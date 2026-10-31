@@ -1,0 +1,1940 @@
+<!doctype html>
+<html lang="pt-PT"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6a2ee0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="공부방">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<title>공부방 Coreano</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" media="print" onload="this.media='all'">
+<style>
+/* Layout: phone-first app. Purple hero on top, one view at a time, fixed bottom tab bar.
+   Lessons are colour-coded with the four dancheong pigments (jade, vermilion, ochre, cobalt). */
+:root{
+  --bg:#f6f4fa; --surface:#fbfafd; --raised:#ffffff; --ink:#1d1a24; --muted:#625e6d; --line:#e2dfea;
+  --jade:#1d6b58; --jade-soft:#dcebe5; --red:#bf3b28; --red-soft:#f6e1dc; --ochre:#b97c12; --ochre-soft:#f5ead2;
+  --cobalt:#2b4f9b; --cobalt-soft:#dfe6f4; --ok:#1d7a4a; --bad:#bf3b28;
+  --hero-a:#6a2ee0; --hero-b:#7444e0; --hero-c:#7b52ea; --on-hero:#ffffff; --accent-ink:#6d3fd8;
+  --display:"Gowun Batang","Noto Serif KR",Georgia,serif;
+  --body:"Noto Sans KR",system-ui,-apple-system,sans-serif;
+  --nav-h:64px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121018; --surface:#18161f; --raised:#1e1b26; --ink:#ebe8f0; --muted:#a19cad; --line:#2c2836;
+  --jade:#62c3a7; --jade-soft:#1c3530; --red:#f08068; --red-soft:#3a201b; --ochre:#e6b453; --ochre-soft:#382c15;
+  --cobalt:#8eabef; --cobalt-soft:#1f2a42; --ok:#5fd093; --bad:#f08068;
+  --hero-a:#4c1fb0; --hero-b:#6d3fd8; --hero-c:#6e4ad4; --accent-ink:#b9a3ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121018; --surface:#18161f; --raised:#1e1b26; --ink:#ebe8f0; --muted:#a19cad; --line:#2c2836;
+  --jade:#62c3a7; --jade-soft:#1c3530; --red:#f08068; --red-soft:#3a201b; --ochre:#e6b453; --ochre-soft:#382c15;
+  --cobalt:#8eabef; --cobalt-soft:#1f2a42; --ok:#5fd093; --bad:#f08068;
+  --hero-a:#4c1fb0; --hero-b:#6d3fd8; --hero-c:#6e4ad4; --accent-ink:#b9a3ff; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px;border-radius:10px}
+
+.stripe{display:none}
+.app{max-width:620px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:18px calc(var(--nav-h) + 32px + env(safe-area-inset-bottom,0px))}
+.view{display:flex;flex-direction:column;gap:18px}
+
+/* type */
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+h1.title{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.15;margin:0;text-wrap:balance}
+h1.title small{display:block;font-family:var(--body);font-size:14px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:4px}
+h2{font-family:var(--display);font-size:21px;margin:0;text-wrap:balance}
+.muted{color:var(--muted)}
+.ko{font-family:var(--display)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--hero-a) 0%,var(--hero-b) 55%,var(--hero-c) 100%);color:var(--on-hero);border-radius:24px;padding:22px 20px 20px}
+.hero .big{position:relative;font-family:var(--display);font-size:52px;line-height:1;font-weight:700}
+.hero p{position:relative;margin:8px 0 0;opacity:.9}
+.hero .seal{position:absolute;right:-6px;top:-34px;font-family:var(--display);font-size:170px;font-weight:700;line-height:1;color:var(--on-hero);opacity:.12;pointer-events:none}
+.hero .seal::after{content:"한"}
+.hero .stats{position:relative;display:flex;gap:18px;margin-top:16px;flex-wrap:wrap}
+.hero .stats div{font-size:12px;opacity:.9}
+.hero .stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums;opacity:1}
+
+/* cards */
+.card{background:var(--raised);border:1px solid var(--line);border-radius:18px}
+.pad{padding:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{display:flex;flex-direction:column;gap:6px;text-align:left;padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--raised);text-decoration:none;color:inherit;min-height:118px}
+.tile .glyph{font-family:var(--display);font-size:26px;font-weight:700;line-height:1}
+.tile .lbl{font-weight:700}
+.tile .sub{font-size:12px;color:var(--muted);margin-top:auto}
+.c-jade{--c:var(--jade);--cs:var(--jade-soft)} .c-red{--c:var(--red);--cs:var(--red-soft)}
+.c-ochre{--c:var(--ochre);--cs:var(--ochre-soft)} .c-cobalt{--c:var(--cobalt);--cs:var(--cobalt-soft)}
+.tile .glyph,.accent{color:var(--c)}
+.tile.wide{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;gap:14px}
+.wotd{display:flex;align-items:center;gap:14px}
+.wotd .w{font-family:var(--display);font-size:30px;font-weight:700}
+
+/* chips & segmented */
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--raised);border-radius:99px;padding:6px 13px;font-size:14px;font-weight:500;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--c,var(--jade));border-color:var(--c,var(--jade));color:var(--raised)}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:none;border-radius:10px;padding:8px 6px;font-weight:500;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--raised);color:var(--ink);box-shadow:0 1px 3px rgb(0 0 0 / .12)}
+
+/* buttons */
+.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:700;background:var(--jade);color:var(--raised)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn.red{background:var(--red)}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row > .grow{flex:1;min-width:0}
+.icon{width:40px;height:40px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--jade)}
+.icon svg{width:20px;height:20px}
+.icon.lg{width:84px;height:84px;background:var(--jade);border:0;color:var(--raised)}
+.icon.lg svg{width:38px;height:38px}
+
+/* grammar */
+.lesson-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lesson-head .n{font-family:var(--display);font-size:30px;font-weight:700;color:var(--c)}
+.gcard{border-left:4px solid var(--c);border-radius:16px;background:var(--raised);border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.gcard summary{list-style:none;padding:14px 16px;display:flex;flex-direction:column;gap:2px;cursor:pointer}
+.gcard summary::-webkit-details-marker{display:none}
+.gcard .form{font-family:var(--display);font-size:22px;font-weight:700}
+.gcard .mean{color:var(--muted);font-size:14px}
+.gbody{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+.gbody ul{margin:0;padding-left:18px}
+.gbody li{margin:2px 0}
+.ex{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border-radius:12px;padding:10px 12px}
+.ex .t{flex:1;min-width:0}
+.ex .k{font-family:var(--display);font-size:17px;font-weight:700}
+.ex .p{font-size:13px;color:var(--muted)}
+.ex .icon{width:34px;height:34px}
+.tip{background:var(--cs);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:14px}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;font-size:14px;min-width:100%}
+.tbl th,.tbl td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tbl td:first-child{font-family:var(--display);font-weight:700}
+
+/* vocab */
+.deck{display:flex;flex-direction:column;gap:4px;text-align:left;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--raised)}
+.deck .k{font-family:var(--display);font-weight:700;font-size:18px;color:var(--c)}
+.deck .meter{height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:6px}
+.deck .meter i{display:block;height:100%;background:var(--c)}
+.flash{perspective:1200px}
+.flash .inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.flash.flipped .inner{transform:rotateY(180deg)}
+.flash .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:22px;border:1px solid var(--line);background:var(--raised);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;text-align:center}
+.flash .back{transform:rotateY(180deg);background:var(--cs);border-color:transparent}
+.flash .w{font-family:var(--display);font-size:38px;font-weight:700;line-height:1.2;overflow-wrap:anywhere}
+.flash .pt{font-size:22px;font-weight:500;overflow-wrap:anywhere}
+.flash .hint{font-size:12px;color:var(--muted)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--raised);border-radius:14px;padding:13px 14px;font-weight:500}
+.opt.ko{font-family:var(--display);font-size:19px;font-weight:700}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--raised))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--raised))}
+.progress{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c,var(--jade));transition:width .3s}
+
+/* writing & listening */
+.prompt{font-family:var(--display);font-size:24px;font-weight:700;line-height:1.3}
+.prompt .plus{color:var(--muted);font-family:var(--body);font-weight:500;font-size:18px}
+input.ans,textarea.ans{width:100%;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);padding:12px 14px;font-family:var(--display);font-size:20px}
+textarea.ans{min-height:110px;resize:vertical;font-size:17px}
+input.ans:focus,textarea.ans:focus{outline:none;border-color:var(--jade)}
+.fb{border-radius:14px;padding:12px 14px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.fb.ok{background:color-mix(in srgb,var(--ok) 13%,var(--raised));border:1px solid color-mix(in srgb,var(--ok) 40%,transparent)}
+.fb.no{background:color-mix(in srgb,var(--bad) 11%,var(--raised));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent)}
+.fb.info{background:var(--surface);border:1px solid var(--line)}
+.fb .k{font-family:var(--display);font-size:18px;font-weight:700}
+.fb ul{margin:0;padding-left:18px}
+.score{font-variant-numeric:tabular-nums;font-weight:700}
+select.sel{border:1px solid var(--line);background:var(--raised);border-radius:12px;padding:8px 10px;max-width:100%}
+.player{display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 16px}
+.toggle{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--jade);border-radius:50%;animation:sp 0.8s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* teacher */
+.tq{background:var(--raised);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.tq .head{padding:12px 14px 6px}
+.tq .head b{font-family:var(--display);font-size:19px}
+.tq .head small{display:block;color:var(--muted);font-size:13px}
+.tq .r{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
+.tq .r a{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.tag{font-size:12px;font-weight:700;border-radius:7px;padding:2px 8px;background:var(--jade-soft);color:var(--jade)}
+.tag.h{background:var(--ochre-soft);color:var(--ochre)}
+.chk{width:28px;height:28px;flex:none;border-radius:50%;border:2px solid var(--line);background:none;color:transparent;display:grid;place-items:center;font-size:14px}
+.tq .r.done .chk{background:var(--jade);border-color:var(--jade);color:var(--raised)}
+.tq .r.done .d{text-decoration:line-through;color:var(--muted)}
+.tq .r.miss{color:var(--muted);font-size:13px}
+
+/* bottom nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+nav.tabs .in{max-width:620px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);height:var(--nav-h)}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:11px;font-weight:500}
+nav.tabs a .ti{width:48px;height:28px;border-radius:14px;display:grid;place-items:center;transition:background .2s}
+nav.tabs a .ti svg{width:22px;height:22px}
+nav.tabs a[aria-current="page"]{color:var(--accent-ink);font-weight:700}
+nav.tabs a[aria-current="page"] .ti{background:color-mix(in srgb,var(--hero-b) 16%,transparent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---- v4 additions ---- */
+.countdown{display:flex;align-items:center;gap:14px}
+.countdown .days{font-family:var(--display);font-size:44px;font-weight:700;line-height:1;color:var(--red);font-variant-numeric:tabular-nums}
+.countdown input[type=date]{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 8px;max-width:100%}
+.goals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.goal{display:flex;flex-direction:column;gap:4px;font-size:13px}
+.goal .top{display:flex;justify-content:space-between;gap:6px;font-variant-numeric:tabular-nums}
+.goal .top b{font-weight:500}
+.goal.met .top span{color:var(--ok);font-weight:700}
+.streak{display:flex;align-items:center;gap:8px;font-size:14px}
+.streak .dots{display:flex;gap:4px}
+.streak .dots i{width:10px;height:10px;border-radius:3px;background:var(--line)}
+.streak .dots i.on{background:var(--ochre)}
+.errlink{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.errlink .num{font-family:var(--display);font-size:30px;font-weight:700;color:var(--red);min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
+.examq{display:flex;flex-direction:column;gap:14px}
+.qnum{display:flex;align-items:center;gap:10px}
+.qnum .sec{font-size:12px;font-weight:700;border-radius:7px;padding:3px 9px;background:var(--cobalt-soft);color:var(--cobalt)}
+.qnum .sec.r{background:var(--ochre-soft);color:var(--ochre)}
+.timer{height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.timer i{display:block;height:100%;background:var(--red);transform-origin:left;transition:transform 1s linear}
+.stem{font-weight:700;font-size:15px}
+.sentence{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.45}
+.blank{display:inline-block;min-width:3.2em;border-bottom:2px solid var(--ink);text-align:center;color:var(--muted)}
+.passage{font-family:var(--display);font-size:17px;line-height:1.85;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.opt .no{display:inline-block;width:1.6em;color:var(--muted);font-family:var(--body)}
+.plays{font-size:12px;color:var(--muted)}
+.result{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:22px 16px}
+.result .pts{font-family:var(--display);font-size:64px;font-weight:700;line-height:1;color:var(--jade);font-variant-numeric:tabular-nums}
+.splits{display:flex;gap:18px;justify-content:center;margin-top:8px;font-size:13px;color:var(--muted)}
+.splits b{display:block;font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+.hist{display:flex;align-items:flex-end;gap:6px;height:90px;padding-top:6px}
+.hist .b{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.hist .b i{display:block;width:100%;max-width:28px;border-radius:5px 5px 2px 2px;background:var(--jade)}
+.hist .b:last-child i{background:var(--red)}
+.rev{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.rev .ko{font-size:16px;font-weight:700}
+.chat{display:flex;flex-direction:column;gap:10px}
+.bub{max-width:86%;border-radius:18px;padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.bub.them{align-self:flex-start;background:var(--raised);border:1px solid var(--line);border-bottom-left-radius:6px}
+.bub.me{align-self:flex-end;background:var(--jade);color:var(--raised);border-bottom-right-radius:6px}
+.bub .k{font-family:var(--display);font-size:17px;font-weight:700;overflow-wrap:anywhere}
+.bub .t{font-size:13px;color:var(--muted)}
+.bub .tools{display:flex;gap:6px}
+.bub .tools button{border:0;background:none;color:var(--jade);font-size:12px;font-weight:700;padding:2px 0}
+.composer{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;min-width:0;min-height:48px;max-height:140px;font-size:17px}
+.scen{display:flex;flex-direction:column;gap:2px;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--raised)}
+.scen b{font-weight:700}
+.scen span{font-size:13px;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:8px}
+.li{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:12px;font-size:14px}
+.li .ko{font-weight:700;font-size:16px}
+.li .n{margin-left:auto;font-size:12px;color:var(--red);font-weight:700;flex:none}
+.today{display:flex;flex-direction:column;gap:12px}
+.today .nt{font-family:var(--display);font-size:23px;font-weight:700;line-height:1.25;text-wrap:balance}
+.btn.cont{width:100%;padding:15px 16px;font-size:16px;background:var(--hero-a);color:var(--on-hero)}
+/* home v7 */
+.home-hero{display:flex;flex-direction:column;gap:16px;padding:20px}
+.hhead{position:relative;display:flex;align-items:flex-start;gap:12px}
+.hhead>div:first-child{flex:1;min-width:0}
+.hello{font-size:13px;opacity:.85;font-weight:500}
+.home-hero .big{font-size:44px}
+.home-hero p{margin:4px 0 0;font-size:13px}
+.flame{display:flex;align-items:center;gap:4px;background:rgb(255 255 255 / .18);border-radius:99px;padding:6px 12px 6px 9px;font-variant-numeric:tabular-nums}
+.flame svg{width:18px;height:18px;color:#ffd27a}
+.flame b{font-size:16px}
+.htoday{position:relative;display:flex;align-items:center;gap:14px;background:rgb(255 255 255 / .14);border-radius:18px;padding:12px 14px}
+.ring{width:64px;height:64px;flex:none;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:6}
+.ring .rbg{stroke:rgb(255 255 255 / .25)}
+.ring .rfg{stroke:var(--on-hero);stroke-linecap:round;transition:stroke-dashoffset .6s}
+.ring text{transform:rotate(90deg);transform-origin:32px 32px;fill:var(--on-hero);font-size:15px;font-weight:700;font-family:var(--body)}
+.hl{font-size:12px;opacity:.85;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.hn{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.25;text-wrap:balance}
+.hbtn{position:relative;border:0;border-radius:16px;padding:15px 18px;font-weight:700;font-size:16px;background:var(--on-hero);color:var(--hero-a);display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 18px rgb(40 0 110 / .25)}
+.hstats{position:relative;display:flex;gap:22px;font-size:12px;opacity:.9}
+.hstats b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.more{color:var(--accent-ink);font-weight:700;font-size:14px;text-decoration:none}
+.path{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
+.path::-webkit-scrollbar{display:none}
+.lcard{flex:0 0 138px;scroll-snap-align:start;display:flex;flex-direction:column;gap:2px;text-align:left;padding:14px;border-radius:20px;background:var(--raised);border:1px solid var(--line)}
+.lcard .ln{font-family:var(--display);font-size:26px;font-weight:700;color:var(--accent-ink);line-height:1.1}
+.lcard .lk{font-family:var(--display);font-weight:700;font-size:16px;margin-top:6px}
+.lcard .lp{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lcard .lbar{height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:10px}
+.lcard .lbar i{display:block;height:100%;background:var(--hero-b);border-radius:3px}
+.lcard .lt{font-size:11px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.lcard.now{background:color-mix(in srgb,var(--hero-b) 10%,var(--raised));border-color:color-mix(in srgb,var(--hero-b) 45%,transparent)}
+.lcard.full .lt{color:var(--ok);font-weight:700}
+.sc{display:flex;flex-direction:column;gap:2px;padding:16px;border-radius:20px;background:var(--raised);border:1px solid var(--line);text-decoration:none;color:inherit}
+.sc .si{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;margin-bottom:8px;background:color-mix(in srgb,var(--hero-b) 12%,transparent);color:var(--accent-ink)}
+.sc .si svg{width:22px;height:22px}
+.sc b{font-size:15px;line-height:1.3}
+.sc small{color:var(--muted);font-size:13px}
+.sc.hot small{color:var(--red);font-weight:700}
+.sc.hot .si{background:var(--red-soft);color:var(--red)}
+.segs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.segs i{height:6px;border-radius:3px;background:var(--line)}
+.segs i.on{background:var(--hero-b)}
+.menu{display:flex;flex-direction:column;gap:10px}
+.mrow{display:flex;align-items:center;gap:14px;padding:13px 13px 13px 16px;border-radius:22px;background:var(--raised);border:1px solid var(--line);text-decoration:none;color:inherit}
+.mrow .mk{font-family:var(--display);font-weight:700;font-size:19px;color:var(--accent-ink);width:40px;flex:none}
+.mrow .grow{flex:1;min-width:0}
+.mrow b{display:block;font-size:16px}
+.mrow small{display:block;color:var(--muted);font-size:13px}
+.mrow.alert small{color:var(--red);font-weight:700}
+.mrow .arr{width:36px;height:36px;flex:none;border-radius:50%;background:var(--ink);color:var(--raised);display:grid;place-items:center;font-size:17px}
+.mrow:active{transform:scale(.99)}
+.steps{list-style:none;margin:0;padding:12px 0 0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}
+.steps li{display:flex;align-items:center;gap:8px;font-size:13px;min-width:0}
+.steps .ck{width:20px;height:20px;flex:none;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:11px;font-weight:700}
+.steps li.done .ck{background:var(--ok);border-color:var(--ok);color:var(--raised)}
+.steps li.done .grow{color:var(--muted)}
+.steps li.cur .ck{border-color:var(--hero-b);box-shadow:inset 0 0 0 4px color-mix(in srgb,var(--hero-b) 25%,transparent)}
+.steps li.cur .grow{font-weight:700}
+.steps .v{color:var(--muted);font-variant-numeric:tabular-nums}
+/* v8 */
+.rate{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);flex-wrap:wrap;justify-content:center}
+.rate span{margin-right:4px}
+.rate button{border:1px solid var(--line);background:var(--raised);border-radius:99px;padding:4px 11px;font-size:12px;font-weight:700;color:var(--muted)}
+.rate button[aria-pressed="true"]{background:var(--hero-b);border-color:var(--hero-b);color:var(--on-hero)}
+.pron{font-size:13px;color:var(--muted);line-height:1.45}
+.pron b{font-family:var(--display);color:var(--ink);font-size:16px;margin-right:4px}
+.flash{position:relative;height:280px;transition:transform .25s;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.flash.dragging{transition:none}
+.flash .stamp{position:absolute;top:16px;z-index:3;padding:4px 10px;border-radius:8px;border:2px solid;font-weight:800;font-size:14px;opacity:0;transition:opacity .15s;pointer-events:none;background:var(--raised)}
+.flash .stamp.yes{right:16px;color:var(--ok)} .flash .stamp.no{left:16px;color:var(--bad)}
+.flash[data-dir="r"] .stamp.yes,.flash[data-dir="l"] .stamp.no{opacity:1}
+.flash .face .pron{max-width:100%}
+.bad{color:var(--bad);font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.backbtn{align-self:flex-start;display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);background:var(--raised);border-radius:99px;padding:6px 14px 6px 8px;font-weight:600;font-size:14px;color:var(--ink)}
+.backbtn svg{width:18px;height:18px}
+.notice{border:2px solid var(--ink);border-radius:14px;padding:12px 14px;background:var(--surface)}
+.notice b{display:block;text-align:center;font-family:var(--display);font-size:18px;margin-bottom:6px}
+.notice div{white-space:pre-line;font-family:var(--display);font-size:16px;line-height:1.75}
+.passage{white-space:pre-line}
+.qnum .sec.w{background:var(--ochre-soft);color:var(--ochre)} .qnum .sec.s{background:var(--red-soft);color:var(--red)}
+.part{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);text-align:left}
+.part .ko{font-size:20px;font-weight:700;color:var(--accent-ink)} .part small{color:var(--muted);font-size:12px}
+.skills{align-self:stretch;display:grid;gap:8px;margin-top:14px;text-align:left}
+.sk{display:grid;grid-template-columns:56px 1fr 34px;align-items:center;gap:10px;font-size:15px}
+.sk .bar{height:10px;border-radius:5px}
+.sk .bar i{background:var(--hero-b)}
+.sk b{text-align:right;font-variant-numeric:tabular-nums}
+.sk.weak b,.sk.weak span{color:var(--red)} .sk.weak .bar i{background:var(--red)}
+.focus{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.flist{margin:6px 0 0;padding-left:18px;font-size:14px}
+.ansbox{display:flex;flex-direction:column;gap:8px}
+.mic{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.mic svg{width:18px;height:18px}
+.mic.on{background:var(--red-soft);color:var(--red);border-color:var(--red)}
+.toast{position:fixed;z-index:40;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom,0px));
+  max-width:588px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;box-shadow:0 6px 20px rgb(0 0 0 / .25);pointer-events:none}
+</style>
+
+<div class="stripe" aria-hidden="true"></div>
+<main class="app"><div id="view" class="view"></div></main>
+<nav class="tabs" aria-label="Secções"><div class="in" id="tabs"></div></nav>
+<script>
+
+/* ============ DATA ============ */
+const LESSONS = [
+ {n:1,ko:"직업",pt:"Profissões",c:"jade"},
+ {n:2,ko:"여가 활동",pt:"Atividades de lazer",c:"red"},
+ {n:3,ko:"하루 일과",pt:"Rotina diária",c:"ochre"},
+ {n:4,ko:"소개팅",pt:"Encontros",c:"cobalt"},
+ {n:5,ko:"집 소개",pt:"A minha casa",c:"jade"},
+ {n:6,ko:"주말 활동",pt:"Fim de semana",c:"red"},
+ {n:7,ko:"스트레스",pt:"Stress e sintomas",c:"ochre"},
+ {n:8,ko:"생활 습관",pt:"Hábitos de vida",c:"cobalt"},
+ {n:9,ko:"복습",pt:"Revisão e família",c:"jade"}
+];
+
+const GRAMMAR = {
+1:[
+ {f:"-(이)라고 하다",m:"chamar-se / dizer-se",
+  r:["Nome termina em vogal → -라고 하다","Nome termina em consoante → -이라고 하다","Usos: apresentar o nome (formal), dizer como se chama uma coisa, citar palavras"],
+  ex:[["저는 안나라고 해요.","Chamo-me Anna."],["저는 재민이라고 해요.","Chamo-me Jaemin."],["이건 한국어로 한복이라고 해요.","Isto em coreano chama-se hanbok."]],
+  tbl:{h:["Forma","Uso"],rows:[["저는 안나예요.","casual, dia a dia"],["저는 안나라고 해요.","formal, respeitoso"],["저는 안나라고 합니다.","muito formal"]]}},
+ {f:"-는",m:"modificador verbal: \"que faz / que está a fazer\"",
+  r:["[raiz do VERBO] + 는 + NOME","Só verbos (não adjetivos)","Não muda com 받침","Raiz em ㄹ → o ㄹ cai (만들다 → 만드는)"],
+  ex:[["먹는 음식","comida que como"],["공부하는 학생","estudante que estuda"],["사는 도시","cidade onde vivo"]],
+  tip:"Ordem inversa ao português: 먹는 음식 = \"come-que comida\" → comida que como."}
+],
+2:[
+ {f:"-거나",m:"\"ou\" entre VERBOS / adjetivos",r:["raiz + 거나 (sem variação)"],
+  ex:[["주말에 등산하거나 유튜브를 봐요.","Ao fim de semana faço montanhismo ou vejo YouTube."],["저녁에 요리하거나 한국어를 공부해요.","À noite cozinho ou estudo coreano."]]},
+ {f:"-(이)나",m:"\"ou\" entre NOMES",r:["Vogal → -나","Consoante → -이나"],
+  ex:[["아침에 빵이나 과일을 먹어요.","De manhã como pão ou fruta."],["커피나 차를 마셔요.","Bebo café ou chá."]],
+  tip:"-거나 liga duas AÇÕES (먹거나 마셔요); -(이)나 liga dois OBJETOS (밥이나 빵)."},
+ {f:"-(으)ㄹ까요?",m:"\"Vamos…?\" (proposta) ou \"Será que…?\" (especulação)",r:["Vogal ou ㄹ → -ㄹ까요?","Consoante → -을까요?","ㅂ irregular: 춥다 → 추울까요?"],
+  ex:[["같이 커피 마실까요?","Vamos beber café juntos?"],["내일 비가 올까요?","Será que amanhã chove?"]]}
+],
+3:[
+ {f:"마다",m:"cada / todos os / sempre que",r:["NOME + 마다 (sem espaço)","Substitui -에: nunca 일요일에마다","Frequência sem exceção"],
+  ex:[["저는 아침마다 차를 마셔요.","Todas as manhãs bebo chá."],["토요일마다 한국어 수업을 들어요.","Todos os sábados tenho aula de coreano."]],
+  tip:"매일 / 매주 = neutro. 아침마다 / 일요일마다 = enfático, sem exceção."},
+ {f:"-(으)ㄹ 때",m:"quando… / no momento em que…",r:["Vogal → -ㄹ 때 · Consoante → -을 때","ㄹ 받침 mantém-se: 만들 때, 살 때","ㄷ irr.: 듣다 → 들을 때","ㅂ irr.: 돕다 → 도울 때","ㅅ irr.: 짓다 → 지을 때"],
+  ex:[["시간이 있을 때 등산을 해요.","Quando tenho tempo, faço montanhismo."]],
+  tip:"-(으)ㄹ 때마다 = sempre que · -았/었을 때 = quando (no passado): 어렸을 때."}
+],
+4:[
+ {f:"-아/어 보이다",m:"parece (com adjetivos)",r:["ㅏ/ㅗ → -아 보이다","Outras vogais → -어 보이다","-하다 → -해 보이다"],
+  ex:[["오늘 피곤해 보여요. 괜찮아요?","Hoje pareces cansada. Estás bem?"],["그 원피스가 정말 예뻐 보여요.","Esse vestido parece mesmo bonito."]]},
+ {f:"-에다가",m:"em cima de / para além de / combinar com",r:["NOME 1 + 에다가 + NOME 2 + verbo","Pode encurtar: -에다, -에","Diferente de -하고: implica BASE + ADIÇÃO"],
+  ex:[["원피스에다가 재킷을 입어요.","Visto um vestido e por cima um blazer."],["밥에다가 김치를 올려서 먹어요.","Ponho kimchi em cima do arroz e como."]],
+  tbl:{h:["Verbo","Para"],rows:[["입다","tronco e pernas"],["신다","pés"],["쓰다","cabeça / rosto"],["끼다","anel, luvas"],["하다","acessórios"],["매다","atar (gravata)"],["차다","relógio, cinto"],["들다","na mão"],["메다","ao ombro"]]}}
+],
+5:[
+ {f:"-기가 좋다 / 편하다 / 힘들다",m:"é bom / confortável / duro FAZER X",r:["raiz do verbo + -기가 + adjetivo","Também: 어렵다, 쉽다"],
+  ex:[["방이 세 개 있어서 가족과 살기가 편해요.","Tem três quartos, por isso é confortável viver em família."],["우리 집은 지하철이 가까워서 리스본에 가기가 좋아요.","O metro fica perto, por isso é bom para ir a Lisboa."]]},
+ {f:"-지 않다",m:"não (negação longa)",r:["raiz + 지 않다 (sem variação)","= 안 + verbo, mais formal/escrito"],
+  ex:[["경치가 좋지 않아요.","A vista não é boa."]],
+  tip:"가지 않아요 = não vou (escolha) · 가지 못해요 = não consigo ir (impedimento)."},
+ {f:"놓여 있다 / 걸려 있다",m:"está colocado / está pendurado (estado)",r:["놓다 (pôr) → 놓여 있다","걸다 (pendurar) → 걸려 있다"],
+  ex:[["책상 위에 책이 놓여 있어요.","Em cima da secretária está um livro."],["벽에 그림이 걸려 있어요.","Na parede está pendurado um quadro."]]}
+],
+6:[
+ {f:"-(으)면서",m:"enquanto / ao mesmo tempo (mesmo sujeito)",r:["Vogal ou ㄹ → -면서","Consoante → -으면서","ㄷ irr.: 듣다 → 들으면서, 걷다 → 걸으면서"],
+  ex:[["저는 음악을 들으면서 공부해요.","Estudo enquanto ouço música."],["커피를 마시면서 책을 읽어요.","Leio um livro enquanto bebo café."]]},
+ {f:"-기 전에",m:"antes de",r:["raiz + 기 전에 (sem variação)","Com nomes: NOME + 전에 (수업 전에)"],
+  ex:[["자기 전에 책을 읽어요.","Antes de dormir leio um livro."],["한국에 가기 전에 한국어를 공부하고 싶어요.","Antes de ir à Coreia quero estudar coreano."]]},
+ {f:"-(으)ㄴ 후에",m:"depois de",r:["Vogal → -ㄴ 후에 · Consoante → -은 후에","ㄹ cai: 만들다 → 만든 후에","Com nomes: NOME + 후에"],
+  ex:[["운동한 후에 샤워를 해요.","Depois de fazer exercício tomo banho."]],
+  tip:"먹기 전에 → 먹으면서 → 먹은 후에 = antes de comer → enquanto come → depois de comer."}
+],
+7:[
+ {f:"-(으)면",m:"se / quando (condição)",r:["Vogal ou ㄹ → -면 · Consoante → -으면","ㅂ irr.: 춥다 → 추우면","ㄷ irr.: 듣다 → 들으면"],
+  ex:[["스트레스를 받으면 가슴이 답답해요.","Quando apanho stress, sinto um aperto no peito."],["피곤하면 머리가 아파요.","Quando estou cansada, dói-me a cabeça."],["날씨가 추우면 어깨가 아파요.","Quando está frio, dói-me o ombro."]],
+  tip:"-(으)면 = condição (받으면 아파요). -(으)면서 = simultâneo (마시면서 봐요)."},
+ {f:"ㅅ 불규칙",m:"o ㅅ cai antes de vogal",r:["붓다 → 부어요 (inchar)","낫다 → 나아요 (melhorar)","짓다 → 지어요 (construir)","젓다 → 저어요 (mexer)","Antes de consoante fica: 붓지만, 낫고"],
+  ex:[["어제 많이 울어서 눈이 부었어요.","Ontem chorei muito, os olhos ficaram inchados."],["약을 먹고 아픈 것이 다 나았어요.","Tomei o remédio e as dores passaram."]],
+  tip:"Regulares (ㅅ fica): 웃다 → 웃어요, 씻다 → 씻어요, 벗다 → 벗어요."},
+ {f:"-지요? / -죠?",m:"não é? / pois não? (confirmação)",r:["raiz + 지요? (sem variação)","Na fala: -죠?","Passado: -았/었지요?"],
+  ex:[["오늘 날씨가 좋지요?","Hoje o tempo está bom, não está?"],["한국어가 어렵지요?","O coreano é difícil, não é?"]],
+  tip:"Pronúncia: 바쁘죠 → [바쁘조], 많죠 → [만초]."}
+],
+8:[
+ {f:"-는데 / -(으)ㄴ데",m:"contexto para o que vem a seguir · \"mas\" suave",r:["Verbo, 있다/없다 → -는데","Adjetivo vogal → -ㄴ데 · consoante → -은데","이다 → -인데 · passado → -았/었는데","ㄹ cai: 살다 → 사는데 · ㅂ: 춥다 → 추운데"],
+  ex:[["머리가 좀 아픈데 혹시 약이 있어요?","Dói-me a cabeça, por acaso tens remédio?"],["요즘 한국어를 공부하는데 아주 재미있어요.","Ando a estudar coreano e é muito giro."],["커피를 좋아하는데 밤에는 안 마셔요.","Gosto de café, mas à noite não bebo."]],
+  tip:"-아/어서 = causa direta. -는데 = pano de fundo: 아파서 약을 먹어요 vs 아픈데 약 있어요?"},
+ {f:"-아/어 보다",m:"experimentar / tentar",r:["raiz + 아/어 보다 (regras do presente)","Sugerir: -아/어 보세요 (+ 한번)","봤어요 = já experimentei · 볼게요 = vou experimentar · 보고 싶어요 = quero experimentar"],
+  ex:[["이 책이 정말 재미있는데 한번 읽어 보세요.","Este livro é mesmo interessante, experimenta ler."],["잠이 안 오면 가벼운 운동을 해 보세요.","Se não consegues dormir, experimenta exercício leve."],["한국에 가 보고 싶어요.","Quero ir à Coreia."]]},
+ {f:"-지 않는 게 좋다",m:"é bom NÃO fazer X",r:["-지 않다 + -는 + 게 좋다 (것이 좋다)","Afirmativo: 운동하는 게 좋아요"],
+  ex:[["야식을 먹지 않는 게 좋아요.","É bom não comer tarde à noite."],["컴퓨터를 오래 하지 않는 게 좋아요.","É bom não usar o computador muito tempo."]]}
+],
+9:[
+ {f:"-지 않아요 vs 안",m:"duas negações, tons diferentes",r:["-지 않아요: suave, formal, explicativo","안 + V: direto, informal","있다/없다, 맛있다, 재미있다 só com -지 않아요"],
+  ex:[["아뇨, 안 먹어요.","Não, não como. (direto)"],["저는 지금 다이어트 중이라 먹지 않아요.","Estou de dieta, por isso não como. (explicativo)"]],
+  tip:"✅ 재미있지 않아요 · ❌ 안 재미있어요"},
+ {f:"못 / -지 못하다 / -(으)ㄹ 수 없다",m:"não conseguir / não poder",r:["못 + V: dia a dia","-지 못하다: formal / escrito","-(으)ㄹ 수 없다: formal ou proibição"],
+  ex:[["못 갔어요.","Não consegui ir."],["가지 못했습니다.","Não consegui ir. (e-mail formal)"],["들어갈 수 없습니다.","Não é possível entrar."]],
+  tbl:{h:["Verbo","못","-지 못해요","-(으)ㄹ 수 없어요"],rows:[["가다","못 가요","가지 못해요","갈 수 없어요"],["먹다","못 먹어요","먹지 못해요","먹을 수 없어요"],["듣다","못 들어요","듣지 못해요","들을 수 없어요"]]}},
+ {f:"ㅅ 불규칙 · tabela",m:"todas as formas",r:["Antes de vogal (으/아/어) → ㅅ cai","Antes de consoante (ㄱ/ㅈ/ㄴ) → ㅅ fica"],ex:[],
+  tbl:{h:["Verbo","+고","+(으)면","+아/어요"],rows:[["낫다","낫고","나으면","나아요"],["붓다","붓고","부으면","부어요"],["짓다","짓고","지으면","지어요"],["잇다","잇고","이으면","이어요"],["긋다","긋고","그으면","그어요"],["젓다","젓고","저으면","저어요"]]}}
+]
+};
+
+const DECKS = [
+ {id:"prof",ko:"직업",pt:"Profissões",c:"jade",w:[["직업","profissão"],["회사원","funcionário de empresa"],["학생","estudante"],["대학생","estudante universitário"],["교사","professor/a"],["의사","médico/a"],["간호사","enfermeiro/a"],["경찰관","polícia"],["군인","militar"],["연구원","investigador/a"],["팀장","chefe de equipa"],["부서장","chefe de departamento"],["프로그래머","programador/a"],["제빵사","padeiro/a"],["헤어 디자이너","cabeleireiro/a"],["변호사","advogado/a"],["회계사","contabilista"],["자동차 정비사","mecânico automóvel"],["요리사","cozinheiro/a"],["화가","pintor/a"],["작가","escritor/a"],["건축가","arquiteto/a"],["은행원","bancário/a"],["공무원","funcionário público"],["택시기사","taxista"]]},
+ {id:"lazer",ko:"여가 활동",pt:"Lazer",c:"red",w:[["취미","hobby"],["여가 시간","tempo livre"],["등산하다","fazer montanhismo"],["운동하다","fazer exercício"],["운동 모임","grupo desportivo"],["요리하다","cozinhar"],["악기를 연주하다","tocar um instrumento"],["소설을 읽다","ler romances"],["만화를 그리다","desenhar BD"],["배드민턴을 치다","jogar badminton"],["풍경 사진을 찍다","fotografar paisagens"],["스포츠 경기를 보다","ver jogos desportivos"],["드라마를 보다","ver dramas"],["게임을 하다","jogar videojogos"],["자전거를 타다","andar de bicicleta"],["춤을 추다","dançar"],["노래를 부르다","cantar"],["산책하다","passear"]]},
+ {id:"rotina",ko:"하루 일과",pt:"Rotina",c:"ochre",w:[["하루 일과","rotina diária"],["출근하다","ir para o trabalho"],["퇴근하다","sair do trabalho"],["회의","reunião"],["회의를 준비하다","preparar reunião"],["이메일을 읽다","ler e-mails"],["수업을 듣다","ter aulas"],["시험공부를 하다","estudar para exame"],["동아리 활동","atividades de clube"],["아르바이트","part-time"],["일어나다","levantar-se"],["샤워하다","tomar banho"],["아침을 먹다","tomar o pequeno-almoço"],["점심을 먹다","almoçar"],["저녁을 먹다","jantar"],["평일","dias úteis"],["휴일","dia de folga"],["매일","todos os dias"],["보통","normalmente"],["약속","compromisso, encontro marcado"],["문자","mensagem"],["발표","apresentação"],["직접","pessoalmente"]]},
+ {id:"roupa",ko:"옷",pt:"Vestuário",c:"cobalt",w:[["바지","calças"],["청바지","calças de ganga"],["치마","saia"],["원피스","vestido"],["셔츠","camisa"],["블라우스","blusa"],["티셔츠","t-shirt"],["코트","casaco comprido"],["재킷","blazer"],["양복","fato (homem)"],["정장","fato formal"],["운동복","fato de treino"],["모자","chapéu / boné"],["안경","óculos"],["선글라스","óculos de sol"],["넥타이","gravata"],["스카프","lenço"],["목걸이","colar"],["귀걸이","brincos"],["반지","anel"],["시계","relógio"],["벨트","cinto"],["가방","mala"],["운동화","ténis"],["구두","sapatos formais"],["부츠","botas"],["샌들","sandálias"],["양말","meias"],["장갑","luvas"],["신다","calçar"],["쓰다","pôr (cabeça/rosto)"],["끼다","encaixar (anel, luvas)"],["매다","atar"],["차다","prender (relógio, cinto)"],["들다","levar na mão"],["메다","levar ao ombro"]]},
+ {id:"estilo",ko:"스타일",pt:"Estilo",c:"red",w:[["깔끔하다","arrumado/a"],["편하다","confortável"],["세련되다","sofisticado/a"],["단정하다","apresentável"],["화려하다","chamativo/a"],["수수하다","simples, discreto/a"],["꽉 끼다","apertado/a"],["헐렁하다","largo/a"],["중립적인 색깔","cores neutras"]]},
+ {id:"casa",ko:"집",pt:"Casa",c:"jade",w:[["아파트","apartamento"],["주택","moradia"],["원룸","estúdio"],["층","andar"],["방","quarto"],["침실","quarto de dormir"],["거실","sala de estar"],["부엌","cozinha"],["화장실","casa de banho"],["베란다","varanda"],["창문","janela"],["벽","parede"],["바닥","chão"],["천장","teto"],["계단","escadas"],["경치","vista"],["동네","bairro"],["근처","perto"],["주변","arredores"],["넓다","espaçoso"],["좁다","apertado"],["밝다","luminoso"],["어둡다","escuro"],["조용하다","silencioso"],["시끄럽다","barulhento"],["편리하다","conveniente"]]},
+ {id:"moveis",ko:"가구",pt:"Móveis e posição",c:"ochre",w:[["침대","cama"],["책상","secretária"],["의자","cadeira"],["소파","sofá"],["식탁","mesa de jantar"],["옷장","roupeiro"],["책장","estante"],["냉장고","frigorífico"],["세탁기","máquina de lavar"],["그림","quadro"],["달력","calendário"],["거울","espelho"],["위에","em cima de"],["밑에","debaixo de"],["안에","dentro de"],["밖에","fora de"],["옆에","ao lado de"],["앞에","em frente de"],["뒤에","atrás de"],["사이에","entre"]]},
+ {id:"fds",ko:"주말",pt:"Fim de semana",c:"red",w:[["계획을 세우다","fazer planos"],["여행하다","viajar"],["박물관","museu"],["미술관","galeria de arte"],["공원","parque"],["강변","beira-rio"],["해변","praia"],["구경하다","visitar, explorar"],["쉬다","descansar"],["놀다","divertir-se"],["모임","encontro social"],["콘서트","concerto"],["전시회","exposição"],["영화관","cinema"],["맛집","restaurante famoso"],["먼저","primeiro"],["그다음에","a seguir"],["그 후에","depois disso"],["나중에","mais tarde"],["동시에","ao mesmo tempo"],["항상","sempre"],["자주","frequentemente"],["가끔","às vezes"],["아직","ainda"]]},
+ {id:"corpo",ko:"몸",pt:"Corpo",c:"cobalt",w:[["머리","cabeça"],["얼굴","cara, rosto"],["눈","olhos"],["코","nariz"],["입","boca"],["귀","orelha"],["목","pescoço / garganta"],["어깨","ombro"],["팔","braço"],["손","mão"],["가슴","peito"],["배","barriga"],["등","costas"],["허리","cintura"],["다리","perna"],["무릎","joelho"],["발","pé"]]},
+ {id:"sintomas",ko:"증상",pt:"Sintomas e emoções",c:"ochre",w:[["스트레스를 받다","ficar stressada"],["가슴이 답답하다","aperto no peito"],["머리가 복잡하다","cabeça confusa"],["속이 안 좋다","estar maldisposta do estômago"],["눈이 붓다","olhos inchados"],["잠이 안 오다","não conseguir dormir"],["얼굴에 뭐가 나다","aparecer borbulhas"],["어깨가 뭉치다","ombros tensos"],["소화가 안 되다","má digestão"],["식은땀이 나다","suores frios"],["열이 나다","ter febre"],["기침이 나다","ter tosse"],["기분이 좋다","sentir-se bem"],["행복하다","estar feliz"],["슬프다","estar triste"],["화가 나다","ficar zangada"],["걱정하다","preocupar-se"],["긴장하다","estar tensa"],["편안하다","relaxada"],["긴장을 풀다","descontrair"]]},
+ {id:"habitos",ko:"생활 습관",pt:"Hábitos",c:"jade",w:[["잘 웃다","sorrir muito"],["일찍 자고 일찍 일어나다","deitar e levantar cedo"],["음식을 골고루 먹다","comer de forma variada"],["가벼운 운동을 하다","fazer exercício leve"],["손을 잘 씻다","lavar bem as mãos"],["채소를 많이 먹다","comer muitos legumes"],["물을 많이 마시다","beber muita água"],["짜증을 잘 내다","irritar-se facilmente"],["좋아하는 음식만 먹다","só comer o que gosta"],["야식을 먹다","comer tarde à noite"],["컴퓨터를 오래 하다","usar muito o computador"],["지각을 하다","chegar atrasada"],["습관","hábito"],["건강","saúde"],["고치다","corrigir (hábito)"],["움직이다","mexer-se"],["제안하다","sugerir"],["방법","método"],["푹 자다","dormir profundamente"],["안 그래도","aliás, a propósito"]]},
+ {id:"familia",ko:"가족",pt:"Família",c:"red",w:[["아버지","pai"],["어머니","mãe"],["남편","marido"],["아내","esposa"],["아들","filho"],["딸","filha"],["부모","pais"],["자녀","filhos"],["오빠","irmão mais velho (de mulher)"],["언니","irmã mais velha (de mulher)"],["형","irmão mais velho (de homem)"],["누나","irmã mais velha (de homem)"],["남동생","irmão mais novo"],["여동생","irmã mais nova"],["할아버지","avô paterno"],["할머니","avó paterna"],["외할아버지","avô materno"],["외할머니","avó materna"],["큰아버지","tio (irmão mais velho do pai)"],["삼촌","tio paterno (solteiro)"],["고모","tia (irmã do pai)"],["외삼촌","tio (irmão da mãe)"],["이모","tia (irmã da mãe)"],["사촌","primo/a paterno/a"],["외사촌","primo/a materno/a"],["조카","sobrinho/a"],["시아버지","sogro (para a mulher)"],["시어머니","sogra (para a mulher)"]]}
+];
+
+// Conjugation drills: [grammar, base, answer(s), hint]
+const DRILLS = [
+ ["-(이)라고 하다","민지","민지라고 해요","vogal → -라고 해요"],
+ ["-(이)라고 하다","재민","재민이라고 해요","consoante → -이라고 해요"],
+ ["-는 + 음식","먹다","먹는 음식","raiz + 는"],
+ ["-는 + 도시","살다","사는 도시","ㄹ cai antes de 는"],
+ ["-는 + 일","만들다","만드는 일","ㄹ cai antes de 는"],
+ ["-(이)나","빵 / 과일","빵이나 과일","consoante → 이나"],
+ ["-(이)나","커피 / 차","커피나 차","vogal → 나"],
+ ["-(으)ㄹ까요?","가다","갈까요?","vogal → -ㄹ까요"],
+ ["-(으)ㄹ까요?","먹다","먹을까요?","consoante → -을까요"],
+ ["-(으)ㄹ까요?","춥다","추울까요?","ㅂ → 우"],
+ ["-(으)ㄹ까요?","만들다","만들까요?","ㄹ → -ㄹ까요 (sem 으)"],
+ ["마다","일요일","일요일마다","nunca 일요일에마다"],
+ ["-(으)ㄹ 때","있다","있을 때","consoante → -을 때"],
+ ["-(으)ㄹ 때","자다","잘 때","vogal → -ㄹ 때"],
+ ["-(으)ㄹ 때","만들다","만들 때","ㄹ mantém-se"],
+ ["-(으)ㄹ 때","듣다","들을 때","ㄷ → ㄹ"],
+ ["-(으)ㄹ 때","돕다","도울 때","ㅂ → 우"],
+ ["-(으)ㄹ 때","짓다","지을 때","ㅅ cai"],
+ ["-아/어 보여요","피곤하다","피곤해 보여요","하다 → 해 보여요"],
+ ["-아/어 보여요","좋다","좋아 보여요","ㅗ → 아"],
+ ["-아/어 보여요","작다","작아 보여요","ㅏ → 아"],
+ ["-아/어 보여요","어리다","어려 보여요","ㅣ + 어 → ㅕ"],
+ ["-기가 편해요","살다","살기가 편해요","raiz + 기가"],
+ ["-기가 어려워요","배우다","배우기가 어려워요","raiz + 기가"],
+ ["-지 않아요","가다","가지 않아요","raiz + 지 않아요"],
+ ["-지 않아요","좋다","좋지 않아요","raiz + 지 않아요"],
+ ["-지 않아요","재미있다","재미있지 않아요","só esta forma (nunca 안 재미있어요)"],
+ ["-(으)면서","듣다","들으면서","ㄷ → ㄹ + 으면서"],
+ ["-(으)면서","보다","보면서","vogal → 면서"],
+ ["-(으)면서","먹다","먹으면서","consoante → 으면서"],
+ ["-(으)면서","걷다","걸으면서","ㄷ → ㄹ"],
+ ["-(으)면서","살다","살면서","ㄹ → 면서"],
+ ["-기 전에","자다","자기 전에","raiz + 기 전에"],
+ ["-기 전에","먹다","먹기 전에","raiz + 기 전에"],
+ ["-(으)ㄴ 후에","먹다","먹은 후에","consoante → 은 후에"],
+ ["-(으)ㄴ 후에","가다","간 후에","vogal → ㄴ 후에"],
+ ["-(으)ㄴ 후에","만들다","만든 후에","ㄹ cai"],
+ ["-(으)ㄴ 후에","운동하다","운동한 후에","vogal → ㄴ 후에"],
+ ["-(으)면","받다","받으면","consoante → 으면"],
+ ["-(으)면","춥다","추우면","ㅂ → 우"],
+ ["-(으)면","듣다","들으면","ㄷ → ㄹ"],
+ ["-(으)면","피곤하다","피곤하면","vogal → 면"],
+ ["-아/어요 (ㅅ)","붓다","부어요","ㅅ cai antes de vogal"],
+ ["-았/었어요 (ㅅ)","낫다","나았어요","ㅅ cai"],
+ ["-(으)면 (ㅅ)","짓다","지으면","ㅅ cai"],
+ ["-(으)ㄹ 거예요 (ㅅ)","젓다","저을 거예요","ㅅ cai"],
+ ["-아/어요 (ㅅ?)","웃다","웃어요","웃다 é regular: ㅅ fica"],
+ ["-아/어요 (ㅅ?)","씻다","씻어요","씻다 é regular: ㅅ fica"],
+ ["-지요?","좋다","좋지요?","raiz + 지요"],
+ ["-지요?","학생이다","학생이지요?","raiz + 지요"],
+ ["-는데","가다","가는데","verbo → 는데"],
+ ["-는데","있다","있는데","있다/없다 → 는데"],
+ ["-는데","바쁘다","바쁜데","adj. vogal → ㄴ데"],
+ ["-는데","좋다","좋은데","adj. consoante → 은데"],
+ ["-는데","학생이다","학생인데","이다 → 인데"],
+ ["-는데","살다","사는데","ㄹ cai"],
+ ["-는데","춥다","추운데","ㅂ → 우 + ㄴ데"],
+ ["-아/어 보세요","가다","가 보세요","가 + 아 → 가"],
+ ["-아/어 보세요","먹다","먹어 보세요","→ 어 보세요"],
+ ["-아/어 보세요","듣다","들어 보세요","ㄷ → ㄹ"],
+ ["-아/어 보세요","입다","입어 보세요","→ 어 보세요"],
+ ["-아/어 보세요","쓰다","써 보세요","ㅡ cai"],
+ ["-지 않는 게 좋아요","먹다","먹지 않는 게 좋아요","지 않 + 는 + 게 좋아요"],
+ ["못 (3 formas: -지 못해요)","공부하다","공부하지 못해요","raiz + 지 못해요"],
+ ["-(으)ㄹ 수 없어요","듣다","들을 수 없어요","ㄷ → ㄹ"]
+];
+
+// Sentences used in Traduzir and 듣기: [ko, pt, lesson]
+const SENT = [];
+Object.entries(GRAMMAR).forEach(([l,gs])=>gs.forEach(g=>g.ex.forEach(([k,p])=>{ p=p.replace(/ \((direto|explicativo|e-mail formal)\)/,""); if(/[.?]$/.test(k) && k.length>6 && !SENT.some(x=>x[1]===p)) SENT.push([k,p,+l,g.f]); })));
+
+const FREE = [
+ [1,"Apresenta-te: nome e profissão.","(이)라고 하다, -는"],
+ [2,"O que fazes no tempo livre? Faz também uma proposta a um amigo.","-거나, -(이)나, -(으)ㄹ까요?"],
+ [3,"Descreve a tua rotina num dia de trabalho.","마다, -(으)ㄹ 때"],
+ [4,"Vais a um 소개팅. O que vais vestir?","-아/어 보이다, -에다가, 입다/신다/쓰다"],
+ [5,"Descreve a tua casa e o que está em cada divisão.","-기가 좋다, -지 않다, 놓여/걸려 있다"],
+ [6,"Conta o teu fim de semana, por ordem.","-기 전에, -(으)면서, -(으)ㄴ 후에"],
+ [7,"O que te acontece quando estás com stress?","-(으)면, ㅅ 불규칙, -지요?"],
+ [8,"Um amigo dorme mal. Dá-lhe conselhos.","-는데, -아/어 보세요, -지 않는 게 좋다"],
+ [9,"Apresenta a tua família.","vocabulário de família, -지 않다, 못"]
+];
+
+const TEACHER = [
+ [1,"직업",[["(이)라고 하다","apresentar o nome"],["-는","modificador verbal"]]],
+ [2,"여가 활동",[["-거나, (이)나","ou"],["-(으)ㄹ까요?","será que…?"]]],
+ [3,"하루 일과",[["마다","cada, todos os"],["-(으)ㄹ 때","quando"]]],
+ [4,"옷차림",[["-기로 하다","decidir, combinar"],["에다가","juntar a"]]],
+ [5,"집",[["-기가 좋다","ser bom para"],["-지 않다, -지 못하다","não / não conseguir"]]],
+ [6,"장소와 물건",[["-(으)면서","enquanto"],["-지요(죠)","não é?"]]],
+ [7,"스트레스",[["-(으)면","se, quando"],["ㅅ 불규칙","irregular em ㅅ"]]],
+ [8,"건강한 생활",[["-는데, (으)ㄴ데","contexto, mas"],["-아/어 보다","experimentar"]]]
+];
+const tEasy=(l,t)=> l===8&&t===1 ? "rarara-1029-8-1" : `1029-${l}-${t}`;
+const tHard=(l,t)=> l===1&&t===1 ? "2a-1-1-1" : (l===3&&t===2 ? null : `2a-${l}-${t}`);
+
+
+// ---- TOPIK-style bank. First option is always the correct one; options are shuffled at runtime. ----
+// 빈칸 (읽기): [lesson, sentence with ___, [opts], explanation]
+const GAPS = [
+ [1,"저는 수아___ 해요.",["라고","이라고","에다가","마다"],"수아 termina em vogal → 라고"],
+ [1,"이 음식은 한국어로 '김밥'___ 해요.",["이라고","라고","이나","거나"],"밥 termina em consoante → 이라고"],
+ [1,"제가 ___ 도시는 알마다예요.",["사는","살는","살은","살면"],"살다 + 는 → o ㄹ cai: 사는"],
+ [1,"저 사람은 병원에서 ___ 간호사예요.",["일하는","일한는","일하은","일하거나"],"verbo + 는 + nome"],
+ [2,"아침에 빵___ 과일을 먹어요.",["이나","나","거나","마다"],"nome com consoante → 이나"],
+ [2,"저녁에 책을 ___ 음악을 들어요.",["읽거나","읽이나","읽나","읽을까요"],"entre verbos → 거나"],
+ [2,"날씨가 좋은데 같이 ___?",["산책할까요","산책을까요","산책하을까요","산책하거나"],"vogal → ㄹ까요"],
+ [2,"내일 비가 ___? 우산을 가져가요.",["올까요","오을까요","와까요","오거나요"],"오다 → 올까요 (será que…?)"],
+ [3,"저는 일요일___ 등산을 해요.",["마다","에마다","이나","라고"],"마다 substitui 에"],
+ [3,"한국 음식을 ___ 때 김치를 넣어요.",["만들","만들을","만드는","만든을"],"ㄹ 받침 mantém-se: 만들 때"],
+ [3,"음악을 ___ 때 기분이 좋아요.",["들을","듣을","들","듣는"],"듣다 (ㄷ irr.) → 들을 때"],
+ [3,"날씨가 ___ 때 따뜻한 차를 마셔요.",["추울","춥을","추운","춥"],"춥다 (ㅂ irr.) → 추울 때"],
+ [4,"오늘 정말 ___ 보여요. 무슨 일 있어요?",["피곤해","피곤하어","피곤하","피곤한"],"하다 → 해 보여요"],
+ [4,"그 원피스가 아주 ___ 보여요.",["예뻐","예쁘어","예쁜","예쁘"],"예쁘다 → 예뻐 (ㅡ cai)"],
+ [4,"청바지___ 티셔츠를 입었어요.",["에다가","마다","이나","라고"],"base + adição → 에다가"],
+ [4,"추우니까 모자를 ___.",["쓰세요","입으세요","신으세요","끼세요"],"모자 → 쓰다"],
+ [4,"새 운동화를 ___.",["신었어요","입었어요","썼어요","찼어요"],"신발 → 신다"],
+ [5,"집 근처에 지하철역이 있어서 회사에 ___ 좋아요.",["가기가","가기를","가는가","갈기가"],"raiz + 기가 좋다"],
+ [5,"우리 동네는 시끄럽___. 아주 조용해요.",["지 않아요","이 않아요","지 안아요","지 못해요"],"negação: 지 않아요 (못 não se usa com adjetivos)"],
+ [5,"벽에 가족 사진이 ___ 있어요.",["걸려","걸어","놓여","걸러"],"na parede → 걸려 있다"],
+ [6,"저는 음악을 ___ 운동해요.",["들으면서","듣으면서","들면서","듣면서"],"듣다 → 들으면서"],
+ [6,"밥을 ___ 전에 손을 씻어요.",["먹기","먹은","먹는","먹을"],"raiz + 기 전에"],
+ [6,"수업이 ___ 후에 친구를 만났어요.",["끝난","끝나은","끝나는","끝날"],"vogal → ㄴ 후에"],
+ [7,"스트레스를 ___ 머리가 아파요.",["받으면","받면","바드면","받아면"],"consoante → 으면"],
+ [7,"어제 많이 울어서 눈이 ___.",["부었어요","붓었어요","부웠어요","붇었어요"],"붓다: ㅅ cai antes de vogal"],
+ [7,"감기가 다 ___.",["나았어요","낫았어요","나었어요","낳았어요"],"낫다: ㅅ cai → 나았어요"],
+ [7,"한국어 공부가 재미있___? 네, 정말 재미있어요.",["지요","이지요","죠요","지어요"],"raiz + 지요?"],
+ [8,"머리가 좀 ___ 약 있어요?",["아픈데","아프는데","아픈는데","아프은데"],"adjetivo com vogal → ㄴ데"],
+ [8,"그 식당 비빔밥이 맛있는데 한번 ___.",["먹어 보세요","먹아 보세요","먹 보세요","먹으 보세요"],"먹다 → 먹어 보세요"],
+ [8,"밤에 야식을 ___ 게 좋아요.",["먹지 않는","안 먹지는","먹지 않은","먹지 않을"],"지 않 + 는 + 게 좋아요"],
+ [8,"저는 학생___ 요즘 아르바이트도 해요.",["인데","은데","는데","이는데"],"이다 → 인데"],
+ [9,"이 영화는 ___.",["재미있지 않아요","안 재미있어요","재미있 안아요","재미있지 안아요"],"재미있다 só aceita -지 않아요"],
+ [9,"어제 아파서 학교에 ___.",["못 갔어요","갔 못 했어요","못 가었어요","가지 못 갔어요"],"못 + verbo"],
+ [9,"엄마의 언니는 저에게 ___예요.",["이모","고모","언니","숙모"],"irmã da mãe → 이모"],
+ [9,"(여자) 나이가 많은 남자 형제는 ___예요.",["오빠","형","누나","남동생"],"uma mulher diz 오빠"]
+];
+// 듣기 (diálogo): [lesson, what you hear, [replies]]
+const DIALOGS = [
+ [1,"직업이 뭐예요?",["회사원이에요.","회사에 가요.","회사가 커요.","회사가 멀어요."]],
+ [2,"주말에 보통 뭐 해요?",["등산하거나 책을 읽어요.","주말이 좋아요.","토요일이에요.","주말에 바빴어요?"]],
+ [2,"같이 커피 마실까요?",["네, 좋아요. 같이 마셔요.","커피가 비싸요.","아니요, 커피예요.","네, 마셨어요."]],
+ [3,"보통 몇 시에 일어나요?",["아침 일곱 시에 일어나요.","일곱 시간 자요.","아침을 먹어요.","일찍 잤어요."]],
+ [4,"오늘 피곤해 보여요. 괜찮아요?",["어제 잠을 못 잤어요.","네, 피곤해 보여요.","오늘은 토요일이에요.","괜찮아 보여요."]],
+ [4,"이 옷 어때요?",["잘 어울려요. 예뻐 보여요.","옷을 입어요.","백화점에서 샀어요?","옷이 있어요."]],
+ [5,"집이 어때요?",["넓고 밝아서 살기가 좋아요.","집에 가요.","집이 있어요.","아파트에 갔어요."]],
+ [6,"자기 전에 보통 뭐 해요?",["책을 읽어요.","열한 시에 자요.","잠이 와요.","침대예요."]],
+ [7,"스트레스를 받으면 어떻게 해요?",["산책을 하면서 음악을 들어요.","스트레스가 많아요.","머리가 아파요?","네, 받았어요."]],
+ [8,"잠이 안 와요.",["따뜻한 우유를 마셔 보세요.","잠을 잘 자요.","네, 안 와요.","잠이 와요?"]],
+ [8,"한국 음식 먹어 봤어요?",["네, 비빔밥을 먹어 봤어요.","한국 음식이에요.","네, 먹어 보세요.","한국에 가요."]],
+ [9,"어제 왜 수업에 안 왔어요?",["몸이 아파서 못 갔어요.","수업이 재미있어요.","내일 갈 거예요?","학교에서 공부해요."]]
+];
+// 읽기 passages: {l, t, x, q:[[question,[opts]]]}
+const PASSAGES = [
+ {l:1,t:"저는 간호사예요",x:"안녕하세요. 저는 박지수라고 해요. 저는 병원에서 일하는 간호사예요. 병원 일은 힘들지만 아픈 사람을 돕는 일이 좋아요. 제 동생은 은행에서 일하는 은행원이에요. 우리는 주말마다 같이 운동을 해요.",
+  q:[["이 글의 내용과 같은 것을 고르십시오.",["지수 씨는 병원에서 일해요.","지수 씨는 은행에서 일해요.","동생은 간호사예요.","지수 씨는 혼자 운동해요."]],
+     ["지수 씨는 왜 간호사 일이 좋아요?",["아픈 사람을 도울 수 있어서","일이 쉬워서","병원이 가까워서","동생도 간호사라서"]]]},
+ {l:2,t:"주말 계획",x:"저는 여가 시간에 보통 책을 읽거나 영화를 봐요. 그런데 요즘은 날씨가 좋아서 주말마다 친구하고 자전거를 타요. 다음 주 토요일에는 친구들과 같이 한강에 갈 거예요. 그날 비가 올까요? 비가 오면 영화관에 갈 거예요.",
+  q:[["이 글의 내용과 같은 것을 고르십시오.",["요즘 주말마다 자전거를 타요.","이 사람은 책을 읽지 않아요.","다음 주에 혼자 한강에 가요.","비가 오면 자전거를 타요."]],
+     ["비가 오면 어디에 갈 거예요?",["영화관","한강","도서관","공원"]]]},
+ {l:3,t:"나의 하루",x:"저는 회사원이에요. 평일에는 아침 일곱 시에 일어나요. 아침을 먹고 여덟 시에 출근해요. 요즘 아침마다 회의가 있어서 바빠요. 점심을 먹을 때 동료들과 이야기를 해요. 저녁에는 퇴근한 후에 한국어 수업을 들어요.",
+  q:[["이 글의 내용과 같은 것을 고르십시오.",["요즘 아침마다 회의가 있어요.","일곱 시에 출근해요.","점심을 혼자 먹어요.","출근하기 전에 한국어 수업을 들어요."]],
+     ["이 사람은 언제 한국어 수업을 들어요?",["퇴근한 후에","출근하기 전에","점심을 먹을 때","주말마다"]]]},
+ {l:4,t:"내일은 소개팅",x:"내일 소개팅이 있어요. 그래서 오늘 옷을 골랐어요. 원피스에다가 재킷을 입고 구두를 신을 거예요. 목걸이도 할 거예요. 친구가 \"정말 세련돼 보여요!\"라고 했어요. 조금 긴장되지만 기대가 돼요.",
+  q:[["이 글의 내용과 같은 것을 고르십시오.",["내일 구두를 신을 거예요.","내일 운동화를 신을 거예요.","친구가 소개팅을 해요.","원피스만 입을 거예요."]],
+     ["이 사람의 기분은 어때요?",["긴장되지만 기대가 돼요.","슬퍼요.","화가 나요.","심심해요."]]]},
+ {l:5,t:"우리 집",x:"제 집은 아파트 5층에 있어요. 방이 두 개 있고 거실이 넓어요. 창문이 커서 집이 아주 밝아요. 거실 벽에는 가족 사진이 걸려 있고 책상 위에는 꽃이 놓여 있어요. 집 근처에 지하철역이 있어서 회사에 가기가 좋아요. 그런데 밖이 조금 시끄러워요.",
+  q:[["이 글의 내용과 같은 것을 고르십시오.",["거실 벽에 사진이 걸려 있어요.","방이 세 개 있어요.","집이 어두워요.","집 근처가 조용해요."]],
+     ["이 집의 좋은 점이 아닌 것을 고르십시오.",["조용해요.","밝아요.","거실이 넓어요.","회사에 가기가 좋아요."]]]},
+ {l:6,t:"즐거운 주말",x:"지난 주말에 친구와 미술관에 갔어요. 미술관에 가기 전에 맛집에서 점심을 먹었어요. 그림을 구경한 후에 강변을 산책했어요. 우리는 걸으면서 이야기를 많이 했어요. 정말 즐거운 주말이었어요.",
+  q:[["이 사람이 한 일의 순서로 맞는 것을 고르십시오.",["점심 → 미술관 → 산책","미술관 → 점심 → 산책","산책 → 미술관 → 점심","미술관 → 산책 → 점심"]],
+     ["이 글의 내용과 같은 것을 고르십시오.",["걸으면서 이야기를 많이 했어요.","미술관에서 점심을 먹었어요.","혼자 미술관에 갔어요.","주말이 재미없었어요."]]]},
+ {l:7,t:"요즘 스트레스",x:"요즘 회사 일이 많아서 스트레스를 받아요. 스트레스를 받으면 머리가 아프고 잠이 안 와요. 어제는 많이 울어서 아침에 눈이 부었어요. 그래서 오늘은 일찍 퇴근해서 푹 쉴 거예요. 푹 쉬면 빨리 나을 거예요.",
+  q:[["이 글의 내용과 같은 것을 고르십시오.",["스트레스를 받으면 잠이 안 와요.","오늘 늦게 퇴근할 거예요.","오늘 아침에 다리가 부었어요.","요즘 회사 일이 적어요."]],
+     ["이 사람은 오늘 무엇을 할 거예요?",["일찍 퇴근해서 쉴 거예요.","병원에 갈 거예요.","회사에서 일을 많이 할 거예요.","친구를 만날 거예요."]]]},
+ {l:8,t:"민지 씨에게",x:"민지 씨, 요즘 잠을 잘 못 자지요? 저도 전에 그랬는데 생활 습관을 바꾼 후에 잠을 잘 자요. 자기 전에 휴대폰을 오래 하지 않는 게 좋아요. 그리고 저녁에 가벼운 운동을 해 보세요. 밤에 커피를 마시지 않는 것도 중요해요.",
+  q:[["이 글을 쓴 이유를 고르십시오.",["잠을 잘 자는 방법을 알려 주려고","같이 운동을 하려고","커피를 사려고","휴대폰을 빌리려고"]],
+     ["이 글의 내용과 같은 것을 고르십시오.",["자기 전에 휴대폰을 오래 하지 않는 게 좋아요.","밤에 커피를 마시면 좋아요.","글쓴이는 지금도 잠을 못 자요.","아침에 운동을 해 보세요."]]]}
+];
+// 말하기 scenarios: [lesson, title PT, situation for Claude, who Claude plays, grammar]
+const SCEN = [
+ [1,"Primeiro dia de aula","A aluna conhece um colega novo na turma do 세종학당. Perguntam o nome e a profissão um do outro.","민수, um colega de turma simpático","(이)라고 하다, -는"],
+ [2,"Planos para o fim de semana","Duas amigas combinam o que fazer no fim de semana.","지은, uma amiga coreana","-거나, -(이)나, -(으)ㄹ까요?"],
+ [3,"A rotina de trabalho","Um colega de trabalho pergunta sobre a rotina diária da aluna.","준호, um colega de trabalho","마다, -(으)ㄹ 때"],
+ [4,"Preparar o 소개팅","Uma amiga ajuda a aluna a escolher roupa para um 소개팅.","하나, uma amiga que gosta de moda","-아/어 보이다, -에다가, 입다/신다/쓰다"],
+ [5,"Mostrar a casa","Um amigo coreano visita a casa da aluna e faz perguntas.","태민, um amigo de visita","-기가 좋다, 놓여/걸려 있다, -지 않다"],
+ [6,"Como foi o fim de semana?","Segunda de manhã, um colega pergunta como foi o fim de semana.","수진, uma colega","-기 전에, -(으)면서, -(으)ㄴ 후에"],
+ [7,"Na farmácia","A aluna vai à farmácia e explica os sintomas de stress.","o farmacêutico (약사)","-(으)면, ㅅ 불규칙, -지요?"],
+ [8,"Conselhos para dormir","A aluna não dorme bem e pede conselhos a uma amiga.","유나, uma amiga atenciosa","-는데, -아/어 보세요, -지 않는 게 좋다"],
+ [9,"A minha família","Um colega pergunta pela família da aluna.","민수, um colega de turma","vocabulário de família, 못, -지 않다"]
+];
+
+
+// ---- 듣기 com dois falantes (estilo 성취도 평가 / SKA). k = tipo; o[0] é a certa ----
+const LDLG = [
+ {k:"place",s:"여기는 어디입니까?",l:[["남","어서 오세요. 몇 분이세요?"],["여","두 명이에요. 창문 옆 자리 있어요?"]],o:["식당","은행","병원","학교"]},
+ {k:"place",s:"여기는 어디입니까?",l:[["여","어디가 아파요?"],["남","어제부터 머리가 아프고 열이 나요."]],o:["병원","옷 가게","도서관","영화관"]},
+ {k:"place",s:"여기는 어디입니까?",l:[["남","이 책을 빌리고 싶어요."],["여","네, 학생증 있어요?"]],o:["도서관","약국","식당","공항"]},
+ {k:"place",s:"여기는 어디입니까?",l:[["여","이 원피스 입어 봐도 돼요?"],["남","네, 저쪽에서 입어 보세요. 아주 예뻐 보여요."]],o:["옷 가게","병원","우체국","은행"]},
+ {k:"place",s:"여기는 어디입니까?",l:[["남","두통약 있어요?"],["여","네, 하루에 세 번 밥 먹은 후에 드세요."]],o:["약국","서점","카페","미용실"]},
+ {k:"place",s:"여기는 어디입니까?",l:[["여","아이스 아메리카노 한 잔 주세요."],["남","네, 여기에서 드세요?"]],o:["카페","은행","병원","학교"]},
+ {k:"place",s:"여기는 어디입니까?",l:[["남","머리를 어떻게 해 드릴까요?"],["여","조금 짧게 잘라 주세요."]],o:["미용실","식당","약국","도서관"]},
+ {k:"topic",s:"무엇에 대해 이야기하고 있습니까?",l:[["남","저는 아침마다 운동을 해요."],["여","저는 저녁에 요가를 하거나 산책을 해요."]],o:["운동","날씨","직업","가족"]},
+ {k:"topic",s:"무엇에 대해 이야기하고 있습니까?",l:[["여","저는 언니가 한 명, 남동생이 한 명 있어요."],["남","저는 형이 두 명 있어요."]],o:["가족","취미","음식","집"]},
+ {k:"topic",s:"무엇에 대해 이야기하고 있습니까?",l:[["남","오늘 정말 덥지요?"],["여","네, 그런데 내일은 비가 올까요?"]],o:["날씨","옷","여행","약속"]},
+ {k:"topic",s:"무엇에 대해 이야기하고 있습니까?",l:[["여","우리 집은 방이 두 개 있고 거실이 넓어요."],["남","지하철역에서 가까워요?"]],o:["집","직업","쇼핑","건강"]},
+ {k:"topic",s:"무엇에 대해 이야기하고 있습니까?",l:[["남","저는 회사에서 일하는 프로그래머예요."],["여","저는 병원에서 일하는 간호사예요."]],o:["직업","병원","회사","주말"]},
+ {k:"topic",s:"무엇에 대해 이야기하고 있습니까?",l:[["여","요즘 잠을 잘 못 자요."],["남","자기 전에 휴대폰을 하지 않는 게 좋아요."]],o:["건강","쇼핑","날씨","여행"]},
+ {k:"act",s:"여자는 이어서 무엇을 하겠습니까?",l:[["남","밥 먹기 전에 손 씻으세요."],["여","네, 알겠어요. 화장실이 어디에 있어요?"]],o:["손을 씻어요.","밥을 먹어요.","요리를 해요.","화장실을 청소해요."]},
+ {k:"act",s:"여자는 이어서 무엇을 하겠습니까?",l:[["여","추운데 창문 좀 닫을까요?"],["남","네, 고마워요."]],o:["창문을 닫아요.","창문을 열어요.","옷을 벗어요.","밖에 나가요."]},
+ {k:"act",s:"여자는 이어서 무엇을 하겠습니까?",l:[["남","이 영화 정말 재미있는데 같이 볼까요?"],["여","좋아요. 그럼 제가 표를 살게요."]],o:["영화표를 사요.","집에 가요.","밥을 먹어요.","책을 읽어요."]},
+ {k:"act",s:"여자는 이어서 무엇을 하겠습니까?",l:[["여","머리가 너무 아파요."],["남","저기 약국이 있는데 약을 사 보세요."],["여","네, 지금 갈게요."]],o:["약국에 가요.","병원에서 일해요.","잠을 자요.","커피를 마셔요."]},
+ {k:"why",s:"여자는 왜 걸어왔습니까?",l:[["남","왜 버스를 안 타고 걸어왔어요?"],["여","날씨가 좋아서요. 걸으면서 음악도 들었어요."]],o:["날씨가 좋아서","버스가 없어서","돈이 없어서","길을 몰라서"]},
+ {k:"why",s:"남자는 왜 모임에 안 갔습니까?",l:[["여","어제 왜 모임에 안 왔어요?"],["남","회사 일이 많아서 못 갔어요."]],o:["회사 일이 많아서","아파서","약속을 잊어서","비가 와서"]},
+ {k:"why",s:"여자가 이 집을 좋아하는 이유는 무엇입니까?",l:[["남","새 집이 왜 좋아요?"],["여","지하철역이 가까워서 회사에 가기가 편해요."]],o:["회사에 가기가 편해서","집이 넓어서","동네가 조용해서","가족이 가까이 살아서"]},
+ {k:"why",s:"남자는 왜 눈이 부었습니까?",l:[["여","눈이 왜 부었어요?"],["남","어제 슬픈 영화를 보고 많이 울었어요."]],o:["많이 울어서","잠을 많이 자서","눈이 아파서","라면을 먹어서"]},
+ {k:"same",s:"들은 내용과 같은 것을 고르십시오.",l:[["여","민수 씨, 책상 위에 놓여 있는 컵이 민수 씨 거예요?"],["남","아니요, 제 컵은 가방 안에 있어요."]],o:["남자의 컵은 가방 안에 있어요.","남자의 컵은 책상 위에 있어요.","여자는 컵이 없어요.","책상 위에 가방이 있어요."]},
+ {k:"same",s:"들은 내용과 같은 것을 고르십시오.",l:[["남","주말마다 등산을 해요?"],["여","아니요, 보통 집에서 쉬거나 친구를 만나요."]],o:["여자는 주말에 보통 쉬거나 친구를 만나요.","여자는 주말마다 등산을 해요.","남자는 집에서 쉬어요.","여자는 친구가 없어요."]},
+ {k:"same",s:"들은 내용과 같은 것을 고르십시오.",l:[["여","오늘 피곤해 보여요."],["남","어제 늦게까지 게임을 해서 잠을 못 잤어요."]],o:["남자는 어제 늦게까지 게임을 했어요.","남자는 어제 일찍 잤어요.","여자가 게임을 했어요.","남자는 오늘 피곤하지 않아요."]},
+ {k:"same",s:"들은 내용과 같은 것을 고르십시오.",l:[["남","소개팅에 뭐 입고 갈 거예요?"],["여","원피스에다가 재킷을 입을 거예요. 구두도 신을 거예요."]],o:["여자는 구두를 신을 거예요.","여자는 청바지를 입을 거예요.","남자가 소개팅을 해요.","여자는 운동화를 신을 거예요."]},
+ {k:"same",les:6,s:"들은 내용과 같은 것을 고르십시오.",l:[["남","수진 씨, 주말에 뭐 했어요?"],["여","토요일에 친구하고 미술관에 갔어요. 그림을 구경한 후에 같이 저녁을 먹었어요."],["남","일요일에는요?"],["여","일요일에는 집에서 쉬면서 드라마를 봤어요."]],o:["여자는 일요일에 집에서 쉬었어요.","여자는 혼자 미술관에 갔어요.","여자는 토요일에 드라마를 봤어요.","남자는 주말에 미술관에 갔어요."]},
+ {k:"same",les:5,s:"들은 내용과 같은 것을 고르십시오.",l:[["여","새 집은 어때요?"],["남","회사에서 가까워서 출근하기가 편해요. 그런데 방이 좀 좁아요."],["여","창문은 커요?"],["남","네, 창문이 커서 집이 밝아요."]],o:["남자의 집은 회사에서 가까워요.","남자의 집은 방이 넓어요.","남자의 집은 어두워요.","여자는 새 집으로 이사했어요."]}
+];
+
+// Lesson of each LDLG item, for the end-of-exam analysis (0 = not tied to one lesson).
+const LDLG_L=[0,7,0,4,7,0,0,2,9,7,5,1,8,6,2,8,8,6,9,5,7,5,2,4,4];
+LDLG.forEach((h,i)=>{if(h.les===undefined)h.les=LDLG_L[i]||0});
+
+// ---- Novas perguntas no estilo TOPIK I (escritas para a app, nível 2A). Opção certa sempre em 0. ----
+// 듣기 · 중심 생각
+const LMAIN=[
+ {les:8,who:"여자",l:[["남","저는 밤에 커피를 마셔도 잠을 잘 자요."],["여","그래도 밤에는 커피를 마시지 않는 게 좋아요. 건강에 안 좋아요."]],o:["밤에는 커피를 안 마시는 것이 좋습니다.","커피를 많이 마시고 싶습니다.","잠을 많이 자야 합니다.","남자와 같이 커피를 마시고 싶습니다."]},
+ {les:2,who:"남자",l:[["여","이번 주말에는 그냥 집에서 쉬고 싶어요."],["남","날씨가 좋은데 밖에 나가서 산책하거나 운동해 보세요. 그러면 스트레스가 풀려요."]],o:["주말에는 밖에서 활동하는 것이 좋습니다.","주말에는 집에서 쉬어야 합니다.","운동은 너무 힘듭니다.","날씨가 좋지 않습니다."]},
+ {les:3,who:"여자",l:[["남","아침을 자주 안 먹어요. 아침에는 시간이 없어요."],["여","아침을 먹으면 하루 종일 힘이 나요. 조금 일찍 일어나서 간단하게 드세요."]],o:["아침을 먹는 것이 좋습니다.","아침에는 늦게 일어나도 됩니다.","아침에는 시간이 많습니다.","간단한 요리를 배우고 싶습니다."]},
+ {les:7,who:"남자",l:[["여","요즘 스트레스를 많이 받아서 머리가 아파요."],["남","스트레스를 받을 때는 좋아하는 음악을 들으면서 푹 쉬는 게 좋아요."]],o:["스트레스를 받을 때는 쉬는 것이 좋습니다.","음악을 들으면 머리가 아픕니다.","병원에 꼭 가야 합니다.","일을 더 많이 해야 합니다."]},
+ {les:4,who:"여자",l:[["남","소개팅에 정장을 입고 갈까요?"],["여","처음 만나는 자리에는 화려한 옷보다 깔끔하고 편한 옷이 좋아요."]],o:["깔끔하고 편한 옷을 입는 것이 좋습니다.","정장을 꼭 입어야 합니다.","화려한 옷이 잘 어울립니다.","소개팅에 가지 않는 것이 좋습니다."]}
+];
+// 듣기 · 긴 대화 (2 perguntas)
+const LLONG=[
+ {les:6,l:[["여","여러분, 안녕하세요. 내일은 박물관 견학이 있습니다."],["여","아침 아홉 시에 학교 앞에서 버스를 탑니다. 박물관에 가기 전에 학교 식당에서 아침을 먹을 수 있습니다."],["여","박물관을 구경한 후에 한강 공원에서 점심을 먹겠습니다. 오후 세 시에 학교에 돌아옵니다."]],
+  q:[["여자는 왜 이 이야기를 하고 있습니까?",["견학 일정을 알려 주려고","박물관을 소개하려고","점심 메뉴를 바꾸려고","버스 시간을 물어보려고"]],["들은 내용과 같은 것을 고르십시오.",["점심은 한강 공원에서 먹습니다.","아침은 박물관에서 먹습니다.","버스는 박물관 앞에서 탑니다.","오후 다섯 시에 학교에 돌아옵니다."]]]},
+ {les:8,l:[["남","지은 씨, 요즘 피곤해 보여요."],["여","네, 요즘 잠을 잘 못 자요. 자기 전에 휴대폰을 오래 해서 그런 것 같아요."],["남","그럼 자기 한 시간 전에는 휴대폰을 보지 마세요. 그리고 저녁에 가벼운 운동을 해 보세요."],["여","고마워요. 오늘부터 해 볼게요."]],
+  q:[["여자는 왜 잠을 잘 못 잡니까?",["자기 전에 휴대폰을 오래 해서","저녁에 운동을 많이 해서","커피를 많이 마셔서","회사 일이 많아서"]],["들은 내용과 같은 것을 고르십시오.",["남자는 여자에게 운동을 추천했습니다.","여자는 요즘 잠을 잘 잡니다.","남자는 휴대폰을 사고 싶어 합니다.","여자는 다음 주부터 운동을 할 겁니다."]]]},
+ {les:5,l:[["남","여보세요? 집을 보고 싶어서 전화했어요."],["여","네, 어떤 집을 찾으세요?"],["남","방이 두 개 있고 지하철역에서 가까운 집이요. 회사에 가기가 편한 집이 좋아요."],["여","그럼 내일 오후에 오세요. 역 근처에 조용하고 밝은 아파트가 있어요."]],
+  q:[["남자는 왜 전화했습니까?",["집을 보고 싶어서","회사에 가려고","지하철역을 찾으려고","이사를 도와주려고"]],["들은 내용과 같은 것을 고르십시오.",["남자는 방이 두 개 있는 집을 찾습니다.","남자는 오늘 오후에 집을 봅니다.","아파트는 지하철역에서 멉니다.","여자는 시끄러운 집을 소개했습니다."]]]}
+];
+// 읽기 · 무엇에 대한 이야기입니까?
+const RTOPIC=[
+ [1,"아버지는 의사입니다. 어머니는 선생님입니다.",["직업","가족","병원","나이"]],
+ [3,"저는 일곱 시에 일어납니다. 여덟 시에 회사에 갑니다.",["일과","계절","선물","장소"]],
+ [2,"저는 주말에 등산을 합니다. 사진도 자주 찍습니다.",["취미","날씨","가족","음식"]],
+ [5,"우리 집은 3층입니다. 방이 두 개 있고 거실이 넓습니다.",["집","직업","계절","운동"]],
+ [7,"머리가 아픕니다. 그리고 열이 납니다.",["건강","날씨","공부","여행"]],
+ [4,"오늘은 치마를 입었습니다. 구두도 신었습니다.",["옷","음식","시간","나라"]]
+];
+// 읽기 · 맞지 않는 것 (안내문·광고)
+const NOTICE=[
+ {les:6,t:"한국어 말하기 대회",x:"날짜: 12월 6일 (토요일)\n시간: 오후 2시 ~ 5시\n장소: 세종학당 3층 강의실\n신청: 11월 30일까지 이메일로",o:["대회는 일요일에 합니다.","대회는 오후에 합니다.","이메일로 신청합니다.","세종학당에서 합니다."]},
+ {les:5,t:"원룸 있습니다",x:"지하철역에서 걸어서 5분\n방 1개, 화장실 1개\n세탁기, 냉장고 있음\n월세: 50만 원",o:["지하철역에서 멉니다.","냉장고가 있습니다.","화장실이 하나 있습니다.","한 달에 50만 원입니다."]},
+ {les:2,t:"주말 요가 교실",x:"매주 토요일 오전 10시\n장소: 공원 (비가 오면 체육관)\n준비물: 요가 매트, 물\n참가비: 무료",o:["돈을 내야 합니다.","토요일마다 합니다.","비가 오면 체육관에서 합니다.","물을 가지고 가야 합니다."]},
+ {les:7,t:"햇살 약국",x:"평일: 오전 9시 ~ 오후 8시\n토요일: 오전 9시 ~ 오후 1시\n일요일: 쉽니다",o:["일요일에도 문을 엽니다.","토요일에는 오후 1시까지 합니다.","평일에는 오후 8시에 닫습니다.","아침 9시에 문을 엽니다."]}
+];
+// 읽기 · 순서대로 나열하기
+const ORDER=[
+ {les:6,s:["(가) 그래서 오늘은 일찍 집에 가서 쉴 거예요.","(나) 저는 어제 늦게까지 숙제를 했습니다.","(다) 그런데 오늘 아침에는 일찍 일어나서 회사에 갔습니다.","(라) 그래서 지금 아주 피곤합니다."],o:["(나)-(다)-(라)-(가)","(나)-(가)-(다)-(라)","(다)-(나)-(가)-(라)","(다)-(라)-(나)-(가)"]},
+ {les:3,s:["(가) 그다음에 샤워를 하고 아침을 먹습니다.","(나) 저는 매일 아침 여섯 시에 일어납니다.","(다) 아침을 먹은 후에 지하철을 타고 출근합니다.","(라) 일어나서 먼저 공원에서 30분 동안 걷습니다."],o:["(나)-(라)-(가)-(다)","(나)-(가)-(라)-(다)","(라)-(나)-(다)-(가)","(라)-(가)-(나)-(다)"]},
+ {les:5,s:["(가) 지난달에 새 아파트로 이사했습니다.","(나) 그리고 거실 벽에는 그림을 걸었습니다.","(다) 이사한 후에 먼저 책상과 침대를 샀습니다.","(라) 이제 우리 집이 아주 마음에 듭니다."],o:["(가)-(다)-(나)-(라)","(가)-(나)-(다)-(라)","(다)-(가)-(라)-(나)","(다)-(나)-(가)-(라)"]},
+ {les:7,s:["(가) 그래서 어제 약국에 가서 약을 샀습니다.","(나) 지난주부터 감기에 걸려서 기침이 났습니다.","(다) 약을 먹고 푹 잔 후에 다 나았습니다.","(라) 오늘은 다시 회사에 갈 수 있습니다."],o:["(나)-(가)-(다)-(라)","(나)-(다)-(가)-(라)","(가)-(나)-(라)-(다)","(가)-(다)-(나)-(라)"]}
+];
+// 읽기 · 중심 생각
+const RMAIN=[
+ {les:8,x:"요즘 많은 사람들이 늦게 잡니다. 그런데 늦게 자면 다음 날 피곤하고 일을 잘 못 합니다. 건강을 위해서 일찍 자고 일찍 일어나는 게 좋습니다.",o:["일찍 자고 일찍 일어나는 것이 좋습니다.","사람들은 일을 많이 합니다.","늦게 자도 괜찮습니다.","다음 날 일찍 출근해야 합니다."]},
+ {les:2,x:"저는 주말마다 집에서 쉬었습니다. 그런데 지난주에 친구와 같이 처음 산에 갔습니다. 힘들었지만 기분이 아주 좋았습니다. 앞으로 주말에는 밖에서 운동을 하고 싶습니다.",o:["주말에 밖에서 운동을 하고 싶습니다.","주말에는 집에서 쉬는 것이 좋습니다.","등산은 너무 힘듭니다.","친구와 자주 만나고 싶습니다."]},
+ {les:5,x:"집을 고를 때 크기도 중요하지만 교통도 중요합니다. 회사나 학교에서 멀면 매일 길에서 시간을 많이 씁니다. 그래서 저는 지하철역에서 가까운 집을 찾고 있습니다.",o:["집은 교통이 편한 곳이 좋습니다.","큰 집이 제일 좋습니다.","지하철은 너무 복잡합니다.","회사에서 일을 많이 합니다."]},
+ {les:6,x:"저는 음악을 들으면서 공부합니다. 너무 조용하면 공부가 잘 안 됩니다. 그런데 노래보다 피아노 음악을 들으면서 공부하는 게 더 좋습니다.",o:["공부할 때 피아노 음악을 듣는 것이 좋습니다.","공부할 때는 조용해야 합니다.","노래를 부르면서 공부합니다.","피아노를 배우고 싶습니다."]}
+];
+
+// ---- 쓰기 de exame: 3 tipos ----
+const WTASK = {
+ complete:{n:"1. Completar o diálogo",d:"Escreve a frase que falta.",items:[
+   ["가: 주말에 뭐 했어요?","나: ________","가: 재미있었어요?","나: 네, 정말 재미있었어요."],
+   ["가: 내일 같이 점심 먹을까요?","나: ________","가: 그럼 12시에 학교 앞에서 만나요."],
+   ["가: 요즘 잠을 잘 못 자요.","나: ________","가: 고마워요. 오늘 해 볼게요."],
+   ["가: 어제 왜 수업에 안 왔어요?","나: ________","가: 지금은 괜찮아요?"]]},
+ reply:{n:"2. Responder a uma mensagem",d:"Responde em 2 a 3 frases.",items:[
+   ["지은 씨, 이번 토요일에 시간 있어요? 같이 한강에서 자전거를 탈까요?"],
+   ["주말에 이사했어요! 우리 집에 놀러 오세요. 언제 시간이 있어요?"],
+   ["오늘 수업에 못 갔어요. 숙제가 뭐예요? 그리고 다음 수업은 언제예요?"]]},
+ text:{n:"3. Texto curto",d:"Escreve 5 a 6 frases a partir das pistas.",items:[
+   ["나의 주말","토요일 아침: 공원 산책","점심: 친구와 맛집","저녁: 영화관"],
+   ["나의 하루","7시: 일어나다","출근 → 회의","퇴근 후: 한국어 수업"],
+   ["우리 집","아파트, 방 2개","거실 벽: 그림 / 책상 위: 컴퓨터","지하철역 근처"],
+   ["스트레스를 받을 때","증상 두 가지","해결 방법 (-(으)면, -아/어 보세요)"]]}
+};
+
+// ---- 말하기 de exame (oral): [tipo, pergunta coreano, pista PT, resposta-modelo] ----
+const ORAL = [
+ ["p","이름이 뭐예요? 무슨 일을 해요?","Nome e profissão","저는 김하나라고 해요. 회사에서 일하는 팀장이에요."],
+ ["p","주말에 보통 뭐 해요?","O que fazes ao fim de semana","주말에는 보통 산책을 하거나 친구를 만나요."],
+ ["p","보통 몇 시에 일어나요? 아침마다 뭐 해요?","Rotina da manhã","보통 일곱 시에 일어나요. 아침마다 커피를 마시면서 뉴스를 봐요."],
+ ["p","가족을 소개해 주세요.","A tua família","우리 가족은 다섯 명이에요. 언니가 한 명, 남동생이 한 명 있어요."],
+ ["p","스트레스를 받으면 어때요? 그럴 때 어떻게 해요?","Stress: sintomas e o que fazes","스트레스를 받으면 머리가 아프고 잠이 안 와요. 그럴 때 산책을 해요."],
+ ["p","어제 뭐 했어요? 순서대로 말해 보세요.","Ontem, por ordem (-기 전에 / -(으)ㄴ 후에)","퇴근한 후에 한국어 수업을 들었어요. 자기 전에 책을 읽었어요."],
+ ["d","그림을 보고 말해 보세요.","Imagem: uma mulher num café, a beber café e a ler um livro","여자가 카페에서 커피를 마시면서 책을 읽어요."],
+ ["d","그림을 보고 방을 설명해 보세요.","Imagem: um quarto; um quadro na parede, um computador em cima da secretária","벽에 그림이 걸려 있어요. 책상 위에 컴퓨터가 놓여 있어요."],
+ ["d","그림을 보고 이 사람의 옷을 설명해 보세요.","Imagem: um homem de calças de ganga, t-shirt, boné e ténis","남자가 청바지에다가 티셔츠를 입었어요. 모자를 쓰고 운동화를 신었어요."],
+ ["r","친구에게 이번 주말에 같이 영화를 보자고 제안해 보세요.","Roleplay: convida um amigo para o cinema","이번 주말에 같이 영화 볼까요? 토요일 오후에 시간 있어요?"],
+ ["r","약국에 왔어요. 증상을 말하고 약을 사 보세요.","Roleplay: na farmácia","머리가 아프고 열이 나는데 약 있어요?"],
+ ["r","옷 가게에서 옷을 입어 보고 싶어요. 점원에게 말해 보세요.","Roleplay: numa loja de roupa","이 원피스 입어 봐도 돼요? 조금 커 보이는데 작은 거 있어요?"],
+ ["a","친구가 잠을 잘 못 자요. 조언해 주세요.","Conselho: dormir melhor","자기 전에 휴대폰을 하지 않는 게 좋아요. 따뜻한 우유를 마셔 보세요."],
+ ["a","한국어를 잘하고 싶은 친구에게 조언해 주세요.","Conselho: aprender coreano","한국 드라마를 보면서 공부해 보세요. 매일 단어를 외우는 게 좋아요."]
+];
+
+// ---- Vídeos (pesquisa feita noutra sessão) ----
+const VIDEOS = [
+ {g:"Conversas do dia a dia",items:[
+  ["Daily Conversations with Native Koreans","Talk To Me In Korean","18:09","2~3급","TLgAJgYqIZk","Coreanos nativos a velocidade real"],
+  ["Daily Conversations (Restaurant and Cafe)","Talk To Me In Korean","17:08","2급","5n7HFxyE4ZI","Restaurante e café, situações típicas do 듣기"],
+  ["Conversations During a Park Trip","Talk To Me In Korean","16:52","2~3급","QLJVSqyxU4M","Conversa espontânea, sem guião"],
+  ["Slow Korean + Real-Life Conversations (Grocery Shopping)","Daily Korean with Jaerim","13:42","2급","Gy_nMwa51nY","Explicação lenta e depois a conversa real"],
+  ["Real-Life Conversations (Dentist, Pharmacy, Cafe)","Daily Korean with Jaerim","12:29","2급","OS8rnqXM2KI","Farmácia e dentista"]]},
+ {g:"Prática de formato de exame",items:[
+  ["[TOPIK I] Listening Practice (#16)","펀픽 FunPik","3:59","1~2급","tk_NmmX5nEM","Curto e no formato do exame"],
+  ["96회 토픽1 듣기","Namu Korean","40:19","1~2급","3JYb9VrmMmk","Exame completo: faz 1–14 numa sessão e 15–30 noutra"],
+  ["제91회 TOPIK 1 듣기","Topik 3급","45:56","1~2급","N2wG2MPFcaA","Áudio real de um exame antigo"]]},
+ {g:"Histórias curtas",items:[
+  ["Korean Short Story | Yoonji Goes to School","몰입한국어","10:01","1~2급","o6AP3nVNj_8","Narração clara, bom para aquecer"],
+  ["Short stories | Morning routine","최수수 ChoiSusu","9:40","2급","29mdX4IG7YI","Rotina diária, vocabulário de 2급"],
+  ["Listening Practice for ALL Levels","Talk To Me In Korean","3:56","2급","cWcbK176lQs","Curto, para ouvir várias vezes"]]},
+ {g:"Vlogs e vida real",items:[
+  ["Ordering Street Food in Korea (Hongdae)","Talk To Me In Korean","17:45","2~3급","5JFczNjiaks","Pedidos reais em bancas de comida"],
+  ["Korean Daily Life Vlog","Talk To Me In Korean","13:24","2~3급","MY2pSvtbtAo","Expressões do dia a dia"],
+  ["Comprehensible Korean Input at a Convenience Store","Daily Korean with Jaerim","9:40","1~2급","IGEj-oDKyw8","Loja de conveniência, cena clássica do 듣기"]]}
+];
+
+/* ============ STATE ============ */
+// Saved values are checked against the shape of the default, so old or damaged data falls back instead of breaking a screen.
+const store={get(k,d){try{const v=localStorage.getItem("gb_"+k);if(v===null)return d;const x=JSON.parse(v);
+               if(d===null||d===undefined)return x;
+               if(Array.isArray(d))return Array.isArray(x)?x:d;
+               if(typeof d==="object")return x&&typeof x==="object"&&!Array.isArray(x)?x:d;
+               return typeof x===typeof d&&x===x?x:d}catch(e){return d}},
+             set(k,v){try{localStorage.setItem("gb_"+k,JSON.stringify(v))}catch(e){}}};
+const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
+let done=store.get("done",null); if(!isObj(done)){try{done=JSON.parse(localStorage.getItem("done")||"{}")}catch(e){done={}} if(!isObj(done))done={}}
+let known=store.get("known",{});
+let stats=store.get("stats",{}); for(const k of ["drill","drillOk","listen","listenOk"])stats[k]=Number.isFinite(stats[k])?stats[k]:0;
+let err=store.get("err",{}); for(const k in err)if(!(err[k]>=1&&err[k]<=3))delete err[k];
+let days=store.get("days",{});
+let hist=store.get("hist",[]).filter(h=>isObj(h)&&Number.isFinite(h.s)&&typeof h.d==="string");
+const saveAll=()=>{store.set("done",done);store.set("known",known);store.set("stats",stats);store.set("err",err);store.set("days",days);store.set("hist",hist)};
+const S={lesson:store.get("lesson",1),deck:null,vmode:"cards",vdir:"ko",psub:"escrita",wmode:"conj",lmode:"dict",slow:false,drillG:"all",
+  read:null,scen:null,timed:store.get("timed",true),examReview:false,rate:[0.6,0.8,1].includes(store.get("rate",0.8))?store.get("rate",0.8):0.8};
+
+const today=()=>new Date().toLocaleDateString("sv-SE");
+const GOALS=[["v","Palavras",10],["c","Conjugações",5],["l","Audições",3],["r","Leitura ou exame",1]];
+function bump(k){const t=today();days[t]=days[t]||{};days[t][k]=(days[t][k]||0)+1;saveAll()}
+const active=d=>d&&Object.values(d).reduce((a,b)=>a+b,0)>=5;
+function streak(){let n=0;const d=new Date();if(!active(days[d.toLocaleDateString("sv-SE")]))d.setDate(d.getDate()-1);
+  while(active(days[d.toLocaleDateString("sv-SE")])){n++;d.setDate(d.getDate()-1)}return n}
+function last7(){const out=[];const d=new Date();d.setDate(d.getDate()-6);for(let i=0;i<7;i++){out.push(active(days[d.toLocaleDateString("sv-SE")]));d.setDate(d.getDate()+1)}return out}
+const errAdd=k=>{err[k]=Math.min((err[k]||0)+1,3);saveAll()};
+const errOk=k=>{if(err[k]){err[k]--;if(!err[k])delete err[k];saveAll()}};
+const errKeys=p=>Object.keys(err).filter(k=>k.startsWith(p));
+
+/* ============ HELPERS ============ */
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>String(s).replace(/[\s.?!,~·'"“”]/g,"").normalize("NFC");
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.random()*a.length|0];
+const NUM=["①","②","③","④"];
+const SPK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices()||[]}catch(e){}}
+if("speechSynthesis" in window){loadVoices();try{speechSynthesis.addEventListener("voiceschanged",loadVoices)}catch(e){speechSynthesis.onvoiceschanged=loadVoices}}
+const hasTTS=()=>"speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
+const koVoices=()=>{if(!voices.length)loadVoices();return voices.filter(v=>/^ko([-_]|$)/i.test(v.lang||""))};
+let lastTap=0; document.addEventListener("pointerdown",()=>{lastTap=Date.now()},true);
+function toast(html){let t=document.getElementById("toast");
+  if(!t){t=document.createElement("div");t.id="toast";t.className="toast";t.setAttribute("role","status");t.onclick=()=>{t.hidden=true};document.body.appendChild(t)}
+  t.innerHTML=html;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>{t.hidden=true},6000)}
+const TTS_HELP={
+  none:"<b>Este browser não lê em voz alta.</b> Abre o link no Chrome (Android) ou no Safari (iPhone), fora da app do Claude.",
+  novoice:"<b>Falta a voz coreana.</b> Android: Definições › Texto para voz › Motor Google › instalar Coreano. iPhone: Definições › Acessibilidade › Conteúdo falado › Vozes › 한국어.",
+  silent:"<b>O som não arrancou.</b> Confirma o volume de multimédia e, no iPhone, o botão de silêncio. Se continuar, abre o link no Chrome ou no Safari, fora da app do Claude.",
+  error:"<b>Erro no áudio.</b> Tenta outra vez ou abre o link no Chrome ou no Safari."};
+let ttsWarned=0;
+function ttsHelp(k,extra){if(Date.now()-ttsWarned<6000)return;ttsWarned=Date.now();toast(TTS_HELP[k]+(extra?` <span style="opacity:.7">(${esc(extra)})</span>`:""))}
+// Keep the utterances referenced (some browsers drop them mid-speech) and tell the user why there is no sound.
+let curU=[], ttsWatch=null;
+function ttsRun(items){
+  const user=Date.now()-lastTap<1500;
+  if(!hasTTS()){if(user)ttsHelp("none");return}
+  const ss=speechSynthesis, kv=koVoices();
+  try{if(ss.speaking||ss.pending)ss.cancel();ss.resume()}catch(e){}
+  let started=false; clearTimeout(ttsWatch);
+  try{
+    curU=items.map(([t,slow,who])=>{const u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";const m=who==="남";
+      if(kv.length)u.voice=who&&kv.length>1?kv[m?0:1]:kv[0];
+      if(who)u.pitch=m?0.7:1.3; u.rate=Math.max(0.4,(slow?0.7:1)*(S.rate||0.8));
+      u.onstart=()=>{started=true;clearTimeout(ttsWatch)};
+      u.onerror=e=>{if(e.error==="canceled"||e.error==="interrupted")return;clearTimeout(ttsWatch);
+        if(user)ttsHelp(e.error==="language-unavailable"||e.error==="voice-unavailable"?"novoice":e.error==="not-allowed"?"silent":"error",e.error)};
+      return u});
+    curU.forEach(u=>ss.speak(u));
+  }catch(e){if(user)ttsHelp("error",e.message);return}
+  if(user)ttsWatch=setTimeout(()=>{if(!started&&!ss.speaking)ttsHelp(voices.length&&!kv.length?"novoice":"silent")},2500);
+}
+function speak(t,slow){ttsRun([[t,slow]])}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b&&!b.disabled)speak(b.dataset.say,b.dataset.slow==="1"||S.slow)});
+const say=(t,cls="icon")=>`<button class="${cls}" data-say="${esc(t)}" aria-label="Ouvir">${SPK}</button>`;
+const allWords=()=>DECKS.flatMap(d=>d.w.map(w=>({d,w})));
+const knownCount=d=>d.w.filter(w=>known[d.id+"|"+w[0]]).length;
+const totalWords=DECKS.reduce((n,d)=>n+d.w.length,0);
+const teacherIds=()=>TEACHER.flatMap(([l,,gs])=>gs.flatMap((_,i)=>[tEasy(l,i+1),tHard(l,i+1)])).filter(Boolean);
+const lname=n=>n===9?"복습":n+"과";
+let sampleP=null; const getSample=()=>sampleP||(sampleP=(window.claude&&claude.use)?claude.use("sample").catch(()=>null):Promise.resolve(null));
+const sampleErr=e=>e&&e.code==="rate_limited"?"Atingiste o limite de pedidos ao Claude por agora. Tenta daqui a pouco.":e&&e.code==="not_granted"?"Não foi dada autorização para usar o Claude nesta app.":"Não foi possível falar com o Claude agora. Tenta outra vez.";
+
+/* ============ ROUTER ============ */
+const ico=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICON={
+  home:ico('<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/>'),
+  gramatica:ico('<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>'),
+  vocab:ico('<rect x="3" y="7" width="13" height="14" rx="2.5"/><path d="M8 3h10.5A2.5 2.5 0 0 1 21 5.5V16"/>'),
+  pratica:ico('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>'),
+  exame:ico('<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4V3h6v1"/><path d="m9 13 2 2 4-4"/>'),
+  erros:ico('<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M9 8h6M9 12h6M9 16h3"/>'),
+  professor:ico('<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.6"/><path d="M12 17h.01"/>'),
+  flame:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.6 2.5c.7 3.2 5.4 5.3 5.4 10.6a6 6 0 0 1-12 0c0-2.6 1.3-4.4 2.6-5.6.2 2.2 1.2 3.4 2.4 3.6-.3-3.4.2-6 1.6-8.6z"/></svg>'};
+ICON.back=ico('<path d="M15 18l-6-6 6-6"/>');
+ICON.mic=ico('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>');
+const TABS=[["home","Início"],["gramatica","Gramática"],["vocab","Vocabulário"],["pratica","Praticar"],["exame","Exame"]];
+let EX={};
+function route(){
+  let h=(location.hash||"#home").slice(1);
+  if(h==="escrita"||h==="audicao"||h==="leitura"||h==="conversa"){S.psub=h;h="pratica"}
+  const views={home,gramatica,vocab,pratica,exame,professor,erros};
+  const t=views[h]?h:"home";
+  const cur=t==="erros"||t==="professor"?"home":t;
+  $("#tabs").innerHTML=TABS.map(([id,l])=>`<a href="#${id}" ${id===cur?'aria-current="page"':""}><span class="ti">${ICON[id]}</span>${l}</a>`).join("");
+  if(hasTTS())speechSynthesis.cancel();
+  clearInterval(EX.timer); EX.live=false;
+  if(t!=="vocab")S.deck=null;
+  views[t]();
+  window.scrollTo(0,0);
+}
+addEventListener("hashchange",route);
+const V=html=>{const h=(location.hash||"#home").slice(1);
+  const bar=h!=="home"&&h!==""&&!/id="(back|quit)"/.test(html)?`<button class="backbtn" id="gb">${ICON.back}Voltar</button>`:"";
+  $("#view").innerHTML=bar+html; const gb=$("#gb"); if(gb)gb.onclick=goBack};
+const go=h=>{if(location.hash==="#"+h)route();else location.hash="#"+h};
+
+/* ============ PRONÚNCIA (발음): spelling → how it is read, with the rule that changed it ============ */
+const CHO="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+const JONG=["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+const decS=ch=>{const c=ch.charCodeAt(0)-0xAC00;if(c<0||c>11171)return null;return {L:CHO[Math.floor(c/588)],V:Math.floor(c%588/28),T:JONG[c%28]}};
+const encS=s=>String.fromCharCode(0xAC00+(CHO.indexOf(s.L)*21+s.V)*28+JONG.indexOf(s.T));
+const SPLIT={"ㄳ":["ㄱ","ㅅ"],"ㄵ":["ㄴ","ㅈ"],"ㄶ":["ㄴ","ㅎ"],"ㄺ":["ㄹ","ㄱ"],"ㄻ":["ㄹ","ㅁ"],"ㄼ":["ㄹ","ㅂ"],"ㄽ":["ㄹ","ㅅ"],"ㄾ":["ㄹ","ㅌ"],"ㄿ":["ㄹ","ㅍ"],"ㅀ":["ㄹ","ㅎ"],"ㅄ":["ㅂ","ㅅ"]};
+const REP={"ㄲ":"ㄱ","ㅋ":"ㄱ","ㄳ":"ㄱ","ㄺ":"ㄱ","ㅅ":"ㄷ","ㅆ":"ㄷ","ㅈ":"ㄷ","ㅊ":"ㄷ","ㅌ":"ㄷ","ㅎ":"ㄷ","ㅍ":"ㅂ","ㅄ":"ㅂ","ㄿ":"ㅂ","ㄵ":"ㄴ","ㄶ":"ㄴ","ㄼ":"ㄹ","ㄽ":"ㄹ","ㄾ":"ㄹ","ㅀ":"ㄹ","ㄻ":"ㅁ"};
+const TENSE={"ㄱ":"ㄲ","ㄷ":"ㄸ","ㅂ":"ㅃ","ㅅ":"ㅆ","ㅈ":"ㅉ"}, ASP={"ㄱ":"ㅋ","ㄷ":"ㅌ","ㅂ":"ㅍ","ㅈ":"ㅊ"}, NAS={"ㄱ":"ㅇ","ㄷ":"ㄴ","ㅂ":"ㅁ"};
+const PRON_RULE={
+  link:"Ligação: o 받침 passa para a sílaba seguinte, que começa por ㅇ.",
+  hdrop:"O ㅎ do 받침 não se lê antes de vogal nem de ㄴ.",
+  asp:"ㅎ junta-se à consoante ao lado: ㄱ/ㄷ/ㅂ/ㅈ + ㅎ → ㅋ/ㅌ/ㅍ/ㅊ.",
+  palat:"ㄷ/ㅌ antes de 이 lê-se ㅈ/ㅊ.",
+  nasal:"ㄱ/ㄷ/ㅂ antes de ㄴ/ㅁ lêem-se ㅇ/ㄴ/ㅁ.",
+  rl:"ㄹ depois de ㅁ/ㅇ/ㄱ/ㅂ lê-se ㄴ.",
+  liquid:"ㄴ e ㄹ juntos lêem-se ㄹㄹ.",
+  tense:"Depois de ㄱ/ㄷ/ㅂ (e no fim de alguns verbos), ㄱ/ㄷ/ㅂ/ㅅ/ㅈ ficam tensas: ㄲ/ㄸ/ㅃ/ㅆ/ㅉ.",
+  double:"받침 duplo: só se lê uma das duas consoantes.",
+  final:"No fim da sílaba, ㅅ/ㅆ/ㅈ/ㅊ/ㅌ lêem-se [ㄷ], ㅋ/ㄲ [ㄱ] e ㅍ [ㅂ]."};
+function pronWord(w){
+  const sy=[...w].map(ch=>decS(ch)||{raw:ch}); const R=new Set();
+  const verbEnd=w.endsWith("다"); // only one-syllable stems (신다, 앉다, 넓다); 베란다 is a noun
+  for(let i=0;i<sy.length-1;i++){
+    const a=sy[i], b=sy[i+1]; if(a.raw||b.raw||!a.T)continue;
+    const T=a.T;
+    if(T==="ㅎ"||T==="ㄶ"||T==="ㅀ"){
+      const keep=T==="ㅎ"?"":SPLIT[T][0];
+      if(ASP[b.L]){b.L=ASP[b.L];a.T=keep;R.add("asp");continue}
+      if(b.L==="ㅅ"){b.L="ㅆ";a.T=keep;R.add("tense");continue}
+      if(b.L==="ㅇ"){a.T="";if(keep){b.L=keep;R.add("link")}R.add("hdrop");continue}
+      if(b.L==="ㄴ"){a.T=keep||"ㄴ";R.add(keep?"hdrop":"nasal");continue}
+    }
+    if(b.L==="ㅎ"){const base=SPLIT[T]||["",T];const c=REP[base[1]]||base[1];
+      if(ASP[c]){b.L=ASP[c];a.T=base[0];R.add("asp");continue}}
+    if((T==="ㄷ"||T==="ㅌ")&&b.L==="ㅇ"&&b.V===20){b.L=T==="ㄷ"?"ㅈ":"ㅊ";a.T="";R.add("palat");continue}
+    if(b.L==="ㅇ"){
+      if(T==="ㅇ")continue;
+      if(SPLIT[T]){a.T=SPLIT[T][0];b.L=SPLIT[T][1]==="ㅅ"?"ㅆ":SPLIT[T][1]}else{a.T="";b.L=T}
+      R.add("link");continue;
+    }
+    let t;
+    if(T==="ㄺ"&&b.L==="ㄱ"){t="ㄹ";b.L="ㄲ";R.add("double");R.add("tense");a.T=t;continue}
+    if(T==="ㄼ"&&a.L==="ㅂ"&&a.V===0)t="ㅂ"; else t=REP[T]||T;
+    if(t!==T)R.add(SPLIT[T]?"double":"final");
+    if(b.L==="ㄹ"&&["ㅁ","ㅇ","ㄱ","ㄷ","ㅂ"].includes(t)){b.L="ㄴ";R.add("rl")}
+    if((b.L==="ㄴ"||b.L==="ㅁ")&&NAS[t]){t=NAS[t];R.add("nasal")}
+    else if(t==="ㄴ"&&b.L==="ㄹ"){t="ㄹ";R.add("liquid")}
+    else if(t==="ㄹ"&&b.L==="ㄴ"){b.L="ㄹ";R.add("liquid")}
+    else if(NAS[t]&&TENSE[b.L]){b.L=TENSE[b.L];R.add("tense")}
+    else if(verbEnd&&sy.length===2&&i===0&&b.L==="ㄷ"&&["ㄴ","ㅁ","ㄵ","ㄻ","ㄼ","ㄾ"].includes(T)){b.L="ㄸ";R.add("tense")}
+    a.T=t;
+  }
+  const z=sy[sy.length-1];
+  if(z&&!z.raw&&z.T&&REP[z.T]){R.add(SPLIT[z.T]?"double":"final");z.T=REP[z.T]}
+  return {p:sy.map(s=>s.raw||encS(s)).join(""),R};
+}
+function pron(text){
+  const parts=String(text).split(/(\s+)/).map(x=>/\s/.test(x)||!x?{p:x,R:new Set()}:pronWord(x));
+  const p=parts.map(x=>x.p).join(""); if(p===text)return null;
+  const R=new Set(parts.flatMap(x=>[...x.R]));
+  if(R.size>1)R.delete("final");
+  return {p,rules:[...R].slice(0,2).map(k=>PRON_RULE[k])};
+}
+const pronHTML=t=>{const r=pron(t);return r?`<div class="pron"><b>[${esc(r.p)}]</b> ${r.rules.map(esc).join(" ")}</div>`:""};
+
+/* ============ v8: velocidade, arrastar, diferenças, microfone, voltar ============ */
+const RATES=[0.6,0.8,1];
+const rateCtl=()=>`<div class="rate" role="group" aria-label="Velocidade do áudio"><span>Velocidade</span>${RATES.map(r=>`<button type="button" data-rate="${r}" aria-pressed="${S.rate===r}">${r===1?"1":r}×</button>`).join("")}</div>`;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-rate]");if(!b)return;
+  S.rate=+b.dataset.rate;store.set("rate",S.rate);
+  $$("[data-rate]").forEach(x=>x.setAttribute("aria-pressed",String(+x.dataset.rate===S.rate)));speak("이 속도로 들려요.")});
+
+// Drag a card left/right; a short tap still counts as a tap.
+function swipeable(el,{left,right,tap}){
+  let x0=null,y0=0,dx=0,moved=false;
+  el.addEventListener("pointerdown",e=>{x0=e.clientX;y0=e.clientY;dx=0;moved=false;el.classList.add("dragging");try{el.setPointerCapture(e.pointerId)}catch(_){}});
+  el.addEventListener("pointermove",e=>{if(x0===null)return;dx=e.clientX-x0;const dy=e.clientY-y0;
+    if(!moved&&Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy))moved=true;
+    if(moved){el.style.transform=`translateX(${dx}px) rotate(${dx/22}deg)`;el.dataset.dir=dx>50?"r":dx<-50?"l":""}});
+  el.addEventListener("pointerup",()=>{if(x0===null)return;x0=null;el.classList.remove("dragging");
+    if(moved&&Math.abs(dx)>90){const d=dx;el.style.transform=`translateX(${d>0?700:-700}px) rotate(${d/12}deg)`;setTimeout(()=>(d>0?right:left)(),200)}
+    else{el.style.transform="";el.dataset.dir="";if(!moved&&tap)tap()}});
+  el.addEventListener("pointercancel",()=>{x0=null;el.classList.remove("dragging");el.style.transform="";el.dataset.dir=""});
+}
+
+// Mark, syllable by syllable, what differs between what the learner wrote and the right sentence.
+function diffHTML(mine,right){
+  const A=[...mine.normalize("NFC")],B=[...right.normalize("NFC")];
+  const sk=c=>/[\s.?!,~·'"“”]/.test(c);
+  const ai=A.map((_,i)=>i).filter(i=>!sk(A[i])), bi=B.map((_,i)=>i).filter(i=>!sk(B[i]));
+  const n=ai.length,m=bi.length,dp=Array.from({length:n+1},()=>new Uint16Array(m+1));
+  for(let x=n-1;x>=0;x--)for(let y=m-1;y>=0;y--)dp[x][y]=A[ai[x]]===B[bi[y]]?dp[x+1][y+1]+1:Math.max(dp[x+1][y],dp[x][y+1]);
+  const okA=new Set(),okB=new Set();let x=0,y=0;
+  while(x<n&&y<m){if(A[ai[x]]===B[bi[y]]){okA.add(ai[x]);okB.add(bi[y]);x++;y++}else if(dp[x+1][y]>=dp[x][y+1])x++;else y++}
+  const paint=(arr,ok)=>{let out="",bad=false;arr.forEach((c,i)=>{const b=!sk(c)&&!ok.has(i);if(b!==bad){out+=b?'<b class="bad">':"</b>";bad=b}out+=esc(c)});return out+(bad?"</b>":"")};
+  return {mine:paint(A,okA),right:paint(B,okB)};
+}
+
+// Spoken answers: the page's own microphone when the browser allows it, otherwise the keyboard's dictation.
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let REC=null;
+const answerBox=id=>`<div class="ansbox"><textarea class="ans" id="${id}" lang="ko" placeholder="Responde em voz alta. Para a app avaliar, toca aqui e usa o microfone do teclado coreano." aria-label="A tua resposta"></textarea>
+  ${SR?`<button class="btn ghost mic" type="button" data-mic="${id}">${ICON.mic} Gravar resposta</button>`:""}
+  <div class="muted" style="font-size:12px">O texto que o telemóvel reconhece mostra também como foi a tua pronúncia.</div></div>`;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-mic]");if(!b)return;const ta=document.getElementById(b.dataset.mic);if(!ta||!SR)return;
+  if(REC){try{REC.stop()}catch(_){}REC=null;b.classList.remove("on");return}
+  const noMic="<b>O microfone não está disponível nesta página.</b> Toca na caixa de texto e usa o microfone do teclado (teclado coreano).";
+  try{REC=new SR();REC.lang="ko-KR";REC.interimResults=true;REC.continuous=true;const base=ta.value?ta.value+" ":"";
+    REC.onresult=ev=>{let t="";for(const r of ev.results)t+=r[0].transcript;ta.value=base+t;ta.dispatchEvent(new Event("input"))};
+    REC.onerror=ev=>{toast(/not-allowed|service-not-allowed|audio-capture/.test(ev.error)?noMic:"<b>Não consegui ouvir.</b> Tenta outra vez ou usa o microfone do teclado.");REC=null;b.classList.remove("on")};
+    REC.onend=()=>{REC=null;b.classList.remove("on")};REC.start();b.classList.add("on")}catch(err){REC=null;toast(noMic)}
+});
+// A grade only counts when Claude actually returned a number.
+const hasNota=r=>!!r&&r.nota!==null&&r.nota!==""&&Number.isFinite(+r.nota);
+function evalHTML(r,text){
+  const nota=Math.max(0,Math.min(100,Math.round(+r.nota||0)));
+  const pr=Array.isArray(r.pronuncia)?r.pronuncia.filter(x=>x&&x.ouvido):[];
+  return `<div class="fb ${nota>=60?"ok":"no"}"><div class="row"><span class="ko" style="font-size:34px;font-weight:700;color:${nota>=60?"var(--ok)":"var(--ochre)"}">${nota}</span><span class="grow">${esc(r.elogio||"")}</span></div>
+    ${r.corrigido&&norm(r.corrigido)!==norm(text)?`<div class="row"><span class="k grow">${esc(r.corrigido)}</span>${say(r.corrigido)}</div>`:""}
+    ${pr.length?`<div><b>Pronúncia</b><ul>${pr.map(x=>`<li><span class="ko">${esc(x.ouvido)}</span> → <span class="ko">${esc(x.provavel||"")}</span>: ${esc(x.dica||"")}</li>`).join("")}</ul></div>`:""}
+    ${Array.isArray(r.notas)&&r.notas.length?`<ul>${r.notas.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:""}</div>`;
+}
+function oralEval(box,q,text){
+  box.innerHTML=`<div class="fb info"><span><span class="spin"></span> A avaliar a tua resposta…</span></div>`;
+  getSample().then(sample=>{
+    if(!sample)throw {code:"none"};
+    const prompt=`És examinador do 말하기 do 성취도 평가 do 세종학당 (nível 2A). A aluna é portuguesa.
+Pergunta: "${q[1]}" (${q[2]}). Resposta-modelo: "${q[3]}".
+A aluna respondeu em voz alta. O texto seguinte é o que o reconhecimento de voz do telemóvel percebeu; palavras estranhas ou trocadas costumam indicar problemas de pronúncia:
+"""${text}"""
+Avalia de 0 a 100: se responde à pergunta, gramática e vocabulário de 2A, e pronúncia (deduzida do reconhecimento). Sê encorajador e conciso, em português de Portugal. Responde só com JSON:
+{"nota":número,"corrigido":"a resposta corrigida e natural em coreano","pronuncia":[{"ouvido":"palavra reconhecida","provavel":"palavra que querias dizer","dica":"dica curta de pronúncia"}],"notas":["até 3 observações curtas"],"elogio":"frase curta"}
+Se a pronúncia parecer boa, "pronuncia" fica vazio.`;
+    return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{if(!hasNota(r))throw {code:"bad"};bump("c");box.innerHTML=evalHTML(r,text)});
+  }).catch(e=>{box.innerHTML=`<div class="fb info">${e&&e.code==="none"?"A avaliação precisa do Claude, que não está disponível aqui.":sampleErr(e)}</div>`});
+}
+function wShown(T,item){
+  if(T==="complete")return `<div class="passage">${item.map(l=>l.includes("____")?`<b>${esc(l.replace("________",""))}</b><span class="blank" style="min-width:8em">( &nbsp; )</span>`:esc(l)).join("<br>")}</div>`;
+  if(T==="reply")return `<div class="bub them" style="max-width:100%"><span class="t">Mensagem de um amigo</span><span class="k">${esc(item[0])}</span></div>`;
+  return `<div class="passage"><b>${esc(item[0])}</b><ul style="margin:6px 0 0;padding-left:18px">${item.slice(1).map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`;
+}
+
+// One "back" for every screen: closes the innermost thing first, then returns to Início.
+function goBack(){
+  const h=(location.hash||"#home").slice(1);
+  if(h==="exame"&&EX.live){toast("Para sair do exame, carrega em <b>Sair</b>.");return}
+  if(h==="exame"&&!$("#ex-full4")){clearInterval(EX.timer);exame();return}
+  if(h==="vocab"&&S.deck){S.deck=null;vocab();return}
+  if(h==="pratica"){
+    if(S.read){S.read=null;pratica();return}
+    if(CH){S.scen=null;CH=null;pratica();return}
+    if(OR){clearInterval(EX.timer);OR=null;pratica();return}
+  }
+  if(h!=="home"&&h!=="")go("home");
+}
+(()=>{let sx=null,sy=0,t0=0;
+  document.addEventListener("touchstart",e=>{const el=e.target;
+    if(el.closest(".flash,.path,.chips,.tbl,input,textarea,select,.rate,.noswipe")){sx=null;return}
+    const t=e.touches[0];sx=t.clientX;sy=t.clientY;t0=Date.now()},{passive:true});
+  document.addEventListener("touchend",e=>{if(sx===null)return;const t=e.changedTouches[0];const dx=t.clientX-sx,dy=t.clientY-sy;sx=null;
+    if(dx>90&&Math.abs(dy)<60&&Date.now()-t0<700)goBack()},{passive:true});
+})();
+
+/* ============ HOJE: one "Continuar" button that opens the next unmet daily goal ============ */
+const nextDeck=()=>DECKS.find(d=>knownCount(d)<d.w.length)||DECKS[0];
+function nextSteps(td){
+  const ve=errKeys("v:").length, ce=errKeys("c:").length;
+  const meta={
+    v:{label:r=>`Aprender ${r} palavra${r>1?"s":""}`, sub:()=>ve?`Começa pelas ${ve} que falhaste`:`Tema: ${nextDeck().pt}`,
+       go:()=>{if(ve){S.deck="err";S.vmode="quiz"}else{S.deck=nextDeck().id;S.vmode="cards"}go("vocab")}},
+    c:{label:r=>`Fazer ${r} conjugaç${r>1?"ões":"ão"}`, sub:()=>ce?`Começa pelas ${ce} que falhaste`:"Todas as lições",
+       go:()=>{S.psub="escrita";S.wmode="conj";S.drillG=ce?"err":"all";go("pratica")}},
+    l:{label:r=>`Ouvir ${r} frase${r>1?"s":""}`, sub:()=>"Ouves e escolhes o que quer dizer",
+       go:()=>{S.psub="audicao";S.lmode="comp";go("pratica")}},
+    r:{label:()=>"Fazer 1 mini-exame", sub:()=>"20 perguntas de 듣기 e 읽기",
+       go:()=>{S.autoMini=true;go("exame")}}};
+  return GOALS.map(([k,l,n])=>{const v=Math.min(td[k]||0,n);return {k,l,n,v,done:v>=n,...meta[k]}});
+}
+function todayCard(td){
+  const st=nextSteps(td), cur=st.find(s=>!s.done), nd=st.filter(s=>s.done).length;
+  return `<section class="card pad today">
+    <div class="row"><div class="grow" style="min-width:0"><div class="eyebrow">오늘 · ${cur?"Próximo passo":"Hoje"}</div>
+      <div class="nt">${cur?esc(cur.label(cur.n-cur.v)):"Meta cumprida! 화이팅!"}</div></div>
+      <span class="muted score" aria-label="${nd} de ${st.length} metas feitas">${nd}/${st.length}</span></div>
+    <div class="segs" aria-hidden="true">${st.map(s=>`<i class="${s.done?"on":""}"></i>`).join("")}</div>
+    <button class="btn cont" id="cont">${cur?"Continuar →":"Mini-exame extra →"}</button>
+  </section>`;
+}
+
+/* ============ HOME ============ */
+function lessonProgress(l){
+  if(l===9){const d=DECKS.find(x=>x.id==="familia");return {f:knownCount(d)/d.w.length,t:`${knownCount(d)}/${d.w.length} palavras`}}
+  const ids=[1,2].flatMap(t=>[tEasy(l,t),tHard(l,t)]).filter(Boolean), n=ids.filter(i=>done[i]).length;
+  return {f:n/ids.length,t:`${n}/${ids.length} quizzes`};
+}
+function home(){
+  const tIds=teacherIds(), tDone=tIds.filter(i=>done[i]).length;
+  const kw=Object.values(known).filter(Boolean).length;
+  const td=days[today()]||{};
+  const nErr=Object.keys(err).length;
+  const best=hist.length?Math.max(...hist.map(h=>h.s)):null;
+  const st=nextSteps(td), cur=st.find(s=>!s.done), nd=st.filter(s=>s.done).length;
+  const R=26, C=2*Math.PI*R;
+  const LP=LESSONS.map(L=>({L,...lessonProgress(L.n)}));
+  const curL=(LP.find(x=>x.f<1)||LP[0]).L.n;
+  V(`<section class="hero home-hero"><div class="seal" aria-hidden="true"></div>
+      <div class="hhead"><div><div class="hello">안녕하세요!</div><div class="big">공부방</div><p>세종한국어 2A</p></div>
+        <div class="flame" title="Dias seguidos">${ICON.flame}<b>${streak()}</b></div></div>
+      <div class="htoday">
+        <svg class="ring" viewBox="0 0 64 64" aria-label="${nd} de ${st.length} metas de hoje"><circle cx="32" cy="32" r="${R}" class="rbg"/><circle cx="32" cy="32" r="${R}" class="rfg" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-nd/st.length)}"/><text x="32" y="37" text-anchor="middle">${nd}/${st.length}</text></svg>
+        <div style="min-width:0"><div class="hl">${cur?"Hoje · próximo passo":"Hoje"}</div><div class="hn">${cur?esc(cur.label(cur.n-cur.v)):"Meta cumprida! 화이팅!"}</div></div></div>
+      <button class="hbtn" id="cont">${cur?"Continuar":"Mini-exame extra"} <span aria-hidden="true">→</span></button>
+      <div class="hstats"><div><b>${kw}</b>palavras aprendidas</div><div><b>${best??"–"}</b>melhor exame</div></div></section>
+    <section class="view" style="gap:10px"><div class="row"><h2 class="grow">O teu percurso</h2><a class="more" href="#gramatica">Ver tudo</a></div>
+      <div class="path">${LP.map(({L,f,t})=>`<button class="lcard${L.n===curL?" now":""}${f>=1?" full":""}" data-lesson="${L.n}">
+        <span class="ln">${lname(L.n)}</span><span class="lk">${esc(L.ko)}</span><span class="lp">${esc(L.pt)}</span>
+        <span class="lbar"><i style="width:${Math.round(f*100)}%"></i></span><span class="lt">${f>=1?"Concluída ✓":esc(t)}</span></button>`).join("")}</div></section>
+    <div class="grid2">
+      <a class="sc${nErr?" hot":""}" href="#erros"><span class="si">${ICON.erros}</span><b>Caderno de erros</b><small>${nErr?nErr+" por rever":"Sem erros"}</small></a>
+      <a class="sc" href="#professor"><span class="si">${ICON.professor}</span><b>Quizzes do professor</b><small>${tDone} de ${tIds.length} feitos</small></a>
+    </div>`);
+  $("#cont").onclick=cur?cur.go:()=>{S.autoMini=true;go("exame")};
+  $$("[data-lesson]").forEach(b=>b.onclick=()=>{S.lesson=+b.dataset.lesson;store.set("lesson",S.lesson);go("gramatica")});
+  const now=$(".lcard.now"); if(now){const pa=now.parentElement;pa.scrollLeft=Math.max(0,now.getBoundingClientRect().left-pa.getBoundingClientRect().left+pa.scrollLeft-16)}
+}
+// Whole calendar days between today and the exam date (0 on the exam day itself).
+const daysLeft=()=>{const ed=store.get("examDate","");const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(ed);if(!m)return null;
+  const t=new Date();return Math.round((Date.UTC(+m[1],m[2]-1,+m[3])-Date.UTC(t.getFullYear(),t.getMonth(),t.getDate()))/864e5)};
+function countdownHTML(){
+  const ed=store.get("examDate",""), left=daysLeft();
+  return ed&&left!==null&&left>=0
+    ?`<div class="countdown"><div class="days">${left}</div><div class="grow" style="flex:1;min-width:0"><div class="eyebrow">시험까지 · Exame final</div><div>${left===0?"É hoje! 화이팅!":left===1?"Falta 1 dia":"Faltam "+left+" dias"}</div><button class="btn ghost" id="edDate" style="padding:4px 10px;font-size:12px;margin-top:6px">Mudar data</button></div></div>`
+    :`<div class="eyebrow">시험까지 · Exame final</div><div class="row" style="margin-top:8px"><label for="ed" class="grow">Quando é o exame?</label><input type="date" id="ed" value="${esc(ed)}"></div>`;
+}
+
+/* ============ CADERNO DE ERROS ============ */
+function erros(){
+  const vk=errKeys("v:"), ck=errKeys("c:"), qk=errKeys("q:");
+  const wordOf=k=>{const [id,w]=k.slice(2).split("|");const d=DECKS.find(x=>x.id===id);const ww=d&&d.w.find(x=>x[0]===w);return ww?[ww[0],ww[1]]:null};
+  V(`<div><div class="eyebrow">오답 노트</div><h1 class="title">Caderno de erros<small>Cada erro sai daqui quando acertares a mesma coisa (1 a 3 vezes)</small></h1></div>
+    <div class="card pad" style="display:flex;flex-direction:column;gap:10px"><div class="row"><h2 class="grow">Palavras</h2><span class="muted">${vk.length}</span></div>
+      <div class="list">${vk.slice(0,6).map(k=>{const w=wordOf(k);return w?`<div class="li"><span class="ko">${esc(w[0])}</span><span class="muted">${esc(w[1])}</span><span class="n">×${err[k]}</span></div>`:""}).join("")||`<div class="muted">Nada por agora.</div>`}</div>
+      ${vk.length?`<button class="btn" id="ev">Treinar ${vk.length} palavras</button>`:""}</div>
+    <div class="card pad" style="display:flex;flex-direction:column;gap:10px"><div class="row"><h2 class="grow">Conjugações</h2><span class="muted">${ck.length}</span></div>
+      <div class="list">${ck.slice(0,6).map(k=>{const d=DRILLS[+k.slice(2)];return d?`<div class="li"><span class="ko">${esc(d[1])}</span><span class="muted">+ ${esc(d[0])}</span><span class="n">×${err[k]}</span></div>`:""}).join("")||`<div class="muted">Nada por agora.</div>`}</div>
+      ${ck.length?`<button class="btn" id="ec">Treinar ${ck.length} conjugações</button>`:""}</div>
+    <div class="card pad" style="display:flex;flex-direction:column;gap:10px"><div class="row"><h2 class="grow">Perguntas de exame e leitura</h2><span class="muted">${qk.length}</span></div>
+      ${qk.length?`<button class="btn" id="eq">Rever ${qk.length} perguntas</button>`:`<div class="muted">Nada por agora.</div>`}</div>`);
+  const ev=$("#ev");if(ev)ev.onclick=()=>{S.deck="err";S.vmode="quiz";go("vocab")};
+  const ec=$("#ec");if(ec)ec.onclick=()=>{S.psub="escrita";S.wmode="conj";S.drillG="err";go("pratica")};
+  const eq=$("#eq");if(eq)eq.onclick=()=>{S.examReview=true;go("exame")};
+}
+
+/* ============ GRAMÁTICA ============ */
+function gramatica(){
+  const L=LESSONS.find(x=>x.n===S.lesson)||LESSONS[0];
+  const gs=GRAMMAR[L.n];
+  V(`<div><div class="eyebrow">문법 · Gramática</div><h1 class="title">Gramática</h1></div>
+    <div class="chips" role="group" aria-label="Lição">${LESSONS.map(x=>`<button class="chip c-${x.c}" aria-pressed="${x.n===L.n}" data-l="${x.n}">${lname(x.n)}</button>`).join("")}</div>
+    <div class="lesson-head c-${L.c}"><span class="n">${lname(L.n)}</span><h2>${esc(L.ko)}</h2><span class="muted">${esc(L.pt)}</span></div>
+    ${gs.map((g,i)=>`<details class="gcard c-${L.c}" ${i===0?"open":""}><summary><span class="form">${esc(g.f)}</span><span class="mean">${esc(g.m)}</span></summary>
+      <div class="gbody"><ul>${g.r.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
+      ${g.ex.map(([k,p])=>`<div class="ex"><div class="t"><div class="k">${esc(k)}</div><div class="p">${esc(p)}</div></div>${say(k)}</div>`).join("")}
+      ${g.tbl?`<div class="tbl"><table><thead><tr>${g.tbl.h.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${g.tbl.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:""}
+      ${g.tip?`<div class="tip">${esc(g.tip)}</div>`:""}</div></details>`).join("")}
+    <button class="btn ghost" id="toDrill">Treinar conjugações ${L.n===9?"de todas as lições":"desta lição"} →</button>`);
+  $$("[data-l]").forEach(b=>b.onclick=()=>{S.lesson=+b.dataset.l;store.set("lesson",S.lesson);gramatica()});
+  $("#toDrill").onclick=()=>{S.psub="escrita";S.wmode="conj";S.drillG=L.n===9?"all":"L"+L.n;go("pratica")};
+}
+
+/* ============ VOCABULÁRIO ============ */
+let VQ={};
+function vocab(){
+  if(!S.deck){
+    V(`<div><div class="eyebrow">어휘 · Vocabulário</div><h1 class="title">Vocabulário<small>${Object.values(known).filter(Boolean).length} de ${totalWords} palavras aprendidas</small></h1></div>
+      ${errKeys("v:").length?`<button class="btn red" id="verr">Treinar as ${errKeys("v:").length} palavras que falhei</button>`:""}
+      <div class="grid2">${DECKS.map(d=>{const k=knownCount(d);return `<button class="deck c-${d.c}" data-d="${d.id}"><span class="k">${esc(d.ko)}</span><span>${esc(d.pt)}</span><span class="muted" style="font-size:12px">${k}/${d.w.length}</span><span class="meter"><i style="width:${k/d.w.length*100}%"></i></span></button>`}).join("")}</div>`);
+    $$("[data-d]").forEach(b=>b.onclick=()=>{S.deck=b.dataset.d;startDeck()});
+    const ve=$("#verr");if(ve)ve.onclick=()=>{S.deck="err";S.vmode="quiz";startDeck()};
+    return;
+  }
+  startDeck();
+}
+function startDeck(){
+  let items,title,sub,c;
+  if(S.deck==="err"){
+    items=errKeys("v:").map(k=>{const [id,w]=k.slice(2).split("|");const d=DECKS.find(x=>x.id===id);const ww=d&&d.w.find(x=>x[0]===w);return ww?{d,w:ww}:null}).filter(Boolean);
+    if(!items.length){S.deck=null;vocab();return}
+    title="오답 노트";sub="Palavras que falhaste";c="red";items=shuffle(items);
+  } else {
+    const d=DECKS.find(x=>x.id===S.deck); title=d.ko; sub=d.pt; c=d.c;
+    const it=d.w.map(w=>({d,w}));
+    items=S.vmode==="cards"?shuffle(it.filter(x=>!known[d.id+"|"+x.w[0]])).concat(shuffle(it.filter(x=>known[d.id+"|"+x.w[0]]))):shuffle(it);
+  }
+  VQ={items,title,sub,c,i:0,score:0,answered:false};
+  renderDeck();
+}
+function renderDeck(){
+  const {items,i,c}=VQ;
+  const head=`<div class="row"><button class="btn ghost" id="back">← Temas</button><div class="grow"></div>
+      <div class="seg" style="flex:0 0 auto"><button aria-pressed="${S.vmode==="cards"}" data-m="cards">Cartões</button><button aria-pressed="${S.vmode==="quiz"}" data-m="quiz">Quiz</button></div></div>
+    <div class="c-${c}"><div class="eyebrow">${esc(VQ.sub)}</div><h1 class="title accent">${esc(VQ.title)}</h1></div>
+    <div class="seg"><button aria-pressed="${S.vdir==="ko"}" data-dir="ko">한국어 → PT</button><button aria-pressed="${S.vdir==="pt"}" data-dir="pt">PT → 한국어</button></div>`;
+  if(i>=items.length){
+    V(head+`<div class="card pad c-${c}" style="text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div class="ko accent" style="font-size:40px;font-weight:700">수고했어요!</div>
+      <div>${S.vmode==="quiz"?`Acertaste <b>${VQ.score}</b> de ${items.length}.`:`Viste ${items.length} palavras.`}</div>
+      <button class="btn" id="again">Repetir</button></div>`);
+    bindDeckHead(); $("#again").onclick=startDeck; return;
+  }
+  const {d,w}=items[i]; const key="v:"+d.id+"|"+w[0];
+  const front=S.vdir==="ko"?w[0]:w[1], back=S.vdir==="ko"?w[1]:w[0];
+  const pr=pronHTML(w[0]);
+  const prog=`<div class="progress c-${c}"><div class="bar"><i style="width:${i/items.length*100}%"></i></div><span>${i+1}/${items.length}</span></div>`;
+  if(S.vmode==="cards"){
+    V(head+prog+`<div class="flash c-${d.c}" id="fl" role="button" tabindex="0" aria-label="Virar cartão. Seta direita: já sei. Seta esquerda: ainda não.">
+        <span class="stamp no">Ainda não</span><span class="stamp yes">Já sei</span><div class="inner">
+        <div class="face front"><div class="${S.vdir==="ko"?"w":"pt"}">${esc(front)}</div><div class="hint">toca para virar · arrasta para o lado</div></div>
+        <div class="face back"><div class="${S.vdir==="ko"?"pt":"w"}">${esc(back)}</div><div class="hint">${esc(front)}</div>${pr}</div></div></div>
+      <div class="row">${say(w[0])}<button class="btn ghost grow" id="no">← Ainda não</button><button class="btn grow" id="yes">Já sei →</button></div>
+      ${rateCtl()}`);
+    const fl=$("#fl"); const flip=()=>fl.classList.toggle("flipped");
+    const yes=()=>{known[d.id+"|"+w[0]]=true;errOk(key);bump("v");VQ.i++;renderDeck()};
+    const no=()=>{delete known[d.id+"|"+w[0]];errAdd(key);bump("v");VQ.i++;renderDeck()};
+    swipeable(fl,{left:no,right:yes,tap:flip});
+    fl.onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();flip()}else if(e.key==="ArrowRight")yes();else if(e.key==="ArrowLeft")no()};
+    $("#yes").onclick=yes; $("#no").onclick=no;
+    if(S.vdir==="ko")speak(w[0]);
+  } else {
+    const others=shuffle(d.w.filter(x=>x!==w&&x[1]!==w[1])).slice(0,3);
+    const opts=shuffle([w,...others]);
+    V(head+prog+`<div class="card pad c-${d.c}" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div class="${S.vdir==="ko"?"ko":""}" style="font-size:${S.vdir==="ko"?34:22}px;font-weight:700;overflow-wrap:anywhere">${esc(front)}</div>${S.vdir==="ko"?say(w[0]):""}</div>
+      <div class="opts">${opts.map((o,j)=>`<button class="opt ${S.vdir==="pt"?"ko":""}" data-o="${j}"><span class="no">${NUM[j]}</span>${esc(S.vdir==="ko"?o[1]:o[0])}</button>`).join("")}</div>
+      <div id="next"></div>`);
+    $$("[data-o]").forEach(b=>b.onclick=()=>{
+      if(VQ.answered)return; VQ.answered=true;
+      const ok=opts[+b.dataset.o]===w;
+      if(ok){VQ.score++;known[d.id+"|"+w[0]]=true;errOk(key)}else errAdd(key);
+      bump("v");
+      $$("[data-o]").forEach(x=>{if(opts[+x.dataset.o]===w)x.classList.add("right");else if(x===b)x.classList.add("wrong")});
+      speak(w[0]);
+      $("#next").innerHTML=`${pr?`<div class="fb info" style="margin-bottom:10px">${pr}</div>`:""}<button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
+      $("#nx").onclick=()=>{VQ.i++;VQ.answered=false;renderDeck()};
+    });
+  }
+  bindDeckHead();
+}
+function bindDeckHead(){
+  $("#back").onclick=()=>{S.deck=null;vocab()};
+  $$("[data-m]").forEach(b=>b.onclick=()=>{S.vmode=b.dataset.m;startDeck()});
+  $$("[data-dir]").forEach(b=>b.onclick=()=>{S.vdir=b.dataset.dir;startDeck()});
+}
+
+/* ============ PRATICAR ============ */
+function pratica(){
+  clearInterval(EX.timer); if(hasTTS())speechSynthesis.cancel();
+  const P=[["escrita","쓰기","Escrita"],["audicao","듣기","Audição"],["leitura","읽기","Leitura"],["conversa","말하기","Conversa"]];
+  V(`<div><div class="eyebrow">연습 · Praticar</div><h1 class="title">${P.find(p=>p[0]===S.psub)[1]}<small>${P.find(p=>p[0]===S.psub)[2]}</small></h1></div>
+    <div class="seg">${P.map(([id,k])=>`<button aria-pressed="${S.psub===id}" data-p="${id}" class="ko" style="font-size:16px">${k}</button>`).join("")}</div>
+    <div id="pbody" class="view"></div>`);
+  $$("[data-p]").forEach(b=>b.onclick=()=>{S.psub=b.dataset.p;S.read=null;S.scen=null;pratica()});
+  ({escrita,audicao,leitura,conversa})[S.psub]();
+}
+
+/* ---- 쓰기 ---- */
+const DRILL_L={L1:["-(이)라고 하다","-는 + 음식","-는 + 도시","-는 + 일"],L2:["-(이)나","-(으)ㄹ까요?"],L3:["마다","-(으)ㄹ 때"],L4:["-아/어 보여요"],L5:["-기가 편해요","-기가 어려워요","-지 않아요"],L6:["-(으)면서","-기 전에","-(으)ㄴ 후에"],L7:["-(으)면","-아/어요 (ㅅ)","-았/었어요 (ㅅ)","-(으)면 (ㅅ)","-(으)ㄹ 거예요 (ㅅ)","-아/어요 (ㅅ?)","-지요?"],L8:["-는데","-아/어 보세요","-지 않는 게 좋아요"]};
+function drillPool(){
+  const idx=DRILLS.map((_,i)=>i);
+  if(S.drillG==="err")return idx.filter(i=>err["c:"+i]);
+  return S.drillG==="all"?idx:idx.filter(i=>DRILL_L[S.drillG].includes(DRILLS[i][0]));
+}
+function wConj(){
+  let pool=drillPool();
+  if(!pool.length){S.drillG="all";pool=drillPool()}
+  const errIn=pool.filter(i=>err["c:"+i]);
+  const idx=(S.drillG!=="err"&&errIn.length&&Math.random()<0.3)?pick(errIn):pick(pool);
+  const it=DRILLS[idx], key="c:"+idx;
+  const acc=stats.drill?Math.round(stats.drillOk/stats.drill*100):0;
+  $("#wbody").innerHTML=`<div class="row"><select class="sel grow" id="dg" aria-label="Lição">
+      <option value="all">Todas as lições</option>${Object.keys(DRILL_L).map(k=>`<option value="${k}">${k.slice(1)}과</option>`).join("")}
+      ${errKeys("c:").length?`<option value="err">Só os meus erros (${errKeys("c:").length})</option>`:""}</select>
+      <span class="score muted">${stats.drillOk}/${stats.drill} · ${acc}%</span></div>
+    <div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
+      <div class="eyebrow accent">${esc(it[0])}${err[key]?' · <span style="color:var(--red)">já falhaste</span>':""}</div>
+      <div class="prompt">${esc(it[1])} <span class="plus">+ ${esc(it[0])}</span></div>
+      <input class="ans" id="in" autocomplete="off" autocapitalize="off" spellcheck="false" lang="ko" placeholder="Escreve em 한글" aria-label="Resposta">
+      <div class="row"><button class="btn ghost" id="skip">Mostrar</button><button class="btn grow" id="chk">Verificar</button></div>
+      <div id="fb"></div></div>`;
+  const dg=$("#dg"); dg.value=S.drillG; if(dg.value!==S.drillG){S.drillG="all";dg.value="all"}
+  dg.onchange=e=>{S.drillG=e.target.value;wConj()};
+  const inp=$("#in"); inp.focus({preventScroll:true});
+  let answered=false;
+  const finish=(ok,shown)=>{
+    answered=true;
+    if(!shown){stats.drill++;if(ok)stats.drillOk++}
+    ok?errOk(key):errAdd(key); bump("c");
+    $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div>${ok?"정답이에요!":shown?"A resposta é:":"Ainda não. A resposta é:"}</div>
+      <div class="row"><span class="k grow">${esc(it[2])}</span>${say(it[2])}</div><div class="muted">${esc(it[3])}</div></div>
+      <button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
+    $("#nx").onclick=wConj; $("#chk").disabled=true; $("#skip").disabled=true;
+  };
+  $("#chk").onclick=()=>{if(answered||!inp.value.trim())return;finish(norm(inp.value)===norm(it[2]),false)};
+  $("#skip").onclick=()=>{if(!answered)finish(false,true)};
+  inp.onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==="Enter"){e.preventDefault();answered?wConj():$("#chk").click()}};
+}
+function claudeFeedback(box,task,text,model){
+  box.innerHTML=`<div class="fb info"><span><span class="spin"></span> A corrigir…</span></div>`;
+  getSample().then(sample=>{
+    if(!sample){box.innerHTML=`<div class="fb info">A correção automática não está disponível aqui.${model?` Compara com a resposta modelo:<div class="k">${esc(model)}</div>`:""}</div>`;return}
+    const prompt=`És professor de coreano. A aluna é portuguesa (PT-PT), nível 세종한국어 2A.
+Tarefa: ${task}
+${model?`Resposta modelo (há outras corretas): ${model}`:""}
+Texto da aluna: """${text}"""
+Avalia gramática, ortografia, partículas e naturalidade, ao nível 2A. Sê encorajador e conciso. Responde só com JSON:
+{"correto": true ou false, "corrigido": "texto corrigido em coreano (igual ao original se estiver certo)", "notas": ["até 4 observações curtas em português de Portugal, cada uma a explicar um erro ou a dar uma dica"], "elogio": "uma frase curta em português"}`;
+    return sample.json(prompt,{modelTier:"default"}).then(r=>{
+      if(!r||(typeof r.correto!=="boolean"&&typeof r.corrigido!=="string"))throw {code:"bad"};
+      bump("c");
+      box.innerHTML=`<div class="fb ${r.correto?"ok":"no"}"><div><b>${r.correto?"Muito bem!":"Quase!"}</b> ${esc(r.elogio||"")}</div>
+        ${r.corrigido&&norm(r.corrigido)!==norm(text)?`<div class="row"><span class="k grow">${esc(r.corrigido)}</span>${say(r.corrigido)}</div>`:""}
+        ${Array.isArray(r.notas)&&r.notas.length?`<ul>${r.notas.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:""}
+        ${model?`<div class="muted">Modelo: <span class="ko">${esc(model)}</span></div>`:""}</div>`;
+    });
+  }).catch(e=>{box.innerHTML=`<div class="fb info">${sampleErr(e)}${model?`<div>Resposta modelo:</div><div class="k">${esc(model)}</div>`:""}</div>`});
+}
+function wTrad(){
+  const s=pick(SENT);
+  $("#wbody").innerHTML=`<div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
+      <div class="eyebrow accent">${lname(s[2])} · ${esc(s[3])}</div>
+      <div style="font-size:20px;font-weight:500">${esc(s[1])}</div>
+      <textarea class="ans" id="in" lang="ko" placeholder="Traduz para coreano…" aria-label="Tradução"></textarea>
+      <div class="row"><button class="btn ghost" id="show">Ver modelo</button><button class="btn grow" id="fix">Corrigir</button></div>
+      <div id="fb"></div><button class="btn ghost" id="nx">Outra frase →</button></div>`;
+  $("#nx").onclick=wTrad;
+  $("#show").onclick=()=>{$("#fb").innerHTML=`<div class="fb info"><div class="row"><span class="k grow">${esc(s[0])}</span>${say(s[0])}</div></div>`};
+  $("#fix").onclick=()=>{const t=$("#in").value.trim();if(!t){$("#in").focus();return}
+    if(norm(t)===norm(s[0])){bump("c");$("#fb").innerHTML=`<div class="fb ok"><b>정답이에요! Igual ao modelo.</b><div class="row"><span class="k grow">${esc(s[0])}</span>${say(s[0])}</div></div>`;return}
+    claudeFeedback($("#fb"),`Traduzir para coreano: "${s[1]}" (gramática em foco: ${s[3]})`,t,s[0])};
+}
+function wLivre(){
+  const sel=Math.min(FREE.length-1,Math.max(0,store.get("free",0)|0));
+  const f=FREE[sel];
+  $("#wbody").innerHTML=`<select class="sel" id="fs" aria-label="Tema">${FREE.map((x,i)=>`<option value="${i}" ${i===sel?"selected":""}>${lname(x[0])} · ${esc(x[1])}</option>`).join("")}</select>
+    <div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
+      <div class="eyebrow accent">${lname(f[0])} · usa ${esc(f[2])}</div>
+      <div style="font-size:19px;font-weight:500">${esc(f[1])}</div>
+      <textarea class="ans" id="in" lang="ko" placeholder="Escreve 3 a 5 frases…" aria-label="Texto">${esc(store.get("draft"+sel,""))}</textarea>
+      <button class="btn" id="fix">Corrigir com o Claude</button><div id="fb"></div></div>`;
+  $("#fs").onchange=e=>{store.set("free",+e.target.value);wLivre()};
+  $("#in").oninput=e=>store.set("draft"+sel,e.target.value);
+  $("#fix").onclick=()=>{const t=$("#in").value.trim();if(!t){$("#in").focus();return}
+    claudeFeedback($("#fb"),`Escrita livre: "${f[1]}". Deve usar: ${f[2]}. Diz também se usou bem as gramáticas pedidas.`,t,null)};
+}
+
+/* ---- 듣기 ---- */
+function playerHTML(t){return `<div class="card player c-cobalt">
+  <button class="icon lg" data-say="${esc(t)}" aria-label="Ouvir frase">${SPK}</button>
+  <button class="btn ghost" data-say="${esc(t)}" data-slow="1">Ouvir devagar</button>
+  <div class="muted" style="font-size:13px">Podes ouvir as vezes que quiseres</div>${rateCtl()}</div>`}
+function newListen(){
+  const s=pick(SENT); let answered=false;
+  if(S.lmode==="dict"){
+    $("#abody").innerHTML=playerHTML(s[0])+`<textarea class="ans" id="in" lang="ko" placeholder="Escreve o que ouviste…" aria-label="Ditado"></textarea>
+      <div class="row"><button class="btn ghost" id="show">Mostrar</button><button class="btn grow" id="chk">Verificar</button></div><div id="fb"></div>`;
+    const end=(ok,shown)=>{answered=true;if(!shown){stats.listen++;if(ok)stats.listenOk++}bump("l");
+      const mine=$("#in").value.trim(); const dm=!ok&&mine&&!shown?diffHTML(mine,s[0]):null;
+      $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div>${ok?"정답이에요!":dm?"Quase! O que está a vermelho é diferente:":"A frase era:"}</div>
+        <div class="row"><span class="k grow">${dm?dm.right:esc(s[0])}</span>${say(s[0])}</div><div class="muted">${esc(s[1])}</div>
+        ${dm?`<div class="muted">Escreveste: <span class="ko">${dm.mine}</span></div>`:""}${pronHTML(s[0])}</div>
+        <button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
+      $("#nx").onclick=newListen;$("#chk").disabled=true;$("#show").disabled=true};
+    $("#chk").onclick=()=>{if(answered||!$("#in").value.trim())return;end(norm($("#in").value)===norm(s[0]),false)};
+    $("#show").onclick=()=>{if(!answered)end(false,true)};
+  } else {
+    const opts=shuffle([s,...shuffle(SENT.filter(x=>x!==s)).slice(0,3)]);
+    $("#abody").innerHTML=playerHTML(s[0])+`<div class="eyebrow">O que ouviste?</div><div class="opts">${opts.map((o,j)=>`<button class="opt" data-o="${j}"><span class="no">${NUM[j]}</span>${esc(o[1])}</button>`).join("")}</div><div id="fb"></div>`;
+    $$("[data-o]").forEach(b=>b.onclick=()=>{
+      if(answered)return;answered=true;const ok=opts[+b.dataset.o]===s;stats.listen++;if(ok)stats.listenOk++;bump("l");
+      $$("[data-o]").forEach(x=>{if(opts[+x.dataset.o]===s)x.classList.add("right");else if(x===b)x.classList.add("wrong")});
+      $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div class="row"><span class="k grow">${esc(s[0])}</span>${say(s[0])}</div>${pronHTML(s[0])}</div><button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
+      $("#nx").onclick=newListen;
+    });
+  }
+  setTimeout(()=>speak(s[0]),250);
+}
+
+/* ---- 읽기 ---- */
+const genOk=p=>isObj(p)&&typeof p.x==="string"&&Array.isArray(p.q)&&p.q.every(q=>Array.isArray(q)&&Array.isArray(q[1])&&q[1].length===4);
+const allPassages=()=>PASSAGES.map((p,i)=>({...p,id:"p"+i})).concat(store.get("gen",[]).filter(genOk).map((p,i)=>({...p,l:LESSONS.some(L=>L.n===p.l)?p.l:1,t:String(p.t||"새 글"),id:"x"+i,gen:true})));
+function leitura(){
+  if(S.read){readPassage();return}
+  const ps=allPassages();
+  $("#pbody").innerHTML=`<div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:10px">
+      <div class="eyebrow accent">Texto novo com o Claude</div>
+      <div class="row"><select class="sel grow" id="gl" aria-label="Lição">${LESSONS.map(l=>`<option value="${l.n}">${lname(l.n)} · ${esc(l.pt)}</option>`).join("")}</select><button class="btn" id="gen">Gerar</button></div>
+      <div id="gfb"></div></div>
+    <div class="list">${ps.map(p=>`<button class="scen" data-r="${p.id}"><b class="ko" style="font-size:17px">${esc(p.t)}</b><span>${lname(p.l)}${p.gen?" · gerado pelo Claude":""} · ${p.q.length} perguntas</span></button>`).join("")}</div>`;
+  $$("[data-r]").forEach(b=>b.onclick=()=>{S.read=b.dataset.r;readPassage()});
+  $("#gen").onclick=()=>genPassage(+$("#gl").value);
+}
+function genPassage(l){
+  const box=$("#gfb"); const L=LESSONS[l-1];
+  const gram=(GRAMMAR[l]||[]).map(g=>g.f).join(", ");
+  box.innerHTML=`<div class="fb info"><span><span class="spin"></span> A escrever um texto…</span></div>`; $("#gen").disabled=true;
+  getSample().then(sample=>{
+    if(!sample){box.innerHTML=`<div class="fb info">O Claude não está disponível aqui.</div>`;return}
+    const prompt=`Escreve um texto curto de leitura para o 성취도 평가 (teste de fim de nível) do 세종학당, nível 세종한국어 2A.
+Tema: ${L.ko} (${L.pt}). Usa naturalmente estas gramáticas: ${gram}. 5 a 7 frases em 해요체, vocabulário simples.
+Depois escreve 3 perguntas de escolha múltipla em coreano, no estilo do 성취도 평가 (ex.: "이 글의 내용과 같은 것을 고르십시오."), cada uma com 4 opções em coreano e só uma correta.
+Responde só com JSON: {"titulo":"título curto em coreano","texto":"...","perguntas":[{"pergunta":"...","opcoes":["","","",""],"certa":0}]}`;
+    return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{
+      if(!r||!r.texto||!Array.isArray(r.perguntas))throw {code:"bad"};
+      const p={l,t:r.titulo||"새 글",x:r.texto,q:r.perguntas.filter(q=>Array.isArray(q.opcoes)&&q.opcoes.length===4).map(q=>{const c=Math.max(0,Math.min(3,+q.certa||0));return [q.pergunta,[q.opcoes[c],...q.opcoes.filter((_,i)=>i!==c)]]})};
+      const gen=store.get("gen",[]).filter(genOk);gen.unshift(p);store.set("gen",gen.slice(0,6));
+      S.read="x0";readPassage();
+    });
+  }).catch(e=>{box.innerHTML=`<div class="fb info">${sampleErr(e)}</div>`;const g=$("#gen");if(g)g.disabled=false});
+}
+function readPassage(){
+  const p=allPassages().find(x=>x.id===S.read); if(!p){S.read=null;leitura();return}
+  const orders=p.q.map(q=>shuffle([0,1,2,3]));
+  let answered=0;
+  $("#pbody").innerHTML=`<div class="row"><button class="btn ghost" id="rb">← Textos</button></div>
+    <div class="row"><h2 class="grow">${esc(p.t)}</h2>${say(p.x)}</div>
+    <div class="passage">${esc(p.x)}</div>
+    ${p.q.map((q,qi)=>`<div class="examq"><div class="stem">${qi+1}. ${esc(q[0])}</div>
+      <div class="opts">${orders[qi].map((oi,j)=>`<button class="opt ko" style="font-size:16px" data-q="${qi}" data-oi="${oi}"><span class="no">${NUM[j]}</span>${esc(q[1][oi])}</button>`).join("")}</div></div>`).join("")}
+    <div id="rfb"></div>`;
+  $("#rb").onclick=()=>{S.read=null;leitura()};
+  $$("[data-q]").forEach(b=>b.onclick=()=>{
+    const qi=+b.dataset.q; const grp=$$(`[data-q="${qi}"]`); if([...grp].some(x=>x.classList.contains("right")||x.classList.contains("wrong")))return;
+    const ok=b.dataset.oi==="0"; const key="q:"+p.id+"-"+qi;
+    if(!p.gen)(ok?errOk(key):errAdd(key));
+    grp.forEach(x=>{if(x.dataset.oi==="0")x.classList.add("right");else if(x===b)x.classList.add("wrong")});
+    if(++answered===p.q.length){bump("r");$("#rfb").innerHTML=`<div class="fb ok">수고했어요! Texto terminado.</div>`}
+  });
+}
+
+/* ---- 말하기 ---- */
+let CH=null;
+function renderChat(){
+  const sc=CH.sc;
+  $("#pbody").innerHTML=`<div class="row"><button class="btn ghost" id="cb">← Situações</button><div class="grow"></div><button class="btn ghost" id="tp">${CH.showPt?"Esconder":"Mostrar"} tradução</button></div>
+    <div class="card pad"><b>${esc(sc[1])}</b><div class="muted" style="font-size:13px">Com ${esc(sc[3])} · tenta usar ${esc(sc[4])}</div></div>
+    <div class="chat" id="chat">${CH.msgs.map((m,i)=>m.who==="them"
+      ?`<div class="bub them"><span class="k">${esc(m.ko)}</span>${CH.showPt&&m.pt?`<span class="t">${esc(m.pt)}</span>`:""}<span class="tools"><button data-say="${esc(m.ko)}">Ouvir</button><button data-say="${esc(m.ko)}" data-slow="1">Devagar</button></span></div>`
+      :`<div class="bub me"><span class="k">${esc(m.ko)}</span></div>`).join("")}
+      ${CH.busy?`<div class="bub them"><span class="spin"></span></div>`:""}</div>
+    ${CH.error?`<div class="fb info">${esc(CH.error)}</div>`:""}
+    ${CH.fb?CH.fb:`<div class="composer"><textarea class="ans" id="ci" lang="ko" placeholder="Responde em coreano…" aria-label="Mensagem"></textarea><button class="btn" id="cs">Enviar</button></div>
+    ${CH.msgs.filter(m=>m.who==="me").length>=2?`<button class="btn ghost" id="cf">Terminar e corrigir</button>`:""}`}`;
+  $("#cb").onclick=()=>{S.scen=null;CH=null;conversa()};
+  $("#tp").onclick=()=>{CH.showPt=!CH.showPt;renderChat()};
+  const cs=$("#cs");
+  if(cs){const ci=$("#ci");cs.disabled=CH.busy;
+    cs.onclick=()=>{const t=ci.value.trim();if(!t||CH.busy)return;CH.msgs.push({who:"me",ko:t});chatTurn()};
+    ci.onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();cs.click()}}}
+  const cf=$("#cf"); if(cf)cf.onclick=chatFeedback;
+  const ch=$("#chat"); if(ch&&ch.lastElementChild)ch.lastElementChild.scrollIntoView({block:"nearest"});
+}
+const transcript=()=>CH.msgs.map(m=>(m.who==="me"?"Aluna: ":"Tu: ")+m.ko).join("\n");
+function chatTurn(){
+  CH.busy=true;CH.error=null;renderChat();
+  const sc=CH.sc;
+  getSample().then(sample=>{
+    if(!sample)throw {code:"none"};
+    const prompt=`Estás numa conversa de prática de coreano. Fazes de ${sc[3]}. Situação: ${sc[2]}
+A aluna é portuguesa, nível 세종한국어 2A; gramática da lição: ${sc[4]}.
+Regras: fala só coreano simples em 해요체, 1 ou 2 frases curtas, e acaba quase sempre com uma pergunta para a conversa continuar. Não corrijas a aluna durante a conversa. Se ela escrever em português, responde em coreano simples na mesma.
+${CH.msgs.length?"Conversa até agora:\n"+transcript():"Começa tu a conversa."}
+Responde só com JSON: {"ko":"a tua próxima fala em coreano","pt":"tradução em português de Portugal"}`;
+    return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{
+      CH.busy=false; if(!r||!r.ko)throw {code:"bad"};
+      CH.msgs.push({who:"them",ko:r.ko,pt:r.pt||""}); renderChat(); speak(r.ko);
+    });
+  }).catch(e=>{CH.busy=false;CH.error=e&&e.code==="none"?"A conversa precisa do Claude, que não está disponível aqui.":sampleErr(e);renderChat()});
+}
+function chatFeedback(){
+  CH.fb=`<div class="fb info"><span><span class="spin"></span> A rever a conversa…</span></div>`;renderChat();
+  const sc=CH.sc;
+  getSample().then(sample=>{
+    if(!sample)throw {code:"none"};
+    const prompt=`És professor de coreano. A aluna (portuguesa, nível 세종한국어 2A) teve esta conversa de prática. Situação: ${sc[2]} Gramática da lição: ${sc[4]}.
+${transcript()}
+Corrige só as falas da aluna. Responde só com JSON:
+{"elogio":"uma frase curta em português","erros":[{"original":"frase da aluna","corrigido":"versão correta e natural","explicacao":"explicação curta em português de Portugal"}],"dica":"uma dica para a próxima vez, em português"}
+Se uma frase estiver certa, não a incluas em "erros".`;
+    return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{
+      if(!r||(!Array.isArray(r.erros)&&!r.elogio))throw {code:"bad"};
+      bump("c");
+      const er=Array.isArray(r.erros)?r.erros:[];
+      CH.fb=`<div class="fb ${er.length?"no":"ok"}"><div><b>${er.length?"Revisão":"Sem erros!"}</b> ${esc(r.elogio||"")}</div>
+        ${er.map(x=>`<div class="rev"><span class="muted">${esc(x.original||"")}</span><span class="row"><span class="ko grow">${esc(x.corrigido||"")}</span>${say(x.corrigido||"")}</span><span>${esc(x.explicacao||"")}</span></div>`).join("")}
+        ${r.dica?`<div class="rev"><b>Dica:</b> ${esc(r.dica)}</div>`:""}</div>
+        <button class="btn" id="cnew">Nova conversa</button>`;
+      renderChat(); const cn=$("#cnew"); if(cn)cn.onclick=()=>{CH={sc,msgs:[],busy:false,showPt:CH.showPt};chatTurn()};
+    });
+  }).catch(e=>{CH.fb=null;CH.error=e&&e.code==="none"?"A correção precisa do Claude, que não está disponível aqui.":sampleErr(e);renderChat()});
+}
+
+/* ============ EXAME ============ */
+/* ============ PROFESSOR ============ */
+function professor(){
+  const ids=teacherIds(), n=ids.filter(i=>done[i]).length;
+  V(`<div><div class="eyebrow">퀴즈 · Professor</div><h1 class="title">Quizzes do professor</h1></div>
+    <div class="progress"><div class="bar"><i style="width:${n/ids.length*100}%"></i></div><span>${n}/${ids.length} feitos</span></div>
+    ${TEACHER.map(([l,topic,gs])=>{const c=LESSONS[l-1].c;return `<section class="view" style="gap:10px"><div class="lesson-head c-${c}"><span class="n" style="font-size:24px">${l}과</span><span class="muted">${esc(topic)}</span></div>
+      ${gs.map(([g,pt],i)=>`<div class="tq"><div class="head"><b>${esc(g)}</b><small>${esc(pt)}</small></div>${tRow(tEasy(l,i+1),false)}${tRow(tHard(l,i+1),true)}</div>`).join("")}</section>`}).join("")}
+    <p class="muted" style="font-size:13px;margin:0">Fácil = frases curtas · Difícil = diálogos longos (preparação para o teste). Abre numa janela à parte; volta aqui e marca o círculo.</p>`);
+  $$(".tq .chk").forEach(b=>b.onclick=()=>{const id=b.dataset.id;done[id]=!done[id];saveAll();professor()});
+}
+function tRow(id,h){
+  if(!id)return `<div class="r miss"><span class="tag h">Difícil</span> Link em falta</div>`;
+  return `<div class="r${done[id]?" done":""}"><button class="chk" data-id="${id}" aria-label="Marcar como feito">✓</button>
+    <a href="https://sites.google.com/view/${id}/full-page-embed" target="_blank" rel="noopener"><span class="tag${h?" h":""}">${h?"Difícil":"Fácil"}</span><span class="d muted" style="flex:1;font-size:13px">${h?"Diálogos longos":"Frases curtas"}</span><span style="color:var(--jade);font-size:20px">›</span></a></div>`;
+}
+
+
+/* ============ v5: TTS a duas vozes ============ */
+function speakLines(lines,slow){ttsRun(lines.map(([who,t])=>[t,slow,who]))}
+const linesText=l=>l.map(([w,t])=>(w==="남"?"남자":"여자")+": "+t).join(" / ");
+
+/* ============ EXAME (성취도 평가): completo de 4 partes, uma parte só, mini, revisão ============ */
+const QRE=/^q:[gdsphtnomck]/;
+const HTYPE={place:"Onde estão",topic:"Tema da conversa",act:"O que vai fazer",why:"Razão",same:"Conteúdo igual"};
+const ORAL_T={p:"Pergunta pessoal",d:"Descrever uma imagem",r:"Roleplay",a:"Dar um conselho"};
+function qById(id){
+  const t=id[0], n=+id.slice(1);
+  if(t==="g"){const g=GAPS[n];if(!g)return null;return {id,sec:"r",type:"Gramática (빈칸)",l:g[0],stem:"다음 (　)에 들어갈 가장 알맞은 것을 고르십시오.",sentence:g[1],opts:g[2],expl:g[3],t:30}}
+  if(t==="d"){const d=DIALOGS[n];if(!d)return null;return {id,sec:"l",type:"Resposta adequada",l:d[0],stem:"다음을 듣고 이어지는 말로 가장 알맞은 것을 고르십시오.",audio:d[1],opts:d[2],expl:"Ouviste: "+d[1],t:45}}
+  if(t==="h"){const h=LDLG[n];if(!h)return null;return {id,sec:"l",type:HTYPE[h.k],l:h.les||0,stem:"다음을 듣고 물음에 답하십시오. "+h.s,lines:h.l,opts:h.o,expl:linesText(h.l),t:45}}
+  if(t==="s"){const s=SENT[n];if(!s)return null;const others=shuffle(SENT.filter(x=>x!==s)).slice(0,3).map(x=>x[1]);
+    return {id,sec:"l",type:"Frase ouvida",l:s[2],stem:"다음을 듣고 들은 내용과 같은 것을 고르십시오.",audio:s[0],opts:[s[1],...others],pt:true,expl:"Ouviste: "+s[0],t:45}}
+  if(t==="p"){const m=id.match(/^p(\d+)-(\d+)$/);const p=m&&PASSAGES[+m[1]];const q=p&&p.q[+m[2]];if(!q)return null;
+    return {id,sec:"r",type:"Texto e perguntas",l:p.l,stem:q[0],passage:p.x,opts:q[1],t:60}}
+  if(t==="t"){const x=RTOPIC[n];if(!x)return null;return {id,sec:"r",type:"Tema do texto",l:x[0],stem:"무엇에 대한 이야기입니까? 알맞은 것을 고르십시오.",passage:x[1],opts:x[2],t:30}}
+  if(t==="n"){const x=NOTICE[n];if(!x)return null;return {id,sec:"r",type:"Avisos e anúncios",l:x.les,stem:"다음을 읽고 맞지 않는 것을 고르십시오.",notice:x,opts:x.o,t:60}}
+  if(t==="o"){const x=ORDER[n];if(!x)return null;return {id,sec:"r",type:"Ordem das frases",l:x.les,stem:"다음을 순서대로 맞게 나열한 것을 고르십시오.",passage:x.s.join("\n"),opts:x.o,t:60}}
+  if(t==="m"){const x=RMAIN[n];if(!x)return null;return {id,sec:"r",type:"Ideia principal (ler)",l:x.les,stem:"다음을 읽고 중심 생각을 고르십시오.",passage:x.x,opts:x.o,t:60}}
+  if(t==="c"){const x=LMAIN[n];if(!x)return null;return {id,sec:"l",type:"Ideia principal (ouvir)",l:x.les,stem:`다음을 듣고 ${x.who}의 중심 생각을 고르십시오.`,lines:x.l,opts:x.o,expl:linesText(x.l),t:45}}
+  if(t==="k"){const m=id.match(/^k(\d+)-(\d+)$/);const x=m&&LLONG[+m[1]];const q=x&&x.q[+m[2]];if(!q)return null;
+    return {id,sec:"l",type:"Diálogo longo",l:x.les,stem:"다음을 듣고 물음에 답하십시오. "+q[0],lines:x.l,opts:q[1],expl:linesText(x.l),t:60}}
+  if(t==="w"){const m=id.match(/^w(\w+)-(\d+)$/);const T=m&&WTASK[m[1]];const it=T&&T.items[+m[2]];if(!it)return null;return {id,sec:"w",type:T.n,task:m[1],item:it}}
+  if(t==="z"){const o=ORAL[n];if(!o)return null;return {id,sec:"s",type:ORAL_T[o[0]],oral:o}}
+  return null;
+}
+const KIND={full4:"Exame completo",L:"Exame de 듣기",R:"Exame de 읽기",W:"Exame de 쓰기",S:"Exame de 말하기",mini:"Mini-exame"};
+function buildExam(kind){
+  const N=(arr,n)=>shuffle(arr).slice(0,n);
+  const ids=(arr,p)=>arr.map((_,i)=>p+i);
+  const H=k=>LDLG.map((h,i)=>h.k===k?"h"+i:null).filter(Boolean);
+  // Same order of question types as TOPIK I: answers, place, topic, content, main idea, reasons, long dialogue.
+  const Lq=()=>{const k=N(LLONG.map((_,i)=>i),1)[0];return [...N(ids(DIALOGS,"d"),6),...N(H("place"),4),...N(H("topic"),3),...N(H("same"),4),...N(ids(LMAIN,"c"),3),...N(H("act"),1),...N(H("why"),2),"k"+k+"-0","k"+k+"-1"]};
+  const Rq=()=>{const ps=N(PASSAGES.map((_,i)=>i),3);return [...N(ids(RTOPIC,"t"),3),...N(ids(GAPS,"g"),10),...N(ids(NOTICE,"n"),2),...N(ids(ORDER,"o"),2),...N(ids(RMAIN,"m"),2),...ps.flatMap(i=>["p"+i+"-0","p"+i+"-1"])]};
+  const Wq=()=>Object.keys(WTASK).map(T=>"w"+T+"-"+(Math.random()*WTASK[T].items.length|0));
+  const Sq=()=>{const by=t=>shuffle(ORAL.map((o,i)=>o[0]===t?"z"+i:null).filter(Boolean));return [...by("p").slice(0,2),by("d")[0],by("r")[0],by("a")[0]]};
+  let L;
+  if(kind==="full4")L=[...Lq(),...Rq(),...Wq(),...Sq()];
+  else if(kind==="L")L=Lq(); else if(kind==="R")L=Rq(); else if(kind==="W")L=Wq(); else if(kind==="S")L=Sq();
+  else {const ps=N(PASSAGES.map((_,i)=>i),1);
+    L=[...shuffle([...N(ids(DIALOGS,"d"),3),...N(ids(LDLG,"h"),4),...N(ids(SENT,"s"),3)]),...N(ids(GAPS,"g"),4),...N(ids(RTOPIC,"t"),1),...N(ids(NOTICE,"n"),1),...N(ids(ORDER,"o"),1),...N(ids(RMAIN,"m"),1),...ps.flatMap(i=>["p"+i+"-0","p"+i+"-1"])]}
+  return L.map(qById).filter(Boolean);
+}
+const lessonTitle=k=>k===9?"복습 (revisão)":`${lname(k)} · ${esc(LESSONS[k-1].ko)}`;
+function weakList(st,min=2){return Object.entries(isObj(st)?st:{}).filter(([k,v])=>Array.isArray(v)&&v.length===2&&v[1]>0).map(([k,[ok,n]])=>({k,ok,n,p:Math.round(ok/n*100)})).filter(x=>x.n>=min&&x.p<70).sort((a,b)=>a.p-b.p).slice(0,3)}
+function exame(){
+  if(S.autoMini){S.autoMini=false;startExam(buildExam("mini"),"exam","mini");return}
+  if(S.examReview){S.examReview=false;const qs=errKeys("q:").filter(k=>QRE.test(k)).map(k=>qById(k.slice(2))).filter(Boolean);
+    if(qs.length){startExam(shuffle(qs),"review","mini");return}}
+  const qn=errKeys("q:").filter(k=>QRE.test(k)).length;
+  const hs=hist.slice(-10);
+  const wl=weakList(store.get("weak",{}).les,4).filter(x=>LESSONS[x.k-1]);
+  V(`<div><div class="eyebrow">시험 · Exame</div><h1 class="title">성취도 평가<small>Teste de fim de nível do 세종학당</small></h1></div>
+    <div class="card pad">${countdownHTML()}</div>
+    <div class="card pad" style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn cont" id="ex-full4">Exame completo · 4 partes</button>
+      <div class="muted" style="font-size:13px">듣기 25 + 읽기 25 (50 min) · 쓰기 3 (20 min) · 말하기 5 · cerca de 80 min</div>
+      <div class="eyebrow" style="margin-top:6px">Exame de uma só parte</div>
+      <div class="grid2">${[["L","듣기","25 perguntas · 25 min"],["R","읽기","25 perguntas · 25 min"],["W","쓰기","3 tarefas · 20 min"],["S","말하기","5 perguntas orais"]].map(([k,ko,s])=>`<button class="part" id="ex-${k}"><span class="ko">${ko}</span><small>${s}</small></button>`).join("")}</div>
+      <button class="btn ghost" id="ex-mini">Mini-exame · 20 perguntas</button>
+      <label class="toggle"><input type="checkbox" id="tm" ${S.timed?"checked":""}> No mini-exame, tempo por pergunta</label>
+      ${qn?`<button class="btn red" id="rv">Rever ${qn} perguntas que errei</button>`:""}
+    </div>
+    ${wl.length?`<div class="card pad" style="display:flex;flex-direction:column;gap:10px"><div class="eyebrow">Onde focar · todos os teus exames</div>
+      ${wl.map(x=>`<div class="row"><b class="grow">${lessonTitle(+x.k)} <span class="muted" style="font-weight:400">${esc(LESSONS[x.k-1].pt)}</span></b><span class="muted score">${x.p}%</span><button class="btn ghost" data-gl="${x.k}" style="padding:6px 12px">Rever</button></div>`).join("")}</div>`:""}
+    ${hs.length?`<div class="card pad"><div class="eyebrow">As tuas notas (60 para passar)</div><div class="hist">${hs.map(h=>`<div class="b" title="${esc(h.d)}"><span>${h.s}</span><i style="height:${Math.max(4,h.s*0.7)}px;${h.s<60?"background:var(--ochre)":""}"></i><span>${esc(h.d.slice(5).replace("-","/"))}${h.full?"★":""}</span></div>`).join("")}</div><div class="muted" style="font-size:12px">★ exame completo</div></div>`:""}
+    <div class="card pad" style="display:flex;flex-direction:column;gap:10px">
+      <div class="eyebrow">Como é o exame (2A)</div>
+      <div class="tbl"><table><thead><tr><th>Parte</th><th>Perguntas</th><th>Tempo</th><th>Tipo</th></tr></thead><tbody>
+        <tr><td>듣기</td><td>25 × 4 pts</td><td rowspan="2">50 min</td><td>escolha múltipla</td></tr>
+        <tr><td>읽기</td><td>25 × 4 pts</td><td>escolha múltipla</td></tr>
+        <tr><td>쓰기</td><td>3</td><td>20 min</td><td>resposta escrita</td></tr>
+        <tr><td>말하기</td><td>5</td><td>3–5 min</td><td>oral com o professor</td></tr></tbody></table></div>
+      <div class="muted" style="font-size:13px">Para passar: média de 60 nas 4 partes e 80% de presenças. As perguntas seguem os tipos do TOPIK I e foram escritas para a app ao nível 2A; o 쓰기 e o 말하기 são corrigidos pelo Claude.</div>
+    </div>`);
+  ["full4","L","R","W","S","mini"].forEach(k=>{$("#ex-"+k).onclick=()=>startExam(buildExam(k),"exam",k)});
+  $("#tm").onchange=e=>{S.timed=e.target.checked;store.set("timed",S.timed)};
+  const rv=$("#rv");if(rv)rv.onclick=()=>{S.examReview=true;exame()};
+  $$("[data-gl]").forEach(b=>b.onclick=()=>{S.lesson=+b.dataset.gl;store.set("lesson",S.lesson);go("gramatica")});
+  const ei=$("#ed"); if(ei)ei.onchange=()=>{store.set("examDate",ei.value);exame()};
+  const eb=$("#edDate"); if(eb)eb.onclick=()=>{store.set("examDate","");exame()};
+}
+function startExam(qs,mode,kind){
+  EX={qs:qs.map(q=>({...q,order:shuffle([0,1,2,3])})),i:0,ans:[],mode,kind:kind||"mini",timer:null,dl:{},live:true};
+  renderQ();
+}
+const mmss=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+const blockOf=q=>q.sec==="w"?"w":q.sec==="s"?"s":"lr";
+const blockMin=b=>b==="w"&&EX.kind!=="mini"?20:b==="lr"?(EX.kind==="full4"?50:EX.kind==="L"||EX.kind==="R"?25:0):0;
+const SECN={l:"듣기",r:"읽기",w:"쓰기",s:"말하기"};
+function renderQ(){
+  clearInterval(EX.timer); if(hasTTS())speechSynthesis.cancel();
+  const q=EX.qs[EX.i]; if(!q){examEnd();return}
+  const n=EX.qs.length, review=EX.mode==="review", blk=blockOf(q);
+  if(!review&&blockMin(blk)&&!EX.dl[blk])EX.dl[blk]=Date.now()+blockMin(blk)*60e3;
+  const dl=review?0:EX.dl[blk]||0;
+  const same=EX.qs.filter(x=>x.sec===q.sec), secN=same.indexOf(q)+1;
+  const head=`<div class="row"><button class="btn ghost" id="quit">Sair</button><div class="grow"></div>${dl?`<span class="score" id="gt" style="color:var(--red)">${mmss(dl-Date.now())}</span>`:""}<span class="muted score">${EX.i+1}/${n}</span></div>
+    <div class="progress c-cobalt"><div class="bar"><i style="width:${EX.i/n*100}%"></i></div></div>`;
+  const tag=`<span class="sec ${q.sec}">${SECN[q.sec]} ${secN}/${same.length}</span>`;
+  const next=()=>{clearInterval(EX.timer);EX.i++;renderQ()};
+  const nextBlock=()=>{let j=EX.i;while(j<n&&blockOf(EX.qs[j])===blk)j++;EX.i=j;renderQ()};
+  const bindCommon=()=>{
+    $("#quit").onclick=()=>{clearInterval(EX.timer);EX.live=false;if(hasTTS())speechSynthesis.cancel();exame()};
+    if(dl)EX.timer=setInterval(()=>{const left=dl-Date.now();const gt=$("#gt");if(gt)gt.textContent=mmss(left);
+      if(left<=0){clearInterval(EX.timer);toast("Acabou o tempo desta parte.");nextBlock()}},1000);
+  };
+  if(q.sec==="w"){
+    V(head+`<div class="examq"><div class="qnum">${tag}</div>
+      <div class="stem">${esc(q.type)}</div><div class="muted" style="font-size:14px">${esc(WTASK[q.task].d)}</div>${wShown(q.task,q.item)}
+      <textarea class="ans" id="wa" lang="ko" placeholder="Escreve em 한글…" aria-label="Resposta"></textarea>
+      <button class="btn" id="wn">${EX.i+1<n?"Seguinte →":"Terminar"}</button></div>`);
+    const wa=$("#wa");wa.value=EX.ans[EX.i]||"";wa.oninput=()=>{EX.ans[EX.i]=wa.value};
+    $("#wn").onclick=()=>{EX.ans[EX.i]=wa.value;next()};
+    bindCommon();return;
+  }
+  if(q.sec==="s"){
+    const o=q.oral;
+    V(head+`<div class="examq"><div class="qnum">${tag}<span class="muted" style="font-size:13px">${esc(q.type)}</span></div>
+      <div class="card pad c-cobalt" style="display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center">
+        <button class="icon lg" data-say="${esc(o[1])}" aria-label="Ouvir pergunta">${SPK}</button>
+        <div class="sentence">${esc(o[1])}</div><div class="muted" style="font-size:14px">${esc(o[2])}</div>
+        <div class="ko" id="oc" style="font-size:36px;font-weight:700;font-variant-numeric:tabular-nums"></div><div class="muted" id="ol" style="font-size:13px"></div>${rateCtl()}</div>
+      ${answerBox("sa")}
+      <button class="btn" id="sn">${EX.i+1<n?"Seguinte →":"Terminar"}</button></div>`);
+    const sa=$("#sa");sa.value=EX.ans[EX.i]||"";sa.oninput=()=>{EX.ans[EX.i]=sa.value};
+    const done2=()=>{EX.ans[EX.i]=sa.value;next()};
+    $("#sn").onclick=done2;
+    bindCommon();
+    speak(o[1]);
+    let left=10,phase="prep";const oc=$("#oc"),ol=$("#ol");
+    const tick=()=>{oc.textContent=left;ol.textContent=phase==="prep"?"Pensa…":"Fala agora!";oc.style.color=phase==="prep"?"var(--muted)":"var(--red)"};
+    tick(); EX.timer=setInterval(()=>{left--;if(left<=0){if(phase==="prep"){phase="talk";left=40}else{done2();return}}tick()},1000);
+    return;
+  }
+  let plays=0; const maxPlays=review?99:2;
+  const perQ=S.timed&&!review&&!dl&&EX.kind==="mini";
+  V(head+`<div class="examq">
+      <div class="qnum">${tag}${review?'<span class="muted" style="font-size:13px">Revisão</span>':""}</div>
+      ${perQ?`<div class="timer"><i id="ti"></i></div>`:""}
+      <div class="stem">${esc(q.stem)}</div>
+      ${q.audio||q.lines?`<div class="card player c-cobalt"><button class="icon lg" id="pl" aria-label="Ouvir">${SPK}</button><span class="plays" id="pc"></span>${rateCtl()}</div>`:""}
+      ${q.sentence?`<div class="sentence">${esc(q.sentence).replace("___",'<span class="blank">( &nbsp; )</span>')}</div>`:""}
+      ${q.notice?`<div class="notice"><b>${esc(q.notice.t)}</b><div>${esc(q.notice.x)}</div></div>`:""}
+      ${q.passage?`<div class="passage">${esc(q.passage)}</div>`:""}
+      <div class="opts">${q.order.map((oi,j)=>`<button class="opt ${q.pt?"":"ko"}" style="${q.pt?"":"font-size:17px"}" data-oi="${oi}"><span class="no">${NUM[j]}</span>${esc(q.opts[oi])}</button>`).join("")}</div>
+      <div id="qfb"></div></div>`);
+  if(q.audio||q.lines){
+    const pl=$("#pl"),pc=$("#pc");
+    const play=()=>{if(plays>=maxPlays)return;plays++;q.lines?speakLines(q.lines):speak(q.audio);
+      pc.textContent=review?"":(maxPlays-plays?"Podes ouvir mais 1 vez":"Já não podes ouvir outra vez");pl.disabled=plays>=maxPlays};
+    pl.onclick=play; setTimeout(play,350);
+  }
+  let locked=false;
+  const choose=oi=>{
+    if(locked)return; locked=true; clearInterval(EX.timer);
+    EX.ans[EX.i]=oi;
+    if(!review){next();return}
+    const ok=oi===0; ok?errOk("q:"+q.id):errAdd("q:"+q.id);
+    $$("[data-oi]").forEach(x=>{if(x.dataset.oi==="0")x.classList.add("right");else if(+x.dataset.oi===oi)x.classList.add("wrong")});
+    $("#qfb").innerHTML=`<div class="fb ${ok?"ok":"no"}">${ok?"정답이에요!":"A resposta certa está a verde."}${q.expl?`<div class="muted">${esc(q.expl)}</div>`:""}</div>
+      <button class="btn" id="nx" style="width:100%;margin-top:10px">${EX.i+1<n?"Seguinte →":"Terminar"}</button>`;
+    $("#nx").onclick=next;
+  };
+  bindCommon();
+  if(perQ){
+    const T=q.t; let left=T; const ti=$("#ti"); ti.style.transform="scaleX(1)";
+    EX.timer=setInterval(()=>{left--;ti.style.transform=`scaleX(${Math.max(0,left/T)})`;if(left<=0){clearInterval(EX.timer);choose(null)}},1000);
+  }
+  $$("[data-oi]").forEach(b=>b.onclick=()=>choose(+b.dataset.oi));
+}
+async function gradeOpen(W,Sp){
+  const out={};
+  let sample=null; try{sample=await getSample()}catch(e){}
+  if(!sample){out.err="A correção de 쓰기 e 말하기 precisa do Claude, que não está disponível aqui. Essas partes ficam sem nota.";return out}
+  const ask=async(list,kind)=>{
+    if(!list.length)return null;
+    const items=list.map((r,i)=>kind==="w"
+      ?`${i+1}. Tipo: ${r.q.type}. Enunciado: ${r.q.item.join(" | ")}\nResposta: """${(r.a||"").trim()||"(sem resposta)"}"""`
+      :`${i+1}. Pergunta: ${r.q.oral[1]} (${r.q.oral[2]}). Resposta-modelo: ${r.q.oral[3]}\nTranscrição do reconhecimento de voz: """${(r.a||"").trim()||"(sem resposta)"}"""`).join("\n\n");
+    const intro=kind==="w"
+      ?"És examinador da parte de 쓰기 do 성취도 평가 do 세종학당 (nível 2A, exigência semelhante ao TOPIK I). Avalia cada resposta de uma aluna portuguesa de 0 a 100: cumpre a tarefa, gramática, vocabulário e ortografia."
+      :"És examinador da parte de 말하기 do 성취도 평가 do 세종학당 (nível 2A). A aluna respondeu em voz alta; o texto é o que o reconhecimento de voz percebeu, por isso palavras trocadas podem indicar problemas de pronúncia. Avalia cada resposta de 0 a 100: responde à pergunta, gramática e vocabulário de 2A, pronúncia.";
+    const r=await sample.json(`${intro} Resposta vazia = 0.\n\n${items}\n\nResponde só com JSON: {"itens":[{"nota":número,"comentario":"uma frase curta em português de Portugal com o erro principal ou um elogio"}]} com ${list.length} itens, pela mesma ordem.`,{modelTier:"default",cache:false});
+    return list.map((_,i)=>{const it=r&&Array.isArray(r.itens)&&r.itens[i]||{};return hasNota(it)?{nota:Math.max(0,Math.min(100,Math.round(+it.nota))),comentario:String(it.comentario||"")}:null});
+  };
+  try{out.w=await ask(W,"w");out.s=await ask(Sp,"s")}catch(e){out.err=sampleErr(e)+" As partes de 쓰기 e 말하기 ficam sem nota."}
+  return out;
+}
+function examEnd(){
+  clearInterval(EX.timer); if(hasTTS())speechSynthesis.cancel(); EX.live=false;
+  const res=EX.qs.map((q,i)=>({q,ok:EX.ans[i]===0,a:EX.ans[i]}));
+  if(EX.mode==="review"){
+    const ok=res.filter(r=>r.ok).length;
+    V(`<div class="card result"><div class="eyebrow">Revisão terminada</div><div class="pts">${ok}/${res.length}</div><div class="muted">${errKeys("q:").filter(k=>QRE.test(k)).length} perguntas ainda no caderno de erros</div></div>
+      <button class="btn" id="bk">Voltar ao exame</button>`);
+    $("#bk").onclick=exame; return;
+  }
+  const W=res.filter(r=>r.q.sec==="w"), Sp=res.filter(r=>r.q.sec==="s");
+  if(W.length||Sp.length){
+    V(`<div class="card result"><div class="eyebrow">A corrigir</div><div class="ko" style="font-size:26px;font-weight:700"><span class="spin"></span> 쓰기 · 말하기</div><div class="muted">O Claude está a avaliar as tuas respostas…</div></div>`);
+    gradeOpen(W,Sp).then(g=>showResult(res,g));
+  } else showResult(res,{});
+}
+const SKILL_TIP={l:"Faz 듣기 › Compreensão e Ditado todos os dias, com a velocidade em 0.8×, e vê os vídeos.",r:"Lê um texto por dia em 읽기 e revê os 빈칸 de gramática.",w:"Treina 쓰기 › Exame e Livre, com a correção do Claude.",s:"Faz o 말하기 oral e responde em voz alta com o microfone do teclado."};
+function focusHTML(mc,weakest){
+  const les={},typ={};
+  mc.forEach(r=>{(typ[r.q.type]=typ[r.q.type]||[0,0])[1]++;if(r.ok)typ[r.q.type][0]++;
+    if(r.q.l){(les[r.q.l]=les[r.q.l]||[0,0])[1]++;if(r.ok)les[r.q.l][0]++}});
+  const wl=weakList(les), wt=weakList(typ);
+  if(!weakest&&!wl.length&&!wt.length)return mc.length?`<div class="fb ok">Sem pontos fracos claros neste exame. Continua assim!</div>`:"";
+  return `<div class="card pad" style="display:flex;flex-direction:column;gap:12px"><h2>Onde focar</h2>
+    ${weakest?`<div class="focus"><div>A parte mais difícil foi <b>${weakest.n}</b> (${weakest.s}/100).</div><div class="muted" style="font-size:13px">${SKILL_TIP[weakest.k]}</div></div>`:""}
+    ${wt.length?`<div><div class="eyebrow">Tipos de pergunta com mais erros</div><ul class="flist">${wt.map(x=>`<li><b>${esc(x.k)}</b> · ${x.ok} de ${x.n} certas</li>`).join("")}</ul></div>`:""}
+    ${wl.length?`<div class="eyebrow">Matérias a rever</div>`:""}
+    ${wl.map(x=>{const L=LESSONS[x.k-1];return `<div class="focus"><div class="row"><b class="grow">${lessonTitle(+x.k)} <span class="muted" style="font-weight:400">${esc(L.pt)}</span></b><span class="muted score">${x.ok}/${x.n}</span></div>
+      <div class="muted" style="font-size:13px">${(GRAMMAR[x.k]||[]).map(g=>esc(g.f)).join(" · ")}</div>
+      <div class="row"><button class="btn ghost grow" data-gl="${x.k}">Rever gramática</button>${DRILL_L["L"+x.k]?`<button class="btn grow" data-dl="${x.k}">Treinar conjugações</button>`:""}</div></div>`}).join("")}
+  </div>`;
+}
+function showResult(res,g){
+  const mini=EX.kind==="mini";
+  const part=sec=>{const rs=res.filter(r=>r.q.sec===sec);return rs.length?rs:null};
+  const pct=rs=>Math.round(rs.filter(r=>r.ok).length/rs.length*100);
+  const avg=a=>{const v=(a||[]).filter(Boolean);return v.length?Math.round(v.reduce((s,x)=>s+x.nota,0)/v.length):null};
+  const P=[];
+  if(part("l"))P.push({k:"l",n:"듣기",s:pct(part("l"))});
+  if(part("r"))P.push({k:"r",n:"읽기",s:pct(part("r"))});
+  if(part("w"))P.push({k:"w",n:"쓰기",s:avg(g.w)});
+  if(part("s"))P.push({k:"s",n:"말하기",s:avg(g.s)});
+  const scored=P.filter(p=>p.s!==null);
+  const mc=res.filter(r=>r.q.sec==="l"||r.q.sec==="r");
+  mc.forEach(r=>{if(r.a!==undefined||!mini)r.ok?errOk("q:"+r.q.id):errAdd("q:"+r.q.id)});
+  const noScore=!mini&&!scored.length, partial=!mini&&scored.length>0&&scored.length<P.length;
+  const pts=mini?mc.filter(r=>r.ok).length*5:(scored.length?Math.round(scored.reduce((a,p)=>a+p.s,0)/scored.length):0);
+  if(!noScore){hist.push({d:today(),s:pts,full:EX.kind==="full4"&&!partial}); hist=hist.slice(-20)} bump("r");
+  const wk=store.get("weak",{}); if(!isObj(wk.les))wk.les={}; if(!isObj(wk.type))wk.type={};
+  mc.forEach(r=>{(wk.type[r.q.type]=wk.type[r.q.type]||[0,0])[1]++;if(r.ok)wk.type[r.q.type][0]++;
+    if(r.q.l){(wk.les[r.q.l]=wk.les[r.q.l]||[0,0])[1]++;if(r.ok)wk.les[r.q.l][0]++}});
+  store.set("weak",wk);
+  const weakest=scored.length>1?scored.reduce((a,b)=>b.s<a.s?b:a):(scored.length===1&&scored[0].s<70?scored[0]:null);
+  const pass=pts>=60, wrong=mc.filter(r=>!r.ok);
+  const W=res.filter(r=>r.q.sec==="w"), Sp=res.filter(r=>r.q.sec==="s");
+  const orow=(r,ev)=>`<div class="rev"><span class="muted">${esc(r.q.type)}${r.q.oral?" · "+esc(r.q.oral[1]):""}</span><span class="ko">${esc((r.a||"").trim()||"(sem resposta)")}</span>${ev?`<span><b>${ev.nota}</b> · ${esc(ev.comentario)}</span>`:""}</div>`;
+  V(`<div class="card result"><div class="eyebrow">${KIND[EX.kind]||"Exame"}</div><div class="pts" style="${pass||noScore?"":"color:var(--ochre)"}">${noScore?"–":pts}</div>
+      <div class="muted">${noScore?"Sem nota: esta parte é corrigida pelo Claude"
+        :`${mini?"pontos em 100":partial?"média de "+scored.map(p=>p.n).join(" e ")+" (o resto ficou sem nota)":"média em 100"} · ${pass?"acima dos 60 para passar":"abaixo dos 60 para passar"}`}</div>
+      ${P.length>1||!mini?`<div class="skills">${P.map(p=>`<div class="sk${weakest&&p===weakest?" weak":""}"><span class="ko">${p.n}</span><div class="bar"><i style="width:${p.s??0}%"></i></div><b>${p.s??"–"}</b></div>`).join("")}</div>`:""}</div>
+    ${g.err?`<div class="fb info">${esc(g.err)}</div>`:""}
+    ${focusHTML(mc,weakest)}
+    ${W.length||Sp.length?`<div class="card pad" style="display:flex;flex-direction:column;gap:12px"><h2>쓰기 e 말하기</h2>${W.map((r,i)=>orow(r,g.w&&g.w[i])).join("")}${Sp.map((r,i)=>orow(r,g.s&&g.s[i])).join("")}</div>`:""}
+    ${wrong.length?`<div class="card pad" style="display:flex;flex-direction:column;gap:12px"><h2>Para rever (${wrong.length})</h2>
+      ${wrong.map(r=>`<div class="rev"><span class="muted">${esc(r.q.sentence||r.q.expl||r.q.stem)}</span>
+        <span>Certa: <span class="ko">${esc(r.q.opts[0])}</span></span>
+        ${r.a==null?'<span class="muted">Sem resposta</span>':`<span class="muted">Escolheste: ${esc(r.q.opts[r.a])}</span>`}
+        ${r.q.sentence&&r.q.expl?`<span class="muted">${esc(r.q.expl)}</span>`:""}</div>`).join("")}</div>`:mc.length?`<div class="fb ok">Tudo certo na escolha múltipla! 완벽해요!</div>`:""}
+    <div class="row"><button class="btn ghost grow" id="bk">Voltar</button><button class="btn grow" id="again">Outro exame</button></div>`);
+  $("#bk").onclick=exame; const kind=EX.kind; $("#again").onclick=()=>startExam(buildExam(kind),"exam",kind);
+  $$("[data-gl]").forEach(b=>b.onclick=()=>{S.lesson=+b.dataset.gl;store.set("lesson",S.lesson);go("gramatica")});
+  $$("[data-dl]").forEach(b=>b.onclick=()=>{S.psub="escrita";S.wmode="conj";S.drillG="L"+b.dataset.dl;go("pratica")});
+}
+
+/* ============ 쓰기 (com modo exame) ============ */
+function escrita(){
+  $("#pbody").innerHTML=`<div class="seg"><button aria-pressed="${S.wmode==="conj"}" data-w="conj">Conjugar</button><button aria-pressed="${S.wmode==="trad"}" data-w="trad">Traduzir</button><button aria-pressed="${S.wmode==="livre"}" data-w="livre">Livre</button><button aria-pressed="${S.wmode==="exame"}" data-w="exame">Exame</button></div>
+    <div id="wbody" class="view"></div>`;
+  $$("[data-w]").forEach(b=>b.onclick=()=>{S.wmode=b.dataset.w;escrita()});
+  ({conj:wConj,trad:wTrad,livre:wLivre,exame:wExame})[S.wmode]();
+}
+function wExame(){
+  const T=S.wtask||"complete"; const task=WTASK[T]; const item=pick(task.items);
+  let shown;
+  if(T==="complete")shown=`<div class="passage">${item.map(l=>l.includes("____")?`<b>${esc(l.replace("________",""))}</b><span class="blank" style="min-width:8em">( &nbsp; )</span>`:esc(l)).join("<br>")}</div>`;
+  else if(T==="reply")shown=`<div class="bub them" style="max-width:100%"><span class="t">Mensagem de um amigo</span><span class="k">${esc(item[0])}</span></div>`;
+  else shown=`<div class="passage"><b>${esc(item[0])}</b><ul style="margin:6px 0 0;padding-left:18px">${item.slice(1).map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`;
+  $("#wbody").innerHTML=`<div class="seg">${Object.entries(WTASK).map(([k,v])=>`<button aria-pressed="${T===k}" data-wt="${k}">${v.n.slice(0,2)}${{complete:"Diálogo",reply:"Mensagem",text:"Texto"}[k]}</button>`).join("")}</div>
+    <div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
+      <div class="eyebrow accent">${esc(task.n)}</div><div class="muted" style="font-size:14px">${esc(task.d)}</div>
+      ${shown}
+      <textarea class="ans" id="in" lang="ko" placeholder="Escreve em 한글…" aria-label="Resposta"></textarea>
+      <button class="btn" id="fix">Corrigir e dar nota</button><div id="fb"></div>
+      <button class="btn ghost" id="nx">Outra pergunta →</button></div>
+    <p class="muted" style="font-size:13px;margin:0">No exame tens 20 minutos para as 3 perguntas. A nota é uma estimativa feita pelo Claude.</p>`;
+  $$("[data-wt]").forEach(b=>b.onclick=()=>{S.wtask=b.dataset.wt;wExame()});
+  $("#nx").onclick=wExame;
+  $("#fix").onclick=()=>{const t=$("#in").value.trim();if(!t){$("#in").focus();return}
+    const box=$("#fb"); box.innerHTML=`<div class="fb info"><span><span class="spin"></span> A corrigir…</span></div>`;
+    getSample().then(sample=>{
+      if(!sample)throw {code:"none"};
+      const prompt=`És examinador do 세종학당 성취도 평가 (nível 2A). Corrige a parte de 쓰기 de uma aluna portuguesa.
+Tipo de pergunta: ${task.n} (${task.d})
+Enunciado: ${item.join(" | ")}
+Resposta da aluna: """${t}"""
+Avalia: cumpre a tarefa, gramática, vocabulário e ortografia, ao nível 2A. Dá uma nota de 0 a 100. Responde só com JSON:
+{"nota": número, "corrigido":"versão corrigida em coreano", "notas":["até 4 observações curtas em português de Portugal"], "elogio":"frase curta em português"}`;
+      return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{
+        if(!hasNota(r))throw {code:"bad"};
+        bump("c"); const nota=Math.max(0,Math.min(100,Math.round(+r.nota||0)));
+        box.innerHTML=`<div class="fb ${nota>=60?"ok":"no"}"><div class="row"><span class="ko" style="font-size:34px;font-weight:700;color:${nota>=60?"var(--ok)":"var(--ochre)"}">${nota}</span><span class="grow">${esc(r.elogio||"")}</span></div>
+          ${r.corrigido&&norm(r.corrigido)!==norm(t)?`<div class="row"><span class="k grow">${esc(r.corrigido)}</span>${say(r.corrigido)}</div>`:""}
+          ${Array.isArray(r.notas)&&r.notas.length?`<ul>${r.notas.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:""}</div>`;
+      });
+    }).catch(e=>{box.innerHTML=`<div class="fb info">${e&&e.code==="none"?"A correção precisa do Claude, que não está disponível aqui.":sampleErr(e)}</div>`});
+  };
+}
+
+/* ============ 듣기 (com vídeos) ============ */
+function audicao(){
+  $("#pbody").innerHTML=`<div class="seg"><button aria-pressed="${S.lmode==="dict"}" data-a="dict">Ditado</button><button aria-pressed="${S.lmode==="comp"}" data-a="comp">Compreensão</button><button aria-pressed="${S.lmode==="vid"}" data-a="vid">Vídeos</button></div>
+    ${S.lmode!=="vid"?`<div class="muted" style="font-size:13px">${stats.listenOk}/${stats.listen} certas</div>`:""}
+    ${hasTTS()||S.lmode==="vid"?"":`<div class="fb no">Este browser não lê em voz alta. Abre o link no Chrome (Android) ou no Safari (iPhone), fora da app do Claude.</div>`}
+    ${hasTTS()&&S.lmode!=="vid"?`<div class="row"><button class="btn ghost" data-say="안녕하세요. 소리가 잘 들려요?">Testar o som</button><span class="muted grow" style="font-size:13px" id="vinfo"></span></div>`:""}
+    <div id="abody" class="view"></div>`;
+  const vi=$("#vinfo"); if(vi){const n=koVoices().length; vi.textContent=n?`${n} voz${n>1?"es":""} coreana${n>1?"s":""} neste aparelho`:"Ainda sem voz coreana detetada";}
+  $$("[data-a]").forEach(b=>b.onclick=()=>{S.lmode=b.dataset.a;audicao()});
+  if(S.lmode==="vid")videos(); else newListen();
+}
+function videos(){
+  const seen=store.get("seen",{});
+  $("#abody").innerHTML=`<div class="card pad" style="display:flex;flex-direction:column;gap:8px">
+      <div class="eyebrow">O melhor treino de 듣기</div>
+      <div style="font-size:14px">O exame baseia-se no áudio do manual 2A, que é gratuito no <b>누리-세종학당</b> (site e app oficiais). Para treinar o formato, há o simulado <b>평가 연습하기</b> da SKA.</div>
+      <a class="btn ghost" href="https://ska.ksif.or.kr" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">Abrir o simulado SKA ↗</a></div>
+    ${VIDEOS.map(g=>`<section class="view" style="gap:8px"><h2>${esc(g.g)}</h2>
+      ${g.items.map(v=>`<div class="tq"><div class="r${seen[v[4]]?" done":""}"><button class="chk" data-v="${v[4]}" aria-label="Marcar como visto">✓</button>
+        <a href="https://www.youtube.com/watch?v=${v[4]}" target="_blank" rel="noopener"><span style="flex:1;min-width:0"><b class="d" style="font-size:14px">${esc(v[0])}</b><br><span class="muted" style="font-size:12px">${esc(v[1])} · ${v[2]} · ${v[3]} · ${esc(v[5])}</span></span><span style="color:var(--jade);font-size:20px">↗</span></a></div></div>`).join("")}</section>`).join("")}
+    <p class="muted" style="font-size:13px;margin:0">Dica: vê primeiro com legendas em coreano e depois sem legendas.</p>`;
+  $$("[data-v]").forEach(b=>b.onclick=()=>{const s=store.get("seen",{});s[b.dataset.v]=!s[b.dataset.v];store.set("seen",s);videos()});
+}
+
+/* ============ 말하기 (oral de exame + conversa) ============ */
+function conversa(){
+  S.cmode=S.cmode||"oral";
+  if(S.scen!==null&&S.cmode==="chat"){renderChat();return}
+  $("#pbody").innerHTML=`<div class="seg"><button aria-pressed="${S.cmode==="oral"}" data-cm="oral">Exame oral</button><button aria-pressed="${S.cmode==="chat"}" data-cm="chat">Conversa</button></div><div id="cbody" class="view"></div>`;
+  $$("[data-cm]").forEach(b=>b.onclick=()=>{S.cmode=b.dataset.cm;S.scen=null;OR=null;conversa()});
+  if(S.cmode==="oral"){oral();return}
+  $("#cbody").innerHTML=`<p class="muted" style="margin:0">Escolhe uma situação. O Claude faz de outra pessoa e conversa contigo em coreano simples. No fim, corrige o que escreveste.</p>
+    <div class="list">${SCEN.map((s,i)=>`<button class="scen" data-s="${i}"><b>${lname(s[0])} · ${esc(s[1])}</b><span>Com ${esc(s[3])} · ${esc(s[4])}</span></button>`).join("")}</div>`;
+  $$("[data-s]").forEach(b=>b.onclick=()=>{S.scen=+b.dataset.s;CH={sc:SCEN[S.scen],msgs:[],busy:false,showPt:false};renderChat();chatTurn()});
+}
+let OR=null;
+function oral(){
+  if(!OR){
+    $("#cbody").innerHTML=`<div class="card pad" style="display:flex;flex-direction:column;gap:10px">
+        <b>Simulação do 말하기</b>
+        <div style="font-size:14px">5 perguntas, como no exame: 2 pessoais, 1 imagem, 1 roleplay e 1 conselho. Ouves a pergunta, tens 10 segundos para pensar e 40 para responder <b>em voz alta</b>. Depois vês uma resposta-modelo.</div>
+        <div class="muted" style="font-size:13px">Dica: grava-te com o gravador do telemóvel para te ouvires depois.</div>
+        <button class="btn" id="os">Começar</button></div>`;
+    $("#os").onclick=()=>{const by=t=>shuffle(ORAL.filter(o=>o[0]===t));OR={qs:[...by("p").slice(0,2),by("d")[0],by("r")[0],by("a")[0]],i:0,phase:"prep"};oralQ()};
+    return;
+  }
+  oralQ();
+}
+function oralQ(){
+  clearInterval(EX.timer);
+  const q=OR.qs[OR.i];
+  if(!q){bump("c");$("#cbody").innerHTML=`<div class="card result"><div class="ko" style="font-size:36px;font-weight:700;color:var(--jade)">수고했어요!</div><div class="muted">Terminaste as 5 perguntas.</div></div><button class="btn" id="oa">Outra simulação</button>`;$("#oa").onclick=()=>{OR=null;oral()};return}
+  const tipo=ORAL_T[q[0]];
+  $("#cbody").innerHTML=`<div class="row"><span class="muted grow">${OR.i+1}/5 · ${tipo}</span><button class="btn ghost" id="ox">Sair</button></div>
+    <div class="card pad c-cobalt" style="display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center">
+      <button class="icon lg" data-say="${esc(q[1])}" aria-label="Ouvir pergunta">${SPK}</button>
+      <div class="sentence">${esc(q[1])}</div>
+      <div class="muted" style="font-size:14px">${esc(q[2])}</div>
+      <div class="ko" id="oc" style="font-size:40px;font-weight:700;font-variant-numeric:tabular-nums"></div>
+      <div class="muted" id="ol" style="font-size:13px"></div>${rateCtl()}</div>
+    ${answerBox("oi")}
+    <button class="btn" id="od">Já respondi</button>
+    <div id="om" class="view"></div>`;
+  $("#ox").onclick=()=>{clearInterval(EX.timer);OR=null;oral()};
+  speak(q[1]);
+  let left=10, phase="prep"; const oc=$("#oc"), ol=$("#ol");
+  const tick=()=>{oc.textContent=left;ol.textContent=phase==="prep"?"Pensa…":"Fala agora!";oc.style.color=phase==="prep"?"var(--muted)":"var(--red)"};
+  const showModel=()=>{clearInterval(EX.timer);oc.textContent="";ol.textContent="";$("#od").hidden=true;
+    $("#om").innerHTML=`<div class="fb info"><div class="muted">Resposta-modelo</div><div class="row"><span class="k grow">${esc(q[3])}</span>${say(q[3])}</div>${pronHTML(q[3])}</div>
+      <div class="row"><button class="btn ghost grow" id="of">Avaliar a minha resposta</button><button class="btn grow" id="on">${OR.i<4?"Seguinte →":"Terminar"}</button></div><div id="ofb"></div>`;
+    $("#on").onclick=()=>{OR.i++;oralQ()};
+    const evalNow=()=>{const t=$("#oi").value.trim();if(!t){$("#oi").focus();toast("Escreve ou dita a tua resposta na caixa para a app avaliar.");return}oralEval($("#ofb"),q,t)};
+    $("#of").onclick=evalNow;
+    if($("#oi").value.trim())evalNow();
+  };
+  $("#od").onclick=showModel;
+  tick();
+  EX.timer=setInterval(()=>{left--;if(left<=0){if(phase==="prep"){phase="talk";left=40}else{showModel();return}}tick()},1000);
+}
+
+route();
+</script>
+
+<script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
+</body></html>
