@@ -1,5 +1,5 @@
 // Offline: keep the app shell, fetch fonts once and reuse them.
-const C="gongbubang-f659136959", SHELL=["./","index.html","manifest.json","icon-192.png","icon-512.png"];
+const C="gongbubang-aec6d4b758", SHELL=["./","index.html","manifest.json","icon-192.png","icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener("fetch",e=>{

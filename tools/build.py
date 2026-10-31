@@ -30,7 +30,10 @@ TAIL = """
 """
 (ROOT / "index.html").write_text(HEAD + app + TAIL, encoding="utf-8")
 
-version = hashlib.sha1(app.encode("utf-8")).hexdigest()[:10]
+h = hashlib.sha1(app.encode("utf-8"))
+for f in ("manifest.json", "icon-192.png", "icon-512.png"):  # icon or manifest changes also count as a new version
+    h.update((ROOT / f).read_bytes())
+version = h.hexdigest()[:10]
 sw = ROOT / "sw.js"
 sw.write_text(re.sub(r'const C="gongbubang-[^"]*"', f'const C="gongbubang-{version}"', sw.read_text(encoding="utf-8")), encoding="utf-8")
 print(f"index.html gerado · cache gongbubang-{version}")
