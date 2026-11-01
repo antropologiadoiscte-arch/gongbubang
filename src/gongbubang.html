@@ -335,6 +335,13 @@ nav.tabs a[aria-current="page"] .ti{background:color-mix(in srgb,var(--hero-b) 1
 .mic{display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .mic svg{width:18px;height:18px}
 .mic.on{background:var(--red-soft);color:var(--red);border-color:var(--red)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;min-height:48px;align-items:center}
+.tiles.answer{padding:10px;border-radius:14px;border:1.5px dashed var(--line);background:var(--surface)}
+.wtile{font-family:var(--display);font-size:18px;font-weight:700;border:1px solid var(--line);background:var(--raised);border-radius:12px;padding:8px 12px;color:var(--ink)}
+.wtile.on{border-color:var(--accent-ink);color:var(--accent-ink)}
+.wtile.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 13%,var(--raised));color:var(--ink)}
+.wtile.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--raised));color:var(--ink)}
+.wtile-end{font-family:var(--display);font-size:18px;font-weight:700}
 .toast{position:fixed;z-index:40;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom,0px));
   max-width:588px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;box-shadow:0 6px 20px rgb(0 0 0 / .25);pointer-events:none}
 </style>
@@ -1038,7 +1045,7 @@ function evalHTML(r,text){
 function oralEval(box,q,text){
   box.innerHTML=`<div class="fb info"><span><span class="spin"></span> A avaliar a tua resposta…</span></div>`;
   getSample().then(sample=>{
-    if(!sample)throw {code:"none"};
+    if(!sample){bump("c");box.innerHTML=localCheckHTML(text,{model:q[3],range:[1,3]});return}
     const prompt=`És examinador do 말하기 do 성취도 평가 do 세종학당 (nível 2A). A aluna é portuguesa.
 Pergunta: "${q[1]}" (${q[2]}). Resposta-modelo: "${q[3]}".
 A aluna respondeu em voz alta. O texto seguinte é o que o reconhecimento de voz do telemóvel percebeu; palavras estranhas ou trocadas costumam indicar problemas de pronúncia:
@@ -1047,7 +1054,7 @@ Avalia de 0 a 100: se responde à pergunta, gramática e vocabulário de 2A, e p
 {"nota":número,"corrigido":"a resposta corrigida e natural em coreano","pronuncia":[{"ouvido":"palavra reconhecida","provavel":"palavra que querias dizer","dica":"dica curta de pronúncia"}],"notas":["até 3 observações curtas"],"elogio":"frase curta"}
 Se a pronúncia parecer boa, "pronuncia" fica vazio.`;
     return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{if(!hasNota(r))throw {code:"bad"};bump("c");box.innerHTML=evalHTML(r,text)});
-  }).catch(e=>{box.innerHTML=`<div class="fb info">${e&&e.code==="none"?"A avaliação precisa do Claude, que não está disponível aqui.":sampleErr(e)}</div>`});
+  }).catch(e=>{box.innerHTML=`<div class="fb info" style="margin-bottom:8px">${sampleErr(e)} Fica a correção automática:</div>`+localCheckHTML(text,{model:q[3],range:[1,3]})});
 }
 function wShown(T,item){
   if(T==="complete")return `<div class="passage">${item.map(l=>l.includes("____")?`<b>${esc(l.replace("________",""))}</b><span class="blank" style="min-width:8em">( &nbsp; )</span>`:esc(l)).join("<br>")}</div>`;
@@ -1319,10 +1326,196 @@ function wConj(){
   $("#skip").onclick=()=>{if(!answered)finish(false,true)};
   inp.onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==="Enter"){e.preventDefault();answered?wConj():$("#chk").click()}};
 }
-function claudeFeedback(box,task,text,model){
+/* ============ 쓰기: correção automática (funciona sem o Claude) ============ */
+// Verbs known to the app, to recognise forms like 먹는 / 사는 (-는 modifier).
+const VERBS=new Set([...DECKS.flatMap(d=>d.w.map(w=>w[0].split(" ").pop())),...DRILLS.map(d=>d[1]),
+  ..."하다 먹다 살다 일하다 만들다 좋아하다 다니다 가르치다 팔다 배우다 읽다 쓰다 마시다 듣다 보다 가다 오다 자다 타다 입다 있다 없다 알다 놀다 걷다 공부하다 운동하다 일어나다 만나다 사다 앉다 웃다 울다 찾다 기다리다 전화하다 요리하다".split(" ")].filter(v=>v.endsWith("다")));
+const jongOf=ch=>{const c=(ch||"").charCodeAt(0)-0xAC00;return c<0||c>11171?-1:c%28};
+const addRieul=s=>{const c=s.charCodeAt(s.length-1)-0xAC00;return c>=0&&c%28===0?s.slice(0,-1)+String.fromCharCode(s.charCodeAt(s.length-1)+8):null};
+const isVerbStem=st=>VERBS.has(st+"다")||(!!addRieul(st)&&VERBS.has(addRieul(st)+"다"));
+const kWords=t=>t.split(/\s+/).map(w=>w.replace(/[.,?!"'“”()~·:…]/g,"")).filter(Boolean);
+// What each grammar point looks like in a learner's sentence.
+const GDET={
+  "라고":t=>/라고\s*(해|합|했|하)/.test(t),
+  "는":t=>kWords(t).some((w,i,a)=>i<a.length-1&&w.length>1&&w.endsWith("는")&&isVerbStem(w.slice(0,-1))),
+  "거나":t=>/거나/.test(t),
+  "이나":t=>/[가-힣](?<!거)(?:이나|나)\s+[가-힣]+[을를이가]?/.test(t),
+  "까요":t=>/까요/.test(t),
+  "마다":t=>/마다/.test(t),
+  "때":t=>[...t.matchAll(/([가-힣])\s*때/g)].some(m=>jongOf(m[1])===8),
+  "보이다":t=>/보여|보이|보입/.test(t),
+  "에다가":t=>/에다가?\s/.test(t),
+  "기가":t=>/기가\s*(좋|편|힘들|어렵|쉽)/.test(t),
+  "지않는게좋다":t=>/지\s*않는\s*게\s*좋/.test(t),
+  "있다상태":t=>/(놓여|걸려)\s*있/.test(t),
+  "면서":t=>/면서/.test(t),
+  "기전에":t=>/기\s*전에/.test(t),
+  "후에":t=>[...t.matchAll(/([가-힣])\s*후에/g)].some(m=>jongOf(m[1])===4),
+  "면":t=>/면(?!서)/.test(t),
+  "ㅅ불규칙":t=>/(부어|부었|나아|나았|지어|지었|저어|저었|부으|나으|지으|저으)/.test(t),
+  "지요":t=>/(지요|죠)/.test(t),
+  "는데":t=>[...t.matchAll(/([가-힣])데(?=[\s,.?!]|$)/g)].some(m=>/[는은인]/.test(m[1])||jongOf(m[1])===4),
+  "보다":t=>/(\s보세요|\s봤어요|\s볼게요|\s보고\s*싶|봐\s*보)/.test(t),
+  "수없다":t=>/수\s*없/.test(t),
+  "못":t=>/(^|\s)못\s|지\s*못/.test(t),
+  "지않다":t=>/지\s*않/.test(t),
+  "기로하다":t=>/기로\s*(했|해|하)/.test(t),
+  "옷동사":t=>/(입|신|써|쓰|껴|끼|차|매|메)(어요|었어요|을|고|어|었|요)/.test(t)};
+const GKEY=[[/지 않는 게/,"지않는게좋다"],[/라고/,"라고"],[/거나/,"거나"],[/\(이\)나/,"이나"],[/까요/,"까요"],[/마다/,"마다"],[/ㄹ 때/,"때"],[/보이다/,"보이다"],[/에다가/,"에다가"],
+  [/기가/,"기가"],[/놓여|걸려/,"있다상태"],[/면서/,"면서"],[/기 전에/,"기전에"],[/ㄴ 후에/,"후에"],[/ㅅ 불규칙/,"ㅅ불규칙"],[/지요|죠/,"지요"],[/는데/,"는데"],
+  [/보세요|보다$/,"보다"],[/수 없/,"수없다"],[/못/,"못"],[/지 않/,"지않다"],[/^-?\(으\)면$/,"면"],[/^-는$/,"는"],[/입다|신다|쓰다/,"옷동사"],[/기로/,"기로하다"]];
+const gKey=l=>{for(const [r,k] of GKEY)if(r.test(l.trim()))return k;return null};
+const gramList=s=>String(s||"").split(/,\s*/).map(l=>[l.trim(),gKey(l)]).filter(x=>x[1]);
+// Particle that does not match the 받침 of the word before it (을/를, 은/는, 와/과, (이)라고, 예요/이에요).
+const PEXC=/^(가을|마을|오늘|지을|저을|나을|부을|이을|그을|지은|저은|나은|부은|이은|그은|하은|다은|수은|은은)$/;
+function particleIssues(text){
+  const out=[];
+  for(const w of kWords(text)){
+    if(w.length<2||PEXC.test(w)||!/^[가-힣]+$/.test(w))continue;
+    const J=n=>jongOf(w[w.length-1-n]);
+    const fix=(cut,add,msg)=>out.push({w,f:w.slice(0,w.length-cut)+add,msg});
+    if(w.endsWith("를")&&J(1)>0)fix(1,"을","depois de consoante usa-se 을");
+    else if(w.endsWith("을")&&J(1)===0)fix(1,"를","depois de vogal usa-se 를");
+    else if(w.endsWith("은")&&J(1)===0)fix(1,"는","depois de vogal usa-se 는");
+    else if(w.endsWith("와")&&w.length>2&&J(1)>0)fix(1,"과","depois de consoante usa-se 과");
+    else if(w.endsWith("이라고")&&w.length>3&&J(3)===0)fix(3,"라고","depois de vogal: 라고");
+    else if(w.endsWith("라고")&&!w.endsWith("이라고")&&w.length>2&&J(2)>0)fix(2,"이라고","depois de consoante: 이라고");
+    else if(/예요$/.test(w)&&w.length>2&&J(2)>0)fix(2,"이에요","depois de consoante: 이에요");
+    else if(/[^니]이에요$/.test(w)&&w.length>3&&J(3)===0)fix(3,"예요","depois de vogal: 예요");
+  }
+  return out;
+}
+const sentencesOf=t=>t.split(/(?<=[.?!])\s+|\n+/).map(s=>s.trim()).filter(s=>/[가-힣]/.test(s));
+const endsPolite=s=>/(요|니다|니까|죠|세요|까요)[.?!]*$/.test(s.replace(/[\s"'”)]+$/,""));
+const simRatio=(a,b)=>{const A=[...norm(a)],B=[...norm(b)];if(!A.length||!B.length)return 0;
+  const dp=Array.from({length:A.length+1},()=>new Uint16Array(B.length+1));
+  for(let i=A.length-1;i>=0;i--)for(let j=B.length-1;j>=0;j--)dp[i][j]=A[i]===B[j]?dp[i+1][j+1]+1:Math.max(dp[i+1][j],dp[i][j+1]);
+  return dp[0][0]/Math.max(A.length,B.length)};
+// One analysis used by every writing exercise: sentences, endings, particles, grammar asked, closeness to the model.
+function analyseWriting(text,o={}){
+  const sents=sentencesOf(text), hangul=(text.match(/[가-힣]/g)||[]).length, latin=(text.match(/[a-zA-Z]/g)||[]).length;
+  const parts=particleIssues(text), casual=sents.filter(s=>!endsPolite(s));
+  const asked=gramList(o.grammar).map(([l,k])=>({l,ok:GDET[k](text)}));
+  const used=Object.entries(GDET).filter(([k,f])=>f(text)).length;
+  const sim=o.model?simRatio(text,o.model):null;
+  let task=40; const n=sents.length,[mn,mx]=o.range||[1,9];
+  if(n<mn)task=Math.round(40*n/mn); else if(n>mx+2)task=32;
+  const gram=asked.length?Math.round(25*asked.filter(a=>a.ok).length/asked.length):(used>=2?25:used===1?18:10);
+  const corr=Math.max(0,35-8*parts.length-5*casual.length);
+  let nota=hangul<2||latin>hangul?0:task+gram+corr;
+  if(sim!==null&&sim>=0.9&&!parts.length)nota=Math.max(nota,95);
+  return {sents,parts,casual,asked,sim,nota:Math.max(0,Math.min(100,nota)),empty:hangul<2,notKorean:latin>hangul};
+}
+function localCheckHTML(text,o={}){
+  const a=analyseWriting(text,o), dm=o.model&&a.sim<0.999?diffHTML(text,o.model):null;
+  const good=!a.empty&&!a.notKorean&&!a.parts.length&&!a.casual.length&&a.asked.every(x=>x.ok)&&(a.sim===null||a.sim>=0.6);
+  const head=a.notKorean||a.empty?"Escreve em coreano (한글), com sílabas completas, para a app poder corrigir.":a.sim!==null&&a.sim>=0.999?"정답이에요! Igual ao modelo.":good?(a.sim!==null&&a.sim>=0.85?"Muito bem! Quase igual ao modelo.":"Muito bem! Não encontrei erros."):"Revê estes pontos:";
+  const items=[
+    ...a.parts.map(p=>`<li>Partícula: <span class="ko">${esc(p.w)}</span> → <b class="ko">${esc(p.f)}</b> (${esc(p.msg)})</li>`),
+    ...a.casual.map(s=>`<li>Terminação: <span class="ko">${esc(s)}</span> não acaba em 요/니다. No exame usa sempre 해요체.</li>`),
+    ...a.asked.map(x=>`<li>${x.ok?"✓":"✗"} Gramática pedida <b>${esc(x.l)}</b>${x.ok?"":" — não a encontrei no texto"}</li>`)];
+  if(o.range&&!a.empty){const [mn,mx]=o.range,n=a.sents.length;if(n<mn||n>mx+2)items.push(`<li>Escreveste ${n} frase${n===1?"":"s"}; esta tarefa pede ${mn===mx?mn:mn+" a "+mx}.</li>`)}
+  return `<div class="fb ${good?"ok":"no"}">
+    ${o.score?`<div class="row"><span class="ko" style="font-size:34px;font-weight:700;color:${a.nota>=60?"var(--ok)":"var(--ochre)"}">${a.nota}</span><span class="grow"><b>${esc(head)}</b><br><span class="muted" style="font-size:12px">Nota automática aproximada</span></span></div>`:`<div><b>${esc(head)}</b></div>`}
+    ${items.length?`<ul>${items.join("")}</ul>`:""}
+    ${o.model?`<div><div class="muted" style="font-size:13px">${a.sim!==null&&a.sim<0.999?"Resposta-modelo (o que falta ou está diferente a vermelho; outras respostas também podem estar certas):":"Resposta-modelo:"}</div>
+      <div class="row"><span class="k grow">${dm?dm.right:esc(o.model)}</span>${say(o.model)}</div>${dm?`<div class="muted" style="font-size:13px">Escreveste: <span class="ko">${dm.mine}</span></div>`:""}</div>`:""}
+    <div class="muted" style="font-size:12px">Correção automática: verifica partículas, terminações, gramática pedida e semelhança com o modelo. Não apanha todos os erros.</div></div>`;
+}
+const autoGrade=(text,o)=>{const a=analyseWriting(text||"",o);const first=a.empty?"Sem resposta.":a.parts[0]?`Partícula: ${a.parts[0].w} → ${a.parts[0].f}.`:a.casual[0]?"Usa terminações em 요/니다.":a.asked.find(x=>!x.ok)?`Falta usar ${a.asked.find(x=>!x.ok).l}.`:"Sem erros detetados.";return {nota:a.nota,comentario:first+" (nota automática)"}};
+
+/* ---- dados novos de 쓰기 ---- */
+// Completar: [lição, antes, base, depois, respostas aceites, dica]
+const FILL=[
+ [1,"저는 회사에서 ","일하다 + -는"," 회사원이에요.",["일하는"],"verbo + 는 + nome"],
+ [1,"이 음식은 한국어로 ","불고기 + (이)라고 하다",".",["불고기라고 해요","불고기라고 합니다"],"vogal → 라고 해요"],
+ [1,"제가 ","살다 + -는"," 동네는 조용해요.",["사는"],"ㄹ cai antes de 는"],
+ [1,"요즘 ","배우다 + -는"," 언어는 한국어예요.",["배우는"],"raiz + 는"],
+ [2,"주말에 영화를 ","보다 + -거나"," 책을 읽어요.",["보거나"],"verbo + 거나"],
+ [2,"아침에 ","우유 + (이)나"," 주스를 마셔요.",["우유나"],"vogal → 나"],
+ [2,"같이 저녁을 ","먹다 + -(으)ㄹ까요?","",["먹을까요?","먹을까요"],"consoante → 을까요"],
+ [2,"내일 날씨가 ","춥다 + -(으)ㄹ까요?","",["추울까요?","추울까요"],"ㅂ → 우 + ㄹ까요"],
+ [3,"","주말 + 마다"," 등산을 해요.",["주말마다"],"nome + 마다, sem espaço"],
+ [3,"집에 ","오다 + -(으)ㄹ 때"," 빵을 사요.",["올 때"],"vogal → ㄹ 때"],
+ [3,"음식을 ","만들다 + -(으)ㄹ 때"," 음악을 들어요.",["만들 때"],"ㄹ mantém-se"],
+ [3,"한국 노래를 ","듣다 + -(으)ㄹ 때"," 기분이 좋아요.",["들을 때"],"ㄷ → ㄹ + 을 때"],
+ [4,"그 가방이 정말 ","비싸다 + -아/어 보이다",".",["비싸 보여요"],"ㅏ → 비싸 보여요"],
+ [4,"오늘 기분이 ","좋다 + -아/어 보이다",".",["좋아 보여요"],"ㅗ → 좋아 보여요"],
+ [4,"이 옷이 좀 ","작다 + -아/어 보이다",".",["작아 보여요"],"ㅏ → 작아 보여요"],
+ [4,"동생이 ","피곤하다 + -아/어 보이다",".",["피곤해 보여요"],"하다 → 해 보여요"],
+ [5,"공원이 가까워서 ","산책하다 + -기가 좋다",".",["산책하기가 좋아요","산책하기 좋아요"],"raiz + 기가 좋아요"],
+ [5,"이 방은 ","넓다 + -지 않다",".",["넓지 않아요"],"raiz + 지 않아요"],
+ [5,"벽에 시계가 ","걸다 → 걸려 있다",".",["걸려 있어요"],"걸다 → 걸려 있다"],
+ [5,"책상 위에 컵이 ","놓다 → 놓여 있다",".",["놓여 있어요"],"놓다 → 놓여 있다"],
+ [6,"커피를 ","마시다 + -(으)면서"," 이야기해요.",["마시면서"],"vogal → 면서"],
+ [6,"길을 ","걷다 + -(으)면서"," 노래를 들어요.",["걸으면서"],"ㄷ → ㄹ + 으면서"],
+ [6,"","자다 + -기 전에"," 이를 닦아요.",["자기 전에"],"raiz + 기 전에"],
+ [6,"점심을 ","먹다 + -(으)ㄴ 후에"," 산책했어요.",["먹은 후에"],"consoante → 은 후에"],
+ [7,"시간이 ","있다 + -(으)면"," 같이 영화 봐요.",["있으면"],"consoante → 으면"],
+ [7,"날씨가 ","덥다 + -(으)면"," 에어컨을 켜요.",["더우면"],"ㅂ → 우 + 면"],
+ [7,"감기가 다 ","낫다 + -았/었어요",".",["나았어요"],"ㅅ cai antes de vogal"],
+ [7,"오늘 날씨가 ","좋다 + -지요?","",["좋지요?","좋죠?","좋지요","좋죠"],"raiz + 지요 (죠)"],
+ [8,"배가 ","고프다 + -(으)ㄴ데"," 뭐 먹을까요?",["고픈데"],"adjetivo com vogal → ㄴ데"],
+ [8,"지금 비가 ","오다 + -는데"," 우산 있어요?",["오는데"],"verbo → 는데"],
+ [8,"이 김치 정말 맛있어요. 한번 ","먹다 + -아/어 보세요",".",["먹어 보세요"],"→ 어 보세요"],
+ [8,"밤에 늦게 ","자다 + -지 않는 게 좋다",".",["자지 않는 게 좋아요"],"지 않 + 는 게 좋아요"],
+ [9,"어제 아파서 학교에 ","가다 + 못 (passado)",".",["못 갔어요"],"못 + verbo"],
+ [9,"이 영화는 ","재미있다 + -지 않다",".",["재미있지 않아요"],"재미있다 → 지 않아요 (nunca 안 재미있어요)"],
+ [9,"여기에서 사진을 ","찍다 + -(으)ㄹ 수 없다",".",["찍을 수 없어요","찍을 수 없습니다"],"consoante → 을 수 없어요"],
+ [9,"저는 매운 음식을 ","먹다 + -지 못하다",".",["먹지 못해요"],"raiz + 지 못해요"]];
+// Partículas: [lição, frase com ___, opções (a certa primeiro), explicação]
+const PART=[
+ [1,"저___ 학생이에요.",["는","은","이","를"],"저 acaba em vogal → 는"],
+ [1,"제 이름___ 민지예요.",["은","는","을","가"],"이름 acaba em consoante → 은"],
+ [2,"주말에 영화___ 봐요.",["를","을","가","에"],"objeto; 영화 acaba em vogal → 를"],
+ [2,"저는 음악___ 좋아해요.",["을","를","이","에서"],"objeto; 음악 acaba em consoante → 을"],
+ [2,"저는 한국어___ 공부해요.",["를","을","가","에"],"objeto; 한국어 acaba em vogal → 를"],
+ [3,"아침 7시___ 일어나요.",["에","에서","을","도"],"hora → 에"],
+ [3,"회사___ 일해요.",["에서","에","를","로"],"lugar onde se faz uma ação → 에서"],
+ [3,"내일 학교___ 가요.",["에","에서","를","와"],"destino → 에"],
+ [3,"저녁___ 친구를 만나요.",["에","에서","을","도"],"tempo → 에"],
+ [4,"친구___ 같이 쇼핑했어요.",["와","과","를","에"],"친구 acaba em vogal → 와"],
+ [4,"신발___ 가방을 샀어요.",["과","와","을","에서"],"신발 acaba em consoante → 과"],
+ [5,"방___ 두 개 있어요.",["이","가","을","는"],"sujeito de 있다; 방 acaba em consoante → 이"],
+ [5,"거실에 소파___ 있어요.",["가","이","를","에"],"소파 acaba em vogal → 가"],
+ [5,"책상 위___ 컴퓨터가 있어요.",["에","에서","로","를"],"onde algo está → 에"],
+ [6,"지하철___ 회사에 가요.",["로","으로","에","을"],"meio; 지하철 acaba em ㄹ → 로"],
+ [6,"버스___ 학교에 가요.",["로","으로","에서","를"],"meio; 버스 acaba em vogal → 로"],
+ [6,"손___ 먹어요.",["으로","로","에","을"],"meio; 손 acaba em consoante → 으로"],
+ [7,"머리___ 아파요.",["가","이","를","는"],"머리 acaba em vogal → 가"],
+ [7,"눈___ 부었어요.",["이","가","을","에"],"눈 acaba em consoante → 이"],
+ [8,"저는 커피를 좋아해요. 동생___ 커피를 좋아해요.",["도","는","이","을"],"também → 도"],
+ [8,"물___ 많이 마시세요.",["을","를","이","에"],"objeto; 물 acaba em consoante → 을"],
+ [9,"동생___ 선물을 줬어요.",["에게","에","을","에서"],"dar a uma pessoa → 에게"],
+ [9,"우리 가족___ 다섯 명이에요.",["은","는","을","이"],"가족 acaba em consoante → 은"],
+ [9,"할아버지___ 의사였어요.",["는","은","가","를"],"할아버지 acaba em vogal → 는"]];
+// Respostas-modelo da escrita livre e das tarefas de exame (para comparar quando não há Claude)
+const FREE_MODEL=[
+ "저는 김하나라고 해요. 저는 은행에서 일하는 은행원이에요. 일이 바쁘지만 재미있어요.",
+ "주말에 보통 등산하거나 영화를 봐요. 커피나 차를 마시면서 쉬어요. 이번 주말에 같이 영화 볼까요?",
+ "저는 아침마다 일곱 시에 일어나요. 출근할 때 지하철을 타요. 점심을 먹을 때 동료들과 이야기해요.",
+ "소개팅에 원피스에다가 재킷을 입을 거예요. 구두를 신고 목걸이도 할 거예요. 친구가 \"정말 예뻐 보여요!\"라고 했어요.",
+ "우리 집은 지하철역이 가까워서 회사에 가기가 좋아요. 거실 벽에 그림이 걸려 있어요. 책상 위에 꽃이 놓여 있어요. 동네가 시끄럽지 않아요.",
+ "토요일 아침에 운동하기 전에 물을 마셨어요. 친구와 이야기하면서 점심을 먹었어요. 점심을 먹은 후에 영화를 봤어요.",
+ "스트레스를 받으면 머리가 아파요. 어제는 많이 울어서 눈이 부었어요. 오늘은 푹 쉬어서 다 나았어요. 요즘 스트레스가 많지요?",
+ "요즘 잠을 잘 못 자는데 걱정이에요. 자기 전에 따뜻한 우유를 마셔 보세요. 밤에 커피를 마시지 않는 게 좋아요.",
+ "우리 가족은 네 명이에요. 언니가 한 명, 남동생이 한 명 있어요. 남동생은 매운 음식을 못 먹어요."];
+const WMODEL={
+ complete:["친구하고 영화를 봤어요.","네, 좋아요. 몇 시에 만날까요?","자기 전에 따뜻한 우유를 마셔 보세요.","몸이 아파서 못 갔어요."],
+ reply:["네, 시간 있어요. 토요일 오후에 같이 자전거를 타요. 몇 시에 만날까요?","이사 축하해요! 이번 주말에 시간이 있어요. 토요일 오후에 갈까요?","숙제는 30쪽 문제예요. 다음 수업은 목요일 저녁 7시예요."],
+ text:["토요일 아침에 공원에서 산책했어요. 날씨가 좋아서 기분이 좋았어요. 점심에는 친구와 맛집에 갔어요. 음식이 정말 맛있었어요. 저녁에는 영화관에서 영화를 봤어요. 즐거운 주말이었어요.",
+  "저는 매일 아침 7시에 일어나요. 아침을 먹은 후에 출근해요. 회사에서 회의를 해요. 퇴근한 후에 한국어 수업을 들어요. 집에 와서 숙제를 해요. 바쁘지만 재미있는 하루예요.",
+  "우리 집은 아파트예요. 방이 두 개 있어요. 거실 벽에 그림이 걸려 있어요. 책상 위에 컴퓨터가 놓여 있어요. 지하철역 근처라서 회사에 가기가 좋아요.",
+  "스트레스를 받으면 머리가 아파요. 그리고 잠이 안 와요. 그럴 때는 산책을 해요. 음악을 들으면서 쉬어요. 여러분도 스트레스를 받으면 운동해 보세요."]};
+const WRANGE={complete:[1,2],reply:[2,3],text:[5,6]};
+const WGRAM={text:[null,null,"놓여/걸려 있다, -기가 좋다","-(으)면, -아/어 보세요"]};
+
+/* ---- 쓰기: modos ---- */
+function claudeFeedback(box,task,text,model,o={}){
+  const local=()=>localCheckHTML(text,{model,grammar:o.grammar,range:o.range});
   box.innerHTML=`<div class="fb info"><span><span class="spin"></span> A corrigir…</span></div>`;
   getSample().then(sample=>{
-    if(!sample){box.innerHTML=`<div class="fb info">A correção automática não está disponível aqui.${model?` Compara com a resposta modelo:<div class="k">${esc(model)}</div>`:""}</div>`;return}
+    if(!sample){bump("c");box.innerHTML=local();return}
     const prompt=`És professor de coreano. A aluna é portuguesa (PT-PT), nível 세종한국어 2A.
 Tarefa: ${task}
 ${model?`Resposta modelo (há outras corretas): ${model}`:""}
@@ -1337,10 +1530,14 @@ Avalia gramática, ortografia, partículas e naturalidade, ao nível 2A. Sê enc
         ${Array.isArray(r.notas)&&r.notas.length?`<ul>${r.notas.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:""}
         ${model?`<div class="muted">Modelo: <span class="ko">${esc(model)}</span></div>`:""}</div>`;
     });
-  }).catch(e=>{box.innerHTML=`<div class="fb info">${sampleErr(e)}${model?`<div>Resposta modelo:</div><div class="k">${esc(model)}</div>`:""}</div>`});
+  }).catch(e=>{box.innerHTML=`<div class="fb info" style="margin-bottom:8px">${sampleErr(e)} Fica a correção automática:</div>`+local()});
 }
+const selfMark=key=>`<div class="row"><span class="muted grow" style="font-size:13px">A tua resposta estava certa?</span><button class="btn ghost" data-self="no" data-k="${key}" style="padding:8px 12px">Errei</button><button class="btn" data-self="ok" data-k="${key}" style="padding:8px 12px">Acertei</button></div>`;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-self]");if(!b)return;const k=b.dataset.k;
+  b.dataset.self==="ok"?errOk(k):errAdd(k);stats.drill++;if(b.dataset.self==="ok")stats.drillOk++;saveAll();
+  b.parentElement.innerHTML=`<span class="muted" style="font-size:13px">${b.dataset.self==="ok"?"Registado como certo ✓":"Guardado para rever no caderno de erros"}</span>`});
 function wTrad(){
-  const s=pick(SENT);
+  const i=Math.random()*SENT.length|0, s=SENT[i];
   $("#wbody").innerHTML=`<div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
       <div class="eyebrow accent">${lname(s[2])} · ${esc(s[3])}</div>
       <div style="font-size:20px;font-weight:500">${esc(s[1])}</div>
@@ -1348,10 +1545,11 @@ function wTrad(){
       <div class="row"><button class="btn ghost" id="show">Ver modelo</button><button class="btn grow" id="fix">Corrigir</button></div>
       <div id="fb"></div><button class="btn ghost" id="nx">Outra frase →</button></div>`;
   $("#nx").onclick=wTrad;
-  $("#show").onclick=()=>{$("#fb").innerHTML=`<div class="fb info"><div class="row"><span class="k grow">${esc(s[0])}</span>${say(s[0])}</div></div>`};
+  $("#show").onclick=()=>{$("#fb").innerHTML=`<div class="fb info"><div class="row"><span class="k grow">${esc(s[0])}</span>${say(s[0])}</div>${pronHTML(s[0])}</div>`};
   $("#fix").onclick=()=>{const t=$("#in").value.trim();if(!t){$("#in").focus();return}
-    if(norm(t)===norm(s[0])){bump("c");$("#fb").innerHTML=`<div class="fb ok"><b>정답이에요! Igual ao modelo.</b><div class="row"><span class="k grow">${esc(s[0])}</span>${say(s[0])}</div></div>`;return}
-    claudeFeedback($("#fb"),`Traduzir para coreano: "${s[1]}" (gramática em foco: ${s[3]})`,t,s[0])};
+    if(norm(t)===norm(s[0])){bump("c");stats.drill++;stats.drillOk++;saveAll();$("#fb").innerHTML=`<div class="fb ok"><b>정답이에요! Igual ao modelo.</b><div class="row"><span class="k grow">${esc(s[0])}</span>${say(s[0])}</div></div>`;return}
+    claudeFeedback($("#fb"),`Traduzir para coreano: "${s[1]}" (gramática em foco: ${s[3]})`,t,s[0],{grammar:s[3]});
+    $("#fb").insertAdjacentHTML("afterend",`<div id="sm">${selfMark("t:"+i)}</div>`)};
 }
 function wLivre(){
   const sel=Math.min(FREE.length-1,Math.max(0,store.get("free",0)|0));
@@ -1361,12 +1559,81 @@ function wLivre(){
       <div class="eyebrow accent">${lname(f[0])} · usa ${esc(f[2])}</div>
       <div style="font-size:19px;font-weight:500">${esc(f[1])}</div>
       <textarea class="ans" id="in" lang="ko" placeholder="Escreve 3 a 5 frases…" aria-label="Texto">${esc(store.get("draft"+sel,""))}</textarea>
-      <button class="btn" id="fix">Corrigir com o Claude</button><div id="fb"></div></div>`;
+      <div class="row"><button class="btn ghost" id="show">Ver exemplo</button><button class="btn grow" id="fix">Corrigir</button></div><div id="fb"></div></div>`;
   $("#fs").onchange=e=>{store.set("free",+e.target.value);wLivre()};
   $("#in").oninput=e=>store.set("draft"+sel,e.target.value);
+  $("#show").onclick=()=>{$("#fb").innerHTML=`<div class="fb info"><div class="muted" style="font-size:13px">Exemplo de resposta</div><div class="row"><span class="k grow">${esc(FREE_MODEL[sel])}</span>${say(FREE_MODEL[sel])}</div></div>`};
   $("#fix").onclick=()=>{const t=$("#in").value.trim();if(!t){$("#in").focus();return}
-    claudeFeedback($("#fb"),`Escrita livre: "${f[1]}". Deve usar: ${f[2]}. Diz também se usou bem as gramáticas pedidas.`,t,null)};
+    claudeFeedback($("#fb"),`Escrita livre: "${f[1]}". Deve usar: ${f[2]}. Diz também se usou bem as gramáticas pedidas.`,t,null,{grammar:f[2],range:[3,5]})};
 }
+function wFill(){
+  const pool=FILL.map((_,i)=>i), errIn=pool.filter(i=>err["f:"+i]);
+  const i=errIn.length&&Math.random()<0.3?pick(errIn):pick(pool), it=FILL[i], key="f:"+i;
+  $("#wbody").innerHTML=`<div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
+      <div class="eyebrow accent">${lname(it[0])} · completa a frase${err[key]?' · <span style="color:var(--red)">já falhaste</span>':""}</div>
+      <div class="sentence" style="font-size:20px">${esc(it[1])}<span class="blank" style="min-width:5em">( &nbsp; )</span>${esc(it[3])}</div>
+      <div class="tip">${esc(it[2])}</div>
+      <input class="ans" id="in" autocomplete="off" autocapitalize="off" spellcheck="false" lang="ko" placeholder="Escreve só a parte que falta" aria-label="Resposta">
+      <div class="row"><button class="btn ghost" id="skip">Mostrar</button><button class="btn grow" id="chk">Verificar</button></div><div id="fb"></div></div>`;
+  const inp=$("#in"); inp.focus({preventScroll:true}); let answered=false;
+  const finish=(ok,shown)=>{answered=true;if(!shown){stats.drill++;if(ok)stats.drillOk++}ok?errOk(key):errAdd(key);bump("c");
+    const full=it[1]+it[4][0]+it[3];
+    $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div>${ok?"정답이에요!":shown?"A resposta é:":"Ainda não. A resposta é:"}</div>
+      <div class="row"><span class="k grow">${esc(full)}</span>${say(full)}</div><div class="muted">${esc(it[5])}</div>${!ok&&!shown&&inp.value.trim()?`<div class="muted">Escreveste: <span class="ko">${diffHTML(inp.value.trim(),it[4][0]).mine}</span></div>`:""}</div>
+      <button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
+    $("#nx").onclick=wFill;$("#chk").disabled=true;$("#skip").disabled=true};
+  $("#chk").onclick=()=>{if(answered||!inp.value.trim())return;const v=norm(inp.value);finish(it[4].some(a=>norm(a)===v),false)};
+  $("#skip").onclick=()=>{if(!answered)finish(false,true)};
+  inp.onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==="Enter"){e.preventDefault();answered?wFill():$("#chk").click()}};
+}
+function wOrder(){
+  const pool=[...SENT.map((s,i)=>({ko:s[0],pt:s[1],l:s[2],k:"s"+i})),...DIALOGS.map((d,i)=>({ko:d[2][0],pt:"Resposta a: "+d[1],l:d[0],k:"d"+i}))]
+    .filter(x=>x.ko.split(/\s+/).length>=3&&x.ko.split(/\s+/).length<=9);
+  const it=pick(pool), end=(it.ko.match(/[.?!]$/)||[""])[0], words=it.ko.replace(/[.?!]$/,"").split(/\s+/), key="o:"+it.k;
+  let bank=shuffle(words.map((w,i)=>({w,i}))); for(let n=0;n<5&&bank.every((t,k)=>t.i===k);n++)bank=shuffle(bank);
+  let chosen=[], done=false;
+  $("#wbody").innerHTML=`<div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
+      <div class="eyebrow accent">${lname(it.l)} · ordena as palavras</div>
+      <div style="font-size:18px;font-weight:500">${esc(it.pt)}</div>
+      <div class="tiles answer" id="ans" aria-label="A tua frase"></div>
+      <div class="tiles" id="bank" aria-label="Palavras"></div>
+      <div class="row"><button class="btn ghost" id="undo">Apagar</button><button class="btn grow" id="chk">Verificar</button></div><div id="fb"></div></div>`;
+  const draw=()=>{
+    $("#ans").innerHTML=chosen.length?chosen.map((t,k)=>`<button class="wtile on" data-c="${k}">${esc(t.w)}</button>`).join("")+(end?`<span class="wtile-end">${end}</span>`:""):`<span class="muted" style="font-size:13px">Toca nas palavras pela ordem certa</span>`;
+    $("#bank").innerHTML=bank.map((t,k)=>`<button class="wtile" data-b="${k}">${esc(t.w)}</button>`).join("");
+    $$("[data-b]").forEach(b=>b.onclick=()=>{if(done)return;chosen.push(bank.splice(+b.dataset.b,1)[0]);draw()});
+    $$("[data-c]").forEach(b=>b.onclick=()=>{if(done)return;bank.push(chosen.splice(+b.dataset.c,1)[0]);draw()});
+  };
+  draw();
+  $("#undo").onclick=()=>{if(done||!chosen.length)return;bank.push(chosen.pop());draw()};
+  $("#chk").onclick=()=>{if(done||bank.length)return toast(bank.length?"Usa todas as palavras antes de verificar.":"");
+    done=true;const mine=chosen.map(t=>t.w).join(" "), ok=mine===words.join(" ");
+    stats.drill++;if(ok)stats.drillOk++;ok?errOk(key):errAdd(key);bump("c");
+    $$("#ans .wtile").forEach((b,k)=>b.classList.add(chosen[k].w===words[k]?"right":"wrong"));
+    $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div>${ok?"정답이에요!":"Ainda não. A ordem certa é:"}</div><div class="row"><span class="k grow">${esc(it.ko)}</span>${say(it.ko)}</div>
+      ${ok?"":`<div class="muted" style="font-size:13px">Em coreano o verbo fica sempre no fim, e o que modifica vem antes do nome.</div>`}</div>
+      <button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
+    $("#nx").onclick=wOrder;
+    speak(it.ko)};
+}
+function wPart(){
+  const pool=PART.map((_,i)=>i), errIn=pool.filter(i=>err["pa:"+i]);
+  const i=errIn.length&&Math.random()<0.3?pick(errIn):pick(pool), it=PART[i], key="pa:"+i, order=shuffle([0,1,2,3]);
+  let answered=false;
+  $("#wbody").innerHTML=`<div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
+      <div class="eyebrow accent">${lname(it[0])} · escolhe a partícula${err[key]?' · <span style="color:var(--red)">já falhaste</span>':""}</div>
+      <div class="sentence">${esc(it[1]).replace("___",'<span class="blank">( &nbsp; )</span>')}</div>
+      <div class="opts" style="grid-template-columns:repeat(2,minmax(0,1fr))">${order.map(oi=>`<button class="opt ko" style="text-align:center;font-size:22px" data-po="${oi}">${esc(it[2][oi])}</button>`).join("")}</div>
+      <div id="fb"></div></div>`;
+  $$("[data-po]").forEach(b=>b.onclick=()=>{if(answered)return;answered=true;const ok=b.dataset.po==="0";
+    stats.drill++;if(ok)stats.drillOk++;ok?errOk(key):errAdd(key);bump("c");
+    $$("[data-po]").forEach(x=>{if(x.dataset.po==="0")x.classList.add("right");else if(x===b)x.classList.add("wrong")});
+    const full=it[1].replace("___",it[2][0]);
+    $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div class="row"><span class="k grow">${esc(full)}</span>${say(full)}</div><div class="muted">${esc(it[3])}</div></div>
+      <button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
+    $("#nx").onclick=wPart});
+}
+
 
 /* ---- 듣기 ---- */
 function playerHTML(t){return `<div class="card player c-cobalt">
@@ -1708,7 +1975,8 @@ function renderQ(){
 async function gradeOpen(W,Sp){
   const out={};
   let sample=null; try{sample=await getSample()}catch(e){}
-  if(!sample){out.err="A correção de 쓰기 e 말하기 precisa do Claude, que não está disponível aqui. Essas partes ficam sem nota.";return out}
+  const auto=()=>{out.w=W.length?W.map(r=>autoGrade(r.a,{range:WRANGE[r.q.task]})):null;out.s=Sp.length?Sp.map(r=>autoGrade(r.a,{range:[1,3],model:r.q.oral[3]})):null};
+  if(!sample){auto();out.err="Sem o Claude, as notas de 쓰기 e 말하기 são automáticas e aproximadas: a app verifica tamanho, gramática, partículas e terminações.";return out}
   const ask=async(list,kind)=>{
     if(!list.length)return null;
     const items=list.map((r,i)=>kind==="w"
@@ -1720,7 +1988,7 @@ async function gradeOpen(W,Sp){
     const r=await sample.json(`${intro} Resposta vazia = 0.\n\n${items}\n\nResponde só com JSON: {"itens":[{"nota":número,"comentario":"uma frase curta em português de Portugal com o erro principal ou um elogio"}]} com ${list.length} itens, pela mesma ordem.`,{modelTier:"default",cache:false});
     return list.map((_,i)=>{const it=r&&Array.isArray(r.itens)&&r.itens[i]||{};return hasNota(it)?{nota:Math.max(0,Math.min(100,Math.round(+it.nota))),comentario:String(it.comentario||"")}:null});
   };
-  try{out.w=await ask(W,"w");out.s=await ask(Sp,"s")}catch(e){out.err=sampleErr(e)+" As partes de 쓰기 e 말하기 ficam sem nota."}
+  try{out.w=await ask(W,"w");out.s=await ask(Sp,"s")}catch(e){auto();out.err=sampleErr(e)+" Ficam notas automáticas e aproximadas para 쓰기 e 말하기."}
   return out;
 }
 function examEnd(){
@@ -1798,31 +2066,33 @@ function showResult(res,g){
 
 /* ============ 쓰기 (com modo exame) ============ */
 function escrita(){
-  $("#pbody").innerHTML=`<div class="seg"><button aria-pressed="${S.wmode==="conj"}" data-w="conj">Conjugar</button><button aria-pressed="${S.wmode==="trad"}" data-w="trad">Traduzir</button><button aria-pressed="${S.wmode==="livre"}" data-w="livre">Livre</button><button aria-pressed="${S.wmode==="exame"}" data-w="exame">Exame</button></div>
+  const WM=[["conj","Conjugar"],["fill","Completar"],["order","Ordenar"],["part","Partículas"],["trad","Traduzir"],["livre","Livre"],["exame","Exame"]];
+  if(!WM.some(m=>m[0]===S.wmode))S.wmode="conj";
+  $("#pbody").innerHTML=`<div class="chips" role="group" aria-label="Exercício de escrita">${WM.map(([k,l])=>`<button class="chip" aria-pressed="${S.wmode===k}" data-w="${k}">${l}</button>`).join("")}</div>
     <div id="wbody" class="view"></div>`;
   $$("[data-w]").forEach(b=>b.onclick=()=>{S.wmode=b.dataset.w;escrita()});
-  ({conj:wConj,trad:wTrad,livre:wLivre,exame:wExame})[S.wmode]();
+  ({conj:wConj,fill:wFill,order:wOrder,part:wPart,trad:wTrad,livre:wLivre,exame:wExame})[S.wmode]();
+  const on=$("#pbody .chip[aria-pressed=\"true\"]"); if(on)on.scrollIntoView?.({block:"nearest",inline:"center"});
 }
+
 function wExame(){
-  const T=S.wtask||"complete"; const task=WTASK[T]; const item=pick(task.items);
-  let shown;
-  if(T==="complete")shown=`<div class="passage">${item.map(l=>l.includes("____")?`<b>${esc(l.replace("________",""))}</b><span class="blank" style="min-width:8em">( &nbsp; )</span>`:esc(l)).join("<br>")}</div>`;
-  else if(T==="reply")shown=`<div class="bub them" style="max-width:100%"><span class="t">Mensagem de um amigo</span><span class="k">${esc(item[0])}</span></div>`;
-  else shown=`<div class="passage"><b>${esc(item[0])}</b><ul style="margin:6px 0 0;padding-left:18px">${item.slice(1).map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`;
+  const T=S.wtask||"complete"; const task=WTASK[T]; const idx=Math.random()*task.items.length|0, item=task.items[idx];
+  const model=(WMODEL[T]||[])[idx], o={model,range:WRANGE[T],grammar:(WGRAM[T]||[])[idx]||null,score:true};
   $("#wbody").innerHTML=`<div class="seg">${Object.entries(WTASK).map(([k,v])=>`<button aria-pressed="${T===k}" data-wt="${k}">${v.n.slice(0,2)}${{complete:"Diálogo",reply:"Mensagem",text:"Texto"}[k]}</button>`).join("")}</div>
     <div class="card pad c-ochre" style="display:flex;flex-direction:column;gap:12px">
       <div class="eyebrow accent">${esc(task.n)}</div><div class="muted" style="font-size:14px">${esc(task.d)}</div>
-      ${shown}
+      ${wShown(T,item)}
       <textarea class="ans" id="in" lang="ko" placeholder="Escreve em 한글…" aria-label="Resposta"></textarea>
-      <button class="btn" id="fix">Corrigir e dar nota</button><div id="fb"></div>
+      <div class="row"><button class="btn ghost" id="show">Ver exemplo</button><button class="btn grow" id="fix">Corrigir e dar nota</button></div><div id="fb"></div>
       <button class="btn ghost" id="nx">Outra pergunta →</button></div>
-    <p class="muted" style="font-size:13px;margin:0">No exame tens 20 minutos para as 3 perguntas. A nota é uma estimativa feita pelo Claude.</p>`;
+    <p class="muted" style="font-size:13px;margin:0">No exame tens 20 minutos para as 3 perguntas. A nota é uma estimativa: do Claude no claude.ai, ou automática na app instalada.</p>`;
   $$("[data-wt]").forEach(b=>b.onclick=()=>{S.wtask=b.dataset.wt;wExame()});
   $("#nx").onclick=wExame;
+  $("#show").onclick=()=>{$("#fb").innerHTML=model?`<div class="fb info"><div class="muted" style="font-size:13px">Exemplo de resposta</div><div class="row"><span class="k grow">${esc(model)}</span>${say(model)}</div></div>`:""};
   $("#fix").onclick=()=>{const t=$("#in").value.trim();if(!t){$("#in").focus();return}
     const box=$("#fb"); box.innerHTML=`<div class="fb info"><span><span class="spin"></span> A corrigir…</span></div>`;
     getSample().then(sample=>{
-      if(!sample)throw {code:"none"};
+      if(!sample){bump("c");box.innerHTML=localCheckHTML(t,o);return}
       const prompt=`És examinador do 세종학당 성취도 평가 (nível 2A). Corrige a parte de 쓰기 de uma aluna portuguesa.
 Tipo de pergunta: ${task.n} (${task.d})
 Enunciado: ${item.join(" | ")}
@@ -1836,9 +2106,10 @@ Avalia: cumpre a tarefa, gramática, vocabulário e ortografia, ao nível 2A. D�
           ${r.corrigido&&norm(r.corrigido)!==norm(t)?`<div class="row"><span class="k grow">${esc(r.corrigido)}</span>${say(r.corrigido)}</div>`:""}
           ${Array.isArray(r.notas)&&r.notas.length?`<ul>${r.notas.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:""}</div>`;
       });
-    }).catch(e=>{box.innerHTML=`<div class="fb info">${e&&e.code==="none"?"A correção precisa do Claude, que não está disponível aqui.":sampleErr(e)}</div>`});
+    }).catch(e=>{box.innerHTML=`<div class="fb info" style="margin-bottom:8px">${sampleErr(e)} Fica a correção automática:</div>`+localCheckHTML(t,o)});
   };
 }
+
 
 /* ============ 듣기 (com vídeos) ============ */
 function audicao(){
