@@ -857,23 +857,33 @@ let ttsWarned=0;
 function ttsHelp(k,extra){if(Date.now()-ttsWarned<6000)return;ttsWarned=Date.now();toast(TTS_HELP[k]+(extra?` <span style="opacity:.7">(${esc(extra)})</span>`:""))}
 // Keep the utterances referenced (some browsers drop them mid-speech) and tell the user why there is no sound.
 let curU=[], ttsWatch=null;
-function ttsRun(items){
-  const user=Date.now()-lastTap<1500;
+// Android's engine sometimes fails ("synthesis-failed") when a voice object is forced, or when speech starts
+// right after cancel(). So: wait a moment after a cancel, and if it fails, retry once with only lang="ko-KR".
+// When that plain mode works, remember it for this phone.
+let ttsPlain=store.get("ttsplain",false), ttsRunId=0;
+function ttsRun(items,o={}){
+  const user=o.user??(Date.now()-lastTap<1500), retry=!!o.retry, id=++ttsRunId;
   if(!hasTTS()){if(user)ttsHelp("none");return}
-  const ss=speechSynthesis, kv=koVoices();
-  try{if(ss.speaking||ss.pending)ss.cancel();ss.resume()}catch(e){}
-  let started=false; clearTimeout(ttsWatch);
-  try{
-    curU=items.map(([t,slow,who])=>{const u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";const m=who==="남";
-      if(kv.length)u.voice=who&&kv.length>1?kv[m?0:1]:kv[0];
-      if(who)u.pitch=m?0.7:1.3; u.rate=Math.max(0.4,(slow?0.7:1)*(S.rate||0.8));
-      u.onstart=()=>{started=true;clearTimeout(ttsWatch)};
-      u.onerror=e=>{if(e.error==="canceled"||e.error==="interrupted")return;clearTimeout(ttsWatch);
-        if(user)ttsHelp(e.error==="language-unavailable"||e.error==="voice-unavailable"?"novoice":e.error==="not-allowed"?"silent":"error",e.error)};
-      return u});
-    curU.forEach(u=>ss.speak(u));
-  }catch(e){if(user)ttsHelp("error",e.message);return}
-  if(user)ttsWatch=setTimeout(()=>{if(!started&&!ss.speaking)ttsHelp(voices.length&&!kv.length?"novoice":"silent")},2500);
+  const ss=speechSynthesis, kv=koVoices(), plain=ttsPlain||retry;
+  let busy=false; try{busy=ss.speaking||ss.pending;if(busy)ss.cancel();ss.resume()}catch(e){}
+  let started=false, failed=false; clearTimeout(ttsWatch);
+  const again=reason=>{if(failed||id!==ttsRunId)return;failed=true;clearTimeout(ttsWatch);
+    if(!retry){setTimeout(()=>{if(id===ttsRunId)ttsRun(items,{user,retry:true})},250);return}
+    if(user)ttsHelp(reason==="language-unavailable"||reason==="voice-unavailable"?"novoice":reason==="not-allowed"?"silent":reason==="nostart"?(voices.length&&!kv.length?"novoice":"silent"):"error",reason==="nostart"?"":reason)};
+  const go=()=>{
+    if(id!==ttsRunId)return;
+    try{
+      curU=items.map(([t,slow,who])=>{const u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";const m=who==="남";
+        if(!plain&&kv.length)u.voice=who&&kv.length>1?kv[m?0:1]:kv[0];
+        if(who)u.pitch=m?0.7:1.3; u.rate=Math.max(0.4,(slow?0.7:1)*(S.rate||0.8));
+        u.onstart=()=>{started=true;clearTimeout(ttsWatch);if(retry&&!ttsPlain){ttsPlain=true;store.set("ttsplain",true)}};
+        u.onerror=e=>{if(e.error==="canceled"||e.error==="interrupted")return;again(e.error)};
+        return u});
+      curU.forEach(u=>ss.speak(u));
+    }catch(e){again(e.message);return}
+    ttsWatch=setTimeout(()=>{if(!started&&!ss.speaking&&id===ttsRunId)again("nostart")},2500);
+  };
+  busy?setTimeout(go,120):go();
 }
 function speak(t,slow){ttsRun([[t,slow]])}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b&&!b.disabled)speak(b.dataset.say,b.dataset.slow==="1"||S.slow)});
