@@ -375,6 +375,88 @@ nav.tabs a[aria-current="page"] .ti{background:color-mix(in srgb,var(--hero-b) 1
   max-width:596px;margin:0 auto;display:flex;flex-direction:column;gap:10px;background:var(--raised);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 10px 30px rgb(0 0 0 / .25)}
 .toast{position:fixed;z-index:40;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom,0px));
   max-width:588px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;box-shadow:0 6px 20px rgb(0 0 0 / .25);pointer-events:none}
+
+/* v19: meta, sequência, revisão espaçada, definições, tocar numa palavra */
+.hicons{position:relative;display:flex;gap:8px;align-items:center}
+a.flame{color:inherit;text-decoration:none}
+.gear{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgb(255 255 255 / .18);color:inherit}
+.gear svg{width:19px;height:19px}
+.gt{font-size:12px;opacity:.85;margin-top:2px;font-variant-numeric:tabular-nums}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;position:relative}
+.wday{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--muted)}
+.wday i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:14px;background:var(--line);color:var(--raised)}
+.wday i svg{width:16px;height:16px}
+.wday.met i{background:var(--ok)}
+.wday.today:not(.met) i{background:#f08a24;color:#fff}
+.wday.today span{color:var(--ink)}
+.wday.fut i{background:transparent;border:1.5px dashed var(--line)}
+.week.hero .wday{color:rgb(255 255 255 / .75)}
+.week.hero .wday.today span{color:var(--on-hero)}
+.week.hero .wday i{background:rgb(255 255 255 / .16);width:26px;height:26px;font-size:12px}
+.week.hero .wday.met i{background:#3fcf8e;color:#063b22}
+.week.hero .wday.today:not(.met) i{background:#ff9a3c;color:#fff}
+.week.hero .wday.fut i{background:transparent;border-color:rgb(255 255 255 / .3)}
+.week.big .wday i{width:36px;height:36px}
+.cflame{display:flex;align-items:center;justify-content:center;gap:6px;color:#f08a24}
+.cflame svg{width:54px;height:54px}
+.cflame b{font-size:46px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.celeb{position:fixed;inset:0;z-index:40;background:rgb(10 6 20 / .55);display:grid;place-items:center;padding:16px}
+.cbox{width:min(420px,100%);background:var(--raised);border-radius:26px;padding:24px 20px;display:flex;flex-direction:column;gap:12px;text-align:center;animation:pop .35s ease-out}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+.seqc{display:flex;flex-direction:column;gap:10px;align-items:stretch;text-align:center}
+.gbar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.gbar i{display:block;height:100%;background:#f08a24;border-radius:4px}
+.month{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;font-size:11px;font-weight:700;color:var(--muted)}
+.month i{aspect-ratio:1;border-radius:8px;background:var(--line)}
+.month i.met{background:var(--ok)}
+.month i.today{outline:2px solid #f08a24;outline-offset:1px}
+.month i.fut{background:transparent;border:1px dashed var(--line)}
+.setc{display:flex;flex-direction:column;gap:10px}
+.setc .lab{font-size:13px;font-weight:700;color:var(--muted)}
+.setc .seg button{font-variant-numeric:tabular-nums}
+.srsc{display:flex;flex-direction:column;gap:12px}
+.srsc .more svg{width:15px;height:15px;vertical-align:-2px;color:#f08a24}
+.srsn{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;font-size:11px;color:var(--muted);line-height:1.25}
+.srsn b{display:block;font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
+.srsn div:first-child b{color:var(--accent-ink)}
+.grades{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.grades button{border:0;border-radius:14px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:1px;color:#fff}
+.grades b{font-size:14px} .grades small{font-size:11px;opacity:.9}
+.grades .g0{background:var(--bad)} .grades .g1{background:var(--ochre)} .grades .g2{background:var(--ok)} .grades .g3{background:var(--cobalt)}
+:root[data-theme="dark"] .grades button{color:#120f18}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .grades button{color:#120f18}}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--muted);white-space:nowrap}
+.badge.new{background:var(--cobalt-soft);color:var(--cobalt)}
+.badge.due,.badge.rev{background:#f08a2426;color:#c4620a}
+.badge.learning{background:var(--ochre-soft);color:var(--ochre)}
+.badge.learned{background:var(--jade-soft);color:var(--jade)}
+.wlist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;background:var(--raised);overflow:hidden}
+.wrow{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 0;border-top:1px solid var(--line)}
+.wrow:first-child{border-top:0}
+.wmain{flex:1;min-width:0;border:0;background:none;text-align:left;padding:6px 0 6px 14px;display:flex;flex-direction:column}
+.wmain .ko{font-size:17px;font-weight:700}
+.wpt{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tw{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer;border-radius:5px}
+.tw:hover,.tw:focus-visible{background:color-mix(in srgb,var(--cobalt) 14%,transparent)}
+.vw{color:var(--cobalt);border-bottom:1.5px solid color-mix(in srgb,var(--cobalt) 45%,transparent)}
+.wd.vw{color:var(--cobalt)}
+.bub.me .vw{color:inherit}
+.ex span.k{display:block}
+.rtext .sent p,.passage.rtext{font-size:var(--rfs,20px)}
+.passage.rtext{line-height:1.9}
+.fsctl{flex:0 0 auto;padding:3px}
+.fsctl button{padding:5px 10px;font-weight:700;color:var(--ink)}
+.shtabs{margin-top:-4px}
+.shw,.shs{display:flex;flex-direction:column;gap:10px}
+.tsay{border:0;background:none;padding:0;font:inherit;color:var(--cobalt);text-align:left;cursor:pointer}
+.sug{align-self:flex-start;max-width:90%;border:1.5px dashed color-mix(in srgb,var(--cobalt) 50%,transparent);border-radius:16px;padding:10px 14px;display:flex;flex-direction:column;gap:4px;background:color-mix(in srgb,var(--cobalt) 6%,transparent)}
+.sug .k{font-family:var(--display);font-size:16px;font-weight:700}
+.sug .t{font-size:13px;color:var(--muted)}
+.sug .tools{display:flex;gap:12px}
+.sug .tools button{border:0;background:none;color:var(--cobalt);font-size:12px;font-weight:700;padding:2px 0}
+.nwords{display:flex;flex-direction:column;gap:8px}
+.nwr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nwr .btn{padding:7px 10px;font-size:13px}
 </style>
 
 <div class="stripe" aria-hidden="true"></div>
@@ -935,11 +1017,12 @@ const S={lesson:store.get("lesson",1),deck:null,vmode:"cards",vdir:"ko",psub:"es
 
 const today=()=>new Date().toLocaleDateString("sv-SE");
 const GOALS=[["v","Palavras",10],["c","Conjugações",5],["l","Audições",3],["r","Leitura ou exame",1]];
-function bump(k){const t=today();days[t]=days[t]||{};days[t][k]=(days[t][k]||0)+1;saveAll()}
-const active=d=>d&&Object.values(d).reduce((a,b)=>a+b,0)>=5;
-function streak(){let n=0;const d=new Date();if(!active(days[d.toLocaleDateString("sv-SE")]))d.setDate(d.getDate()-1);
-  while(active(days[d.toLocaleDateString("sv-SE")])){n++;d.setDate(d.getDate()-1)}return n}
-function last7(){const out=[];const d=new Date();d.setDate(d.getDate()-6);for(let i=0;i<7;i++){out.push(active(days[d.toLocaleDateString("sv-SE")]));d.setDate(d.getDate()+1)}return out}
+function bump(k){const t=today();days[t]=days[t]||{};days[t][k]=(days[t][k]||0)+1;saveAll();checkGoal()}
+// A day counts for the streak when the daily goal was met (see goalMet, in the v19 block).
+const active=(d,k)=>goalMet(d,k);
+function streak(){let n=0;const d=new Date();let k=d.toLocaleDateString("sv-SE");if(!active(days[k],k))d.setDate(d.getDate()-1);
+  for(;;){k=d.toLocaleDateString("sv-SE");if(!active(days[k],k))break;n++;d.setDate(d.getDate()-1)}return n}
+function last7(){const out=[];const d=new Date();d.setDate(d.getDate()-6);for(let i=0;i<7;i++){const k=d.toLocaleDateString("sv-SE");out.push(active(days[k],k));d.setDate(d.getDate()+1)}return out}
 const errAdd=k=>{err[k]=Math.min((err[k]||0)+1,3);saveAll()};
 const errOk=k=>{if(err[k]){err[k]--;if(!err[k])delete err[k];saveAll()}};
 const errKeys=p=>Object.keys(err).filter(k=>k.startsWith(p));
@@ -957,7 +1040,11 @@ let voices=[];
 function loadVoices(){try{voices=speechSynthesis.getVoices()||[]}catch(e){}}
 if("speechSynthesis" in window){loadVoices();try{speechSynthesis.addEventListener("voiceschanged",loadVoices)}catch(e){speechSynthesis.onvoiceschanged=loadVoices}}
 const hasTTS=()=>"speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
-const koVoices=()=>{if(!voices.length)loadVoices();return voices.filter(v=>/^ko([-_]|$)/i.test(v.lang||""))};
+const isFem=v=>/female|여성|여자|yuna|sora|heami|sunhi|seoyeon|jimin|yujin|seoa|nari/i.test(v.name||"");
+const isMale=v=>!isFem(v)&&/male|남성|남자|minjun|injoon|hyunsu|bongjin|gookmin|jun\b/i.test(v.name||"");
+const koVoices=()=>{if(!voices.length)loadVoices();const kv=voices.filter(v=>/^ko([-_]|$)/i.test(v.lang||""));
+  const sc=v=>(typeof CFG!=="undefined"&&CFG.voice&&v.name===CFG.voice?-10:0)+(isFem(v)?-2:isMale(v)?2:0);
+  return kv.map((v,i)=>[v,i]).sort((a,b)=>sc(a[0])-sc(b[0])||a[1]-b[1]).map(x=>x[0])};
 let lastTap=0; document.addEventListener("pointerdown",()=>{lastTap=Date.now()},true);
 function toast(html){let t=document.getElementById("toast");
   if(!t){t=document.createElement("div");t.id="toast";t.className="toast";t.setAttribute("role","status");t.onclick=()=>{t.hidden=true};document.body.appendChild(t)}
@@ -988,7 +1075,7 @@ function ttsRun(items,o={}){
     if(id!==ttsRunId)return;
     try{
       curU=items.map(([t,slow,who])=>{const u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";const m=who==="남";
-        if(!plain&&kv.length)u.voice=who&&kv.length>1?kv[m?0:1]:kv[0];
+        if(!plain&&kv.length)u.voice=m?(kv.find(isMale)||kv[1]||kv[0]):kv[0];
         if(who)u.pitch=m?0.7:1.3; u.rate=Math.max(0.4,(slow?0.7:1)*(S.rate||0.8));
         u.onstart=()=>{started=true;clearTimeout(ttsWatch);if(retry&&!ttsPlain){ttsPlain=true;store.set("ttsplain",true)}};
         u.onerror=e=>{if(e.error==="canceled"||e.error==="interrupted")return;again(e.error)};
@@ -1021,6 +1108,8 @@ const ICON={
   erros:ico('<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M9 8h6M9 12h6M9 16h3"/>'),
   professor:ico('<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.6"/><path d="M12 17h.01"/>'),
   flame:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.6 2.5c.7 3.2 5.4 5.3 5.4 10.6a6 6 0 0 1-12 0c0-2.6 1.3-4.4 2.6-5.6.2 2.2 1.2 3.4 2.4 3.6-.3-3.4.2-6 1.6-8.6z"/></svg>'};
+ICON.gear=ico('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>');
+ICON.srs=ico('<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/><path d="m9 12 2 2 4-4"/>');
 ICON.back=ico('<path d="M15 18l-6-6 6-6"/>');
 ICON.mic=ico('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>');
 const TABS=[["home","Início"],["gramatica","Gramática"],["vocab","Vocabulário"],["pratica","Praticar"],["exame","Exame"]];
@@ -1028,17 +1117,20 @@ let EX={};
 function route(){
   let h=(location.hash||"#home").slice(1);
   if(h==="escrita"||h==="audicao"||h==="leitura"||h==="conversa"){S.psub=h;h="pratica"}
-  const views={home,gramatica,vocab,pratica,exame,professor,erros};
+  const views={home,gramatica,vocab,pratica,exame,professor,erros,sequencia,definicoes};
   const t=views[h]?h:"home";
-  const cur=t==="erros"||t==="professor"?"home":t;
+  const cur=["erros","professor","sequencia","definicoes"].includes(t)?"home":t;
   $("#tabs").innerHTML=TABS.map(([id,l])=>`<a href="#${id}" ${id===cur?'aria-current="page"':""}><span class="ti">${ICON[id]}</span>${l}</a>`).join("");
   if(hasTTS())speechSynthesis.cancel();
   clearInterval(EX.timer); EX.live=false; closeSheet();
-  if(t!=="vocab")S.deck=null;
+  if(t!=="vocab"){S.deck=null;SQ=null}
   views[t]();
   window.scrollTo(0,0);
 }
 addEventListener("hashchange",route);
+// Tapping the tab of the page you are on takes you back to the top of that page (e.g. out of a review session).
+document.addEventListener("click",e=>{const a=e.target.closest("#tabs a");if(!a||a.getAttribute("href")!==(location.hash||"#home"))return;
+  e.preventDefault();S.deck=null;SQ=null;S.vtab="temas";S.story=null;S.read=null;route()});
 const V=html=>{const h=(location.hash||"#home").slice(1);
   const bar=h!=="home"&&h!==""&&!/id="(back|quit)"/.test(html)?`<button class="backbtn" id="gb">${ICON.back}Voltar</button>`:"";
   $("#view").innerHTML=bar+html; const gb=$("#gb"); if(gb)gb.onclick=goBack};
@@ -1193,9 +1285,11 @@ function goBack(){
   const h=(location.hash||"#home").slice(1);
   if(h==="exame"&&EX.live){toast("Para sair do exame, carrega em <b>Sair</b>.");return}
   if(h==="exame"&&!$("#ex-full4")){clearInterval(EX.timer);exame();return}
-  if(h==="vocab"&&S.deck){S.deck=null;vocab();return}
+  const ce=document.getElementById("celeb"); if(ce&&!ce.hidden){ce.hidden=true;return}
+  if(document.getElementById("sheet")&&!document.getElementById("sheet").hidden){closeSheet();return}
+  if(h==="vocab"&&(S.deck||SQ)){S.deck=null;SQ=null;vocab();return}
+  if(h==="vocab"&&S.vtab&&S.vtab!=="temas"){S.vtab="temas";vocab();return}
   if(h==="pratica"){
-    if(document.getElementById("sheet")&&!document.getElementById("sheet").hidden){closeSheet();return}
     if(S.story){S.story=null;pratica();return}
     if(S.read){S.read=null;pratica();return}
     if(CH){S.scen=null;CH=null;pratica();return}
@@ -1228,11 +1322,11 @@ function readStory(){
   const st=STORIES.find(x=>x.id===S.story); if(!st){S.story=null;leitura();return}
   const showPt=!!S.storyPt, orders=st.q.map(()=>shuffle([0,1,2,3]));
   const words=ko=>ko.split(/(\s+)/).map(w=>{if(/^\s*$/.test(w))return w;const t=tokClean(w),g=glossOf(st,t);
-    return g?`<button class="wd${isMine(g.lemma)?" saved":""}" data-wd="${t}">${esc(w)}</button>`:esc(w)}).join("");
-  $("#pbody").innerHTML=`<div class="row"><button class="btn ghost" id="sb">← Histórias</button><div class="grow"></div><button class="btn ghost" id="stpt">${showPt?"Esconder":"Mostrar"} tradução</button></div>
+    return g?`<button class="wd${isMine(g.lemma)?" saved":""}${vIndex().m.has(g.lemma)?" vw":""}" data-wd="${t}">${esc(w)}</button>`:esc(w)}).join("");
+  $("#pbody").innerHTML=`<div class="row"><button class="btn ghost" id="sb">← Histórias</button><div class="grow"></div>${fsCtl()}<button class="btn ghost" id="stpt">${showPt?"Esconder":"Mostrar"} tradução</button></div>
     <div><div class="eyebrow">${lname(st.l)} · ${esc(st.pt)}</div><h2 class="ko" style="font-size:26px;margin-top:4px">${esc(st.t)}</h2></div>
     <div class="row"><button class="btn ghost" id="stall">Ouvir a história toda</button></div>${rateCtl()}
-    <div class="story">${st.s.map(([ko,pt],i)=>`<div class="sent" data-si="${i}"><div class="row" style="align-items:flex-start;flex-wrap:nowrap"><p class="ko grow">${words(ko)}</p>${say(ko,"icon sm")}</div>${showPt?`<div class="tr">${esc(pt)}</div>`:""}</div>`).join("")}</div>
+    <div class="story rtext">${st.s.map(([ko,pt],i)=>`<div class="sent" data-si="${i}"><div class="row" style="align-items:flex-start;flex-wrap:nowrap"><p class="ko grow">${words(ko)}</p>${say(ko,"icon sm")}</div>${showPt?`<div class="tr">${esc(pt)}</div>`:""}</div>`).join("")}</div>
     <div class="card pad" style="display:flex;flex-direction:column;gap:12px"><div class="eyebrow">Perguntas</div>
     ${st.q.map((q,qi)=>`<div class="examq"><div class="stem">${qi+1}. ${esc(q[0])}</div><div class="opts">${orders[qi].map((oi,j)=>`<button class="opt ko" style="font-size:16px" data-sq="${qi}" data-oi="${oi}"><span class="no">${NUM[j]}</span>${esc(q[1][oi])}</button>`).join("")}</div></div>`).join("")}
     <div id="sfb"></div></div>`;
@@ -1251,15 +1345,14 @@ function closeSheet(){const sh=document.getElementById("sheet");if(sh)sh.hidden=
 function openWord(st,tok,sentIdx){
   const g=glossOf(st,tok); if(!g)return;
   const sent=st.s[sentIdx]||st.s.find(s=>s[0].includes(tok))||["",""];
-  let sh=document.getElementById("sheet");
-  if(!sh){sh=document.createElement("div");sh.id="sheet";sh.className="sheet noswipe";sh.setAttribute("role","dialog");sh.setAttribute("aria-label","Palavra");document.body.appendChild(sh)}
+  const sh=sheetEl();
   const saved=isMine(g.lemma);
   sh.innerHTML=`<div class="row"><span class="ko grow" style="font-size:28px;font-weight:700">${esc(tok)}</span>${say(g.lemma)}<button class="icon" id="shx" aria-label="Fechar">✕</button></div>
-    <div><span class="muted" style="font-size:13px">Forma base</span> <b class="ko" style="font-size:18px">${esc(g.lemma)}</b></div>
+    ${sheetTabs(!!sent[0])}<div class="shw"><div><span class="muted" style="font-size:13px">Forma base</span> <b class="ko" style="font-size:18px">${esc(g.lemma)}</b></div>
     <div style="font-size:18px;font-weight:500">${esc(g.mean)}</div>
     ${g.gram?`<div class="muted" style="font-size:13px">${esc(g.gram)}</div>`:""}${pronHTML(tok)}
-    <button class="btn" id="shs" ${saved?"disabled":""}>${saved?"Já está nas tuas palavras ✓":"Guardar nas minhas palavras"}</button>`;
-  sh.hidden=false;
+    <button class="btn" id="shs" ${saved?"disabled":""}>${saved?"Já está nas tuas palavras ✓":"Guardar nas minhas palavras"}</button></div>${sentHTML(sent)}`;
+  sh.hidden=false; bindSheetTabs(sh);
   $("#shx").onclick=closeSheet;
   if(!saved)$("#shs").onclick=()=>{
     mine.push([g.lemma,g.mean,sent[0],sent[1]]); store.set("mine",mine);
@@ -1276,8 +1369,8 @@ const nextDeck=()=>DECKS.find(d=>knownCount(d)<d.w.length)||DECKS[0];
 function nextSteps(td){
   const ve=errKeys("v:").length, ce=errKeys("c:").length;
   const meta={
-    v:{label:r=>`Aprender ${r} palavra${r>1?"s":""}`, sub:()=>ve?`Começa pelas ${ve} que falhaste`:`Tema: ${nextDeck().pt}`,
-       go:()=>{if(ve){S.deck="err";S.vmode="quiz"}else{S.deck=nextDeck().id;S.vmode="cards"}go("vocab")}},
+    v:{label:r=>`Aprender ${r} palavra${r>1?"s":""}`, sub:()=>{if(ve)return `Começa pelas ${ve} que falhaste`;const c=srsCounts();return `${c.due} para rever · ${c.newLeft} novas`},
+       go:()=>{if(ve){S.deck="err";S.vmode="quiz"}else{S.deck=null;S.srsAuto=true}go("vocab")}},
     c:{label:r=>`Fazer ${r} conjugaç${r>1?"ões":"ão"}`, sub:()=>ce?`Começa pelas ${ce} que falhaste`:"Todas as lições",
        go:()=>{S.psub="escrita";S.wmode="conj";S.drillG=ce?"err":"all";go("pratica")}},
     l:{label:r=>`Ouvir ${r} frase${r>1?"s":""}`, sub:()=>"Ouves e escolhes o que quer dizer",
@@ -1315,11 +1408,12 @@ function home(){
   const LP=LESSONS.map(L=>({L,...lessonProgress(L.n)}));
   const curL=(LP.find(x=>x.f<1)||LP[0]).L.n;
   V(`<section class="hero home-hero"><div class="seal" aria-hidden="true"></div>
-      <div class="hhead"><div><div class="hello">안녕하세요!</div><div class="big">공부방</div><p>세종한국어 2A</p></div>
-        <div class="flame" title="Dias seguidos">${ICON.flame}<b>${streak()}</b></div></div>
+      <div class="hhead"><div><div class="hello">안녕하세요${CFG.name?", "+esc(CFG.name):""}!</div><div class="big">공부방</div><p>세종한국어 2A</p></div>
+        <div class="hicons"><a class="flame" href="#sequencia" aria-label="Sequência: ${streak()} dias seguidos">${ICON.flame}<b>${streak()}</b></a><a class="gear" href="#definicoes" aria-label="Definições">${ICON.gear}</a></div></div>
       <div class="htoday">
-        <svg class="ring" viewBox="0 0 64 64" aria-label="${nd} de ${st.length} metas de hoje"><circle cx="32" cy="32" r="${R}" class="rbg"/><circle cx="32" cy="32" r="${R}" class="rfg" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-nd/st.length)}"/><text x="32" y="37" text-anchor="middle">${nd}/${st.length}</text></svg>
-        <div style="min-width:0"><div class="hl">${cur?"Hoje · próximo passo":"Hoje"}</div><div class="hn">${cur?esc(cur.label(cur.n-cur.v)):"Meta cumprida! 화이팅!"}</div></div></div>
+        <svg class="ring" id="gring" viewBox="0 0 64 64" aria-label="Meta diária: ${Math.round(goalFrac(td)*100)}%"><circle cx="32" cy="32" r="${R}" class="rbg"/><circle cx="32" cy="32" r="${R}" class="rfg" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-goalFrac(td))}"/><text x="32" y="37" text-anchor="middle">${Math.round(goalFrac(td)*100)}%</text></svg>
+        <div style="min-width:0"><div class="hl">${cur?"Hoje · próximo passo":"Hoje"}</div><div class="hn">${cur?esc(cur.label(cur.n-cur.v)):"Tudo feito! 화이팅!"}</div><div class="gt" id="gtext">${goalMet(td,today())?"Meta diária cumprida ✓":goalText(td)}</div></div></div>
+      ${weekHTML("hero")}
       <button class="hbtn" id="cont">${cur?"Continuar":"Mini-exame extra"} <span aria-hidden="true">→</span></button>
       <div class="hstats"><div><b>${kw}</b>palavras aprendidas</div><div><b>${best??"–"}</b>melhor exame</div></div></section>
     <section class="view" style="gap:10px"><div class="row"><h2 class="grow">O teu percurso</h2><a class="more" href="#gramatica">Ver tudo</a></div>
@@ -1327,11 +1421,13 @@ function home(){
         <span class="ln">${lname(L.n)}</span><span class="lk">${esc(L.ko)}</span><span class="lp">${esc(L.pt)}</span>
         <span class="lbar"><i style="width:${Math.round(f*100)}%"></i></span><span class="lt">${f>=1?"Concluída ✓":esc(t)}</span></button>`).join("")}</div></section>
     <div class="grid2">
+      ${(()=>{const c=srsCounts();return `<a class="sc wide${c.due?" hot":""}" href="#vocab" id="hsrs"><span class="si">${ICON.srs}</span><span><b>Revisão de hoje</b><small>${c.due} para rever · ${c.newLeft} novas · ${c.learned} aprendidas</small></span></a>`})()}
       <a class="sc wide" href="#pratica" id="hst"><span class="si">${ICON.gramatica}</span><span><b>Histórias</b><small>${STORIES.length} histórias para ler · ${mine.length} palavras guardadas</small></span></a>
       <a class="sc${nErr?" hot":""}" href="#erros"><span class="si">${ICON.erros}</span><b>Caderno de erros</b><small>${nErr?nErr+" por rever":"Sem erros"}</small></a>
       <a class="sc" href="#professor"><span class="si">${ICON.professor}</span><b>Quizzes do professor</b><small>${tDone} de ${tIds.length} feitos</small></a>
     </div>`);
   $("#cont").onclick=cur?cur.go:()=>{S.autoMini=true;go("exame")};
+  const hr=$("#hsrs"); if(hr)hr.onclick=e=>{e.preventDefault();S.deck=null;S.srsAuto=true;go("vocab")};
   const hs=$("#hst"); if(hs)hs.onclick=e=>{e.preventDefault();S.psub="leitura";S.read=null;S.story=null;go("pratica")};
   $$("[data-lesson]").forEach(b=>b.onclick=()=>{S.lesson=+b.dataset.lesson;store.set("lesson",S.lesson);go("gramatica")});
   const now=$(".lcard.now"); if(now){const pa=now.parentElement;pa.scrollLeft=Math.max(0,now.getBoundingClientRect().left-pa.getBoundingClientRect().left+pa.scrollLeft-16)}
@@ -1373,8 +1469,8 @@ function gramatica(){
     <div class="lesson-head c-${L.c}"><span class="n">${lname(L.n)}</span><h2>${esc(L.ko)}</h2><span class="muted">${esc(L.pt)}</span></div>
     ${gs.map((g,i)=>`<details class="gcard c-${L.c}" ${i===0?"open":""}><summary><span class="form">${esc(g.f)}</span><span class="mean">${esc(g.m)}</span></summary>
       <div class="gbody"><ul>${g.r.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
-      ${g.ex.map(([k,p])=>`<div class="ex"><div class="t"><div class="k">${esc(k)}</div><div class="p">${esc(p)}</div></div>${say(k)}</div>`).join("")}
-      ${g.tbl?`<div class="tbl"><table><thead><tr>${g.tbl.h.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${g.tbl.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:""}
+      ${g.ex.map(([k,p])=>`<div class="ex"><div class="t">${tapLine(k,p,"k")}<div class="p">${esc(p)}</div></div>${say(k)}</div>`).join("")}
+      ${g.tbl?`<div class="tbl"><table><thead><tr>${g.tbl.h.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${g.tbl.rows.map(r=>`<tr>${r.map(c=>`<td>${/[가-힣]/.test(c)&&c.length<=24?`<button type="button" class="tsay" data-say="${esc(c.replace(/[→/].*$/,"").trim())}">${esc(c)}</button>`:esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:""}
       ${g.tip?`<div class="tip">${esc(g.tip)}</div>`:""}</div></details>`).join("")}
     <button class="btn ghost" id="toDrill">Treinar conjugações ${L.n===11?"de todas as lições":"desta lição"} →</button>`);
   $$("[data-l]").forEach(b=>b.onclick=()=>{S.lesson=+b.dataset.l;store.set("lesson",S.lesson);gramatica()});
@@ -1384,13 +1480,24 @@ function gramatica(){
 /* ============ VOCABULÁRIO ============ */
 let VQ={};
 function vocab(){
+  if(S.srsAuto){S.srsAuto=false;startSrs();return}
+  if(SQ){renderSrs();return}
   if(!S.deck){
-    V(`<div><div class="eyebrow">어휘 · Vocabulário</div><h1 class="title">Vocabulário<small>${Object.values(known).filter(Boolean).length} de ${totalWords} palavras aprendidas</small></h1></div>
+    const tab=S.vtab||"temas", c=srsCounts();
+    const tabs=`<div class="chips" role="group" aria-label="Mostrar">${[["temas","Temas"],["all","Todas"],["due",`Hoje · ${c.due}`],["learning","A aprender"],["learned","Aprendidas"]].map(([k,l])=>`<button class="chip" data-vt="${k}" aria-pressed="${tab===k}">${l}</button>`).join("")}</div>`;
+    const bindTop=()=>{$$("[data-vt]").forEach(b=>b.onclick=()=>{S.vtab=b.dataset.vt;vocab()});
+      $("#srsgo").onclick=()=>{const cc=srsCounts();startSrs(cc.due+cc.newLeft?{}:{extra:5})};
+      $("#f5").onclick=()=>startSrs({deck:$("#fdeck").value,limit:5})};
+    const top=`<div><div class="eyebrow">어휘 · Vocabulário</div><h1 class="title">Vocabulário<small>${Object.values(known).filter(Boolean).length} de ${totalWords} palavras aprendidas</small></h1></div>
+      ${srsCardHTML()}${tabs}`;
+    if(tab!=="temas"){V(top+vocabListHTML(tab));bindTop();return}
+    V(top+`
       <button class="deck mine c-red" data-d="mine"><span class="k">내 단어 · As minhas palavras</span><span class="muted" style="font-size:13px">${mine.length?mine.length+" palavra"+(mine.length===1?"":"s")+" guardada"+(mine.length===1?"":"s")+" nas Histórias":"Ainda vazia: guarda palavras nas Histórias (Praticar › 읽기)"}</span></button>
       ${errKeys("v:").length?`<button class="btn red" id="verr">Treinar as ${errKeys("v:").length} palavras que falhei</button>`:""}
       <div class="grid2">${DECKS.map(d=>{const k=knownCount(d);return `<button class="deck c-${d.c}" data-d="${d.id}"><span class="k">${esc(d.ko)}</span><span>${esc(d.pt)}</span><span class="muted" style="font-size:12px">${k}/${d.w.length}</span><span class="meter"><i style="width:${k/d.w.length*100}%"></i></span></button>`}).join("")}</div>`);
     $$("[data-d]").forEach(b=>b.onclick=()=>{if(b.dataset.d==="mine"&&!mine.length){S.psub="leitura";S.read=null;S.story=null;go("pratica");return}S.deck=b.dataset.d;startDeck()});
     const ve=$("#verr");if(ve)ve.onclick=()=>{S.deck="err";S.vmode="quiz";startDeck()};
+    bindTop();
     return;
   }
   startDeck();
@@ -1426,7 +1533,7 @@ function renderDeck(){
   }
   const {d,w}=items[i]; const key="v:"+d.id+"|"+w[0], own=d.id==="mine";
   const eAdd=k=>{if(!own)errAdd(k)}, eOk=k=>{if(!own)errOk(k)};
-  const ex=exampleOf(d,w), exHTML=ex?`<div class="exbox"><div class="eyebrow">Exemplo</div><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="grow"><span class="k">${esc(ex[0])}</span><span class="p">${esc(ex[1])}</span></span>${say(ex[0])}</div></div>`:"";
+  const ex=exampleOf(d,w), exHTML=ex?`<div class="exbox"><div class="eyebrow">Exemplo · toca numa palavra</div><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="grow">${tapLine(ex[0],ex[1])}<span class="p">${esc(ex[1])}</span></span>${say(ex[0])}</div></div>`:"";
   const front=S.vdir==="ko"?w[0]:w[1], back=S.vdir==="ko"?w[1]:w[0];
   const pr=pronHTML(w[0]);
   const prog=`<div class="progress c-${c}"><div class="bar"><i style="width:${i/items.length*100}%"></i></div><span>${i+1}/${items.length}</span></div>`;
@@ -1441,8 +1548,8 @@ function renderDeck(){
       ${rateCtl()}`);
     const fl=$("#fl"); const flip=()=>{fl.classList.toggle("flipped");const eb=$("#exb");if(eb)eb.hidden=!fl.classList.contains("flipped")};
     const rm=$("#rm"); if(rm)rm.onclick=()=>{mine=mine.filter(m=>m[0]!==w[0]);store.set("mine",mine);VQ.items.splice(VQ.i,1);if(!VQ.items.length){S.deck=null;vocab();return}renderDeck()};
-    const yes=()=>{known[d.id+"|"+w[0]]=true;eOk(key);bump("v");VQ.i++;renderDeck()};
-    const no=()=>{delete known[d.id+"|"+w[0]];eAdd(key);bump("v");VQ.i++;renderDeck()};
+    const yes=()=>{srsRate(d,w,2);VQ.i++;renderDeck()};
+    const no=()=>{srsRate(d,w,0);VQ.i++;renderDeck()};
     swipeable(fl,{left:no,right:yes,tap:flip});
     fl.onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();flip()}else if(e.key==="ArrowRight")yes();else if(e.key==="ArrowLeft")no()};
     $("#yes").onclick=yes; $("#no").onclick=no;
@@ -1920,8 +2027,9 @@ function readPassage(){
   const orders=p.q.map(q=>shuffle([0,1,2,3]));
   let answered=0;
   $("#pbody").innerHTML=`<div class="row"><button class="btn ghost" id="rb">← Textos</button></div>
-    <div class="row"><h2 class="grow">${esc(p.t)}</h2>${say(p.x)}</div>
-    <div class="passage">${esc(p.x)}</div>
+    <div class="row"><h2 class="grow">${esc(p.t)}</h2>${fsCtl()}${say(p.x)}</div>
+    <div class="muted" style="font-size:13px">Toca numa palavra: a azul estão as do vocabulário.</div>
+    <div class="passage rtext">${p.x.split(/(?<=[.?!])(\s+)/).map(x=>/^\s*$/.test(x)?esc(x):tapLine(x,"","sl")).join("")}</div>
     ${p.q.map((q,qi)=>`<div class="examq"><div class="stem">${qi+1}. ${esc(q[0])}</div>
       <div class="opts">${orders[qi].map((oi,j)=>`<button class="opt ko" style="font-size:16px" data-q="${qi}" data-oi="${oi}"><span class="no">${NUM[j]}</span>${esc(q[1][oi])}</button>`).join("")}</div></div>`).join("")}
     <div id="rfb"></div>`;
@@ -1942,7 +2050,8 @@ function renderChat(){
   $("#pbody").innerHTML=`<div class="row"><button class="btn ghost" id="cb">← Situações</button><div class="grow"></div><button class="btn ghost" id="tp">${CH.showPt?"Esconder":"Mostrar"} tradução</button></div>
     <div class="card pad"><b>${esc(sc[1])}</b><div class="muted" style="font-size:13px">Com ${esc(sc[3])} · tenta usar ${esc(sc[4])}</div></div>
     <div class="chat" id="chat">${CH.msgs.map((m,i)=>m.who==="them"
-      ?`<div class="bub them"><span class="k">${esc(m.ko)}</span>${CH.showPt&&m.pt?`<span class="t">${esc(m.pt)}</span>`:""}<span class="tools"><button data-say="${esc(m.ko)}">Ouvir</button><button data-say="${esc(m.ko)}" data-slow="1">Devagar</button></span></div>`
+      ?`<div class="bub them">${tapLine(m.ko,m.pt)}${CH.showPt&&m.pt?`<span class="t">${esc(m.pt)}</span>`:""}<span class="tools"><button data-say="${esc(m.ko)}">Ouvir</button><button data-say="${esc(m.ko)}" data-slow="1">Devagar</button></span></div>
+        ${i===CH.msgs.length-1&&!CH.busy&&!CH.fb&&m.sug&&m.sug[0]?`<div class="sug"><div class="eyebrow">💡 이렇게 말할 수 있어요</div>${tapLine(m.sug[0],m.sug[1])}${m.sug[1]?`<span class="t">${esc(m.sug[1])}</span>`:""}<span class="tools"><button data-say="${esc(m.sug[0])}">Ouvir</button><button id="usug">Usar esta resposta</button></span></div>`:""}`
       :`<div class="bub me"><span class="k">${esc(m.ko)}</span></div>`).join("")}
       ${CH.busy?`<div class="bub them"><span class="spin"></span></div>`:""}</div>
     ${CH.error?`<div class="fb info">${esc(CH.error)}</div>`:""}
@@ -1955,6 +2064,7 @@ function renderChat(){
     cs.onclick=()=>{const t=ci.value.trim();if(!t||CH.busy)return;CH.msgs.push({who:"me",ko:t});chatTurn()};
     ci.onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();cs.click()}}}
   const cf=$("#cf"); if(cf)cf.onclick=chatFeedback;
+  const us=$("#usug"); if(us)us.onclick=()=>{const m=CH.msgs[CH.msgs.length-1];const ci=$("#ci");if(ci&&m&&m.sug){ci.value=m.sug[0];ci.focus()}};
   const ch=$("#chat"); if(ch&&ch.lastElementChild)ch.lastElementChild.scrollIntoView({block:"nearest"});
 }
 const transcript=()=>CH.msgs.map(m=>(m.who==="me"?"Aluna: ":"Tu: ")+m.ko).join("\n");
@@ -1967,10 +2077,10 @@ function chatTurn(){
 A aluna é portuguesa, nível 세종한국어 2A; gramática da lição: ${sc[4]}.
 Regras: fala só coreano simples em 해요체, 1 ou 2 frases curtas, e acaba quase sempre com uma pergunta para a conversa continuar. Não corrijas a aluna durante a conversa. Se ela escrever em português, responde em coreano simples na mesma.
 ${CH.msgs.length?"Conversa até agora:\n"+transcript():"Começa tu a conversa."}
-Responde só com JSON: {"ko":"a tua próxima fala em coreano","pt":"tradução em português de Portugal"}`;
+Responde só com JSON: {"ko":"a tua próxima fala em coreano","pt":"tradução em português de Portugal","sug_ko":"uma resposta curta e natural que a aluna poderia dar à tua fala, nível 2A, em 해요체","sug_pt":"tradução dessa resposta em português de Portugal"}`;
     return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{
       CH.busy=false; if(!r||!r.ko)throw {code:"bad"};
-      CH.msgs.push({who:"them",ko:r.ko,pt:r.pt||""}); renderChat(); speak(r.ko);
+      CH.msgs.push({who:"them",ko:r.ko,pt:r.pt||"",sug:typeof r.sug_ko==="string"&&r.sug_ko?[r.sug_ko,typeof r.sug_pt==="string"?r.sug_pt:""]:null}); renderChat(); speak(r.ko);
     });
   }).catch(e=>{CH.busy=false;CH.error=e&&e.code==="none"?"A conversa precisa do Claude, que não está disponível aqui.":sampleErr(e);renderChat()});
 }
@@ -1982,7 +2092,8 @@ function chatFeedback(){
     const prompt=`És professor de coreano. A aluna (portuguesa, nível 세종한국어 2A) teve esta conversa de prática. Situação: ${sc[2]} Gramática da lição: ${sc[4]}.
 ${transcript()}
 Corrige só as falas da aluna. Responde só com JSON:
-{"elogio":"uma frase curta em português","erros":[{"original":"frase da aluna","corrigido":"versão correta e natural","explicacao":"explicação curta em português de Portugal"}],"dica":"uma dica para a próxima vez, em português"}
+{"elogio":"uma frase curta em português","erros":[{"original":"frase da aluna","corrigido":"versão correta e natural","explicacao":"explicação curta em português de Portugal"}],"dica":"uma dica para a próxima vez, em português","palavras":[{"ko":"palavra útil da conversa, na forma do dicionário","pt":"significado em português de Portugal"}]}
+Em "palavras", põe até 5 palavras da conversa que uma aluna de 2A talvez ainda não saiba (pode ficar vazio).
 Se uma frase estiver certa, não a incluas em "erros".`;
     return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{
       if(!r||(!Array.isArray(r.erros)&&!r.elogio))throw {code:"bad"};
@@ -1991,6 +2102,7 @@ Se uma frase estiver certa, não a incluas em "erros".`;
       CH.fb=`<div class="fb ${er.length?"no":"ok"}"><div><b>${er.length?"Revisão":"Sem erros!"}</b> ${esc(r.elogio||"")}</div>
         ${er.map(x=>`<div class="rev"><span class="muted">${esc(x.original||"")}</span><span class="row"><span class="ko grow">${esc(x.corrigido||"")}</span>${say(x.corrigido||"")}</span><span>${esc(x.explicacao||"")}</span></div>`).join("")}
         ${r.dica?`<div class="rev"><b>Dica:</b> ${esc(r.dica)}</div>`:""}</div>
+        ${newWordsHTML(r.palavras)}
         <button class="btn" id="cnew">Nova conversa</button>`;
       renderChat(); const cn=$("#cnew"); if(cn)cn.onclick=()=>{CH={sc,msgs:[],busy:false,showPt:CH.showPt};chatTurn()};
     });
@@ -2408,6 +2520,289 @@ function oralQ(){
   tick();
   EX.timer=setInterval(()=>{left--;if(left<=0){if(phase==="prep"){phase="talk";left=40}else{showModel();return}}tick()},1000);
 }
+
+/* ============ v19: definições, meta diária, sequência, revisão espaçada (SRS), tocar numa palavra ============ */
+// Settings live in gb_cfg. "since" is the day this version first ran: older days keep the old streak rule.
+const CFG_DEF={goalMin:10,goalCards:20,newDay:10,theme:"auto",name:"",voice:"",fs:20,since:""};
+let CFG=Object.assign({},CFG_DEF,store.get("cfg",{}));
+for(const [k,ok] of [["goalMin",[5,10,15,20,30]],["goalCards",[10,20,30,50]],["newDay",[5,10,15,20]],["fs",[17,20,23,26]]])if(!ok.includes(CFG[k]))CFG[k]=CFG_DEF[k];
+if(!["auto","light","dark"].includes(CFG.theme))CFG.theme="auto";
+for(const k of ["name","voice","since"])if(typeof CFG[k]!=="string")CFG[k]="";
+if(!/^\d{4}-\d{2}-\d{2}$/.test(CFG.since))CFG.since=today();
+const saveCfg=()=>store.set("cfg",CFG);
+function applyCfg(){const r=document.documentElement;
+  if(CFG.theme==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",CFG.theme);
+  r.style.setProperty("--rfs",CFG.fs+"px")}
+saveCfg(); applyCfg();
+
+/* ---- meta diária: minutos de estudo ou cartas, o que chegar primeiro ---- */
+const ymd=d=>d.toLocaleDateString("sv-SE");
+const dayShift=(n,base)=>{const d=base?new Date(base+"T12:00:00"):new Date();d.setDate(d.getDate()+n);return ymd(d)};
+const legacySum=d=>Object.entries(d).reduce((a,[k,v])=>k==="sec"||k==="nw"?a:a+(+v||0),0);
+function goalMet(d,date){if(!d)return false;
+  if((d.sec||0)>=CFG.goalMin*60||(d.v||0)>=CFG.goalCards)return true;
+  return date<CFG.since&&legacySum(d)>=5}
+const goalFrac=d=>d?Math.min(1,Math.max((d.sec||0)/(CFG.goalMin*60),(d.v||0)/CFG.goalCards)):0;
+function bestStreak(){const ks=Object.keys(days).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();let best=0,run=0,prev=null;
+  for(const k of ks){if(!goalMet(days[k],k)){run=0;prev=k;continue}run=prev&&dayShift(1,prev)===k&&run?run+1:1;prev=k;best=Math.max(best,run)}
+  return Math.max(best,streak())}
+// Count study time: every 15 s while the page is visible and was touched in the last minute.
+let lastAct=Date.now();
+for(const ev of ["pointerdown","keydown","scroll","input"])addEventListener(ev,()=>{lastAct=Date.now()},{passive:true,capture:true});
+setInterval(()=>{
+  if(document.visibilityState!=="visible"||Date.now()-lastAct>60000)return;
+  const t=today();days[t]=days[t]||{};days[t].sec=(days[t].sec||0)+15;store.set("days",days);
+  const ring=document.getElementById("gring"); if(ring)paintRing(); checkGoal();
+},15000);
+function goalText(d){d=d||{};const m=Math.floor((d.sec||0)/60);return `${Math.min(m,CFG.goalMin)} de ${CFG.goalMin} min · ${Math.min(d.v||0,CFG.goalCards)} de ${CFG.goalCards} cartas`}
+function paintRing(){const ring=document.getElementById("gring");if(!ring)return;const d=days[today()]||{},f=goalFrac(d),C=2*Math.PI*26;
+  ring.querySelector(".rfg").setAttribute("stroke-dashoffset",C*(1-f));ring.querySelector("text").textContent=Math.round(f*100)+"%";
+  const gt=document.getElementById("gtext");if(gt)gt.textContent=goalText(d)}
+function checkGoal(){const t=today();if(EX.live||!goalMet(days[t],t)||store.get("celeb","")===t)return;store.set("celeb",t);showCeleb()}
+const WD=["S","T","Q","Q","S","S","D"], WDL=["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
+function weekHTML(cls=""){
+  const now=new Date(), off=(now.getDay()+6)%7, t=today();
+  return `<div class="week ${cls}" role="list" aria-label="Esta semana">${WD.map((l,i)=>{const k=dayShift(i-off),met=goalMet(days[k],k),isT=k===t,fut=k>t;
+    return `<div role="listitem" class="wday${met?" met":""}${isT?" today":""}${fut?" fut":""}" aria-label="${WDL[i]}: ${met?"meta cumprida":isT?"hoje, por fazer":fut?"ainda não chegou":"sem meta"}"><span>${l}</span><i>${met?"✓":isT?ICON.flame:""}</i></div>`}).join("")}</div>`}
+function showCeleb(){
+  let o=document.getElementById("celeb");
+  if(!o){o=document.createElement("div");o.id="celeb";o.className="celeb noswipe";o.setAttribute("role","dialog");o.setAttribute("aria-label","Meta cumprida");document.body.appendChild(o)}
+  const n=streak();
+  o.innerHTML=`<div class="cbox"><div class="cflame">${ICON.flame}<b>${n}</b></div>
+    <div class="ko" style="font-size:30px;font-weight:700">잘했어요!</div>
+    <div style="font-size:17px;font-weight:700">Meta de hoje cumprida</div>
+    <div class="muted">${n===1?"Começaste uma sequência nova. Volta amanhã para a manter.":`${n} dias seguidos. Volta amanhã para a manter.`}</div>
+    ${weekHTML("big")}
+    <button class="btn cont" id="cok">Continuar a estudar</button><button class="btn ghost" id="cseq">Ver a sequência</button></div>`;
+  o.hidden=false;
+  $("#cok").onclick=()=>{o.hidden=true};
+  $("#cseq").onclick=()=>{o.hidden=true;go("sequencia")};
+}
+function sequencia(){
+  const t=today(), d=days[t]||{}, n=streak(), met=goalMet(d,t);
+  const off=(new Date().getDay()+6)%7, start=dayShift(-off-28);
+  const cells=[];for(let i=0;i<35;i++){const k=dayShift(i,start);cells.push(`<i class="${goalMet(days[k],k)?"met":""}${k===t?" today":""}${k>t?" fut":""}" title="${k}"></i>`)}
+  V(`<div><div class="eyebrow">연속 · Sequência</div><h1 class="title">A tua sequência</h1></div>
+    <section class="card pad seqc"><div class="cflame">${ICON.flame}<b>${n}</b></div>
+      <div style="font-size:18px;font-weight:700">${n===1?"1 dia seguido":n+" dias seguidos"}</div>
+      <div class="muted" style="font-size:13px">Melhor sequência: ${bestStreak()} dia${bestStreak()===1?"":"s"}</div>
+      ${weekHTML("big")}
+      <div class="gbar"><i style="width:${Math.round(goalFrac(d)*100)}%"></i></div>
+      <div style="font-size:14px">${met?"<b>Meta de hoje cumprida ✓</b>":"Hoje: "+goalText(d)}</div></section>
+    <section class="card pad" style="display:flex;flex-direction:column;gap:8px"><div class="eyebrow">Últimas 5 semanas</div>
+      <div class="month">${WD.map(l=>`<span>${l}</span>`).join("")}${cells.join("")}</div></section>
+    <div class="fb info">A meta diária é <b>${CFG.goalMin} minutos</b> ou <b>${CFG.goalCards} cartas</b>, o que chegar primeiro. Se um dia passar sem a meta cumprida, a sequência volta a zero à meia-noite.</div>
+    <a class="btn ghost" href="#definicoes" style="text-align:center;text-decoration:none">Mudar a meta diária</a>`);
+}
+
+/* ---- definições ---- */
+const optRow=(k,vals,lab)=>`<div class="seg" data-cfg="${k}">${vals.map(v=>`<button type="button" data-v="${v}" aria-pressed="${CFG[k]===v}">${lab(v)}</button>`).join("")}</div>`;
+function definicoes(){
+  const kv=koVoices();
+  V(`<div><div class="eyebrow">설정 · Definições</div><h1 class="title">Definições</h1></div>
+    <section class="card pad setc"><label class="lab" for="cfn">O teu nome (aparece só no início)</label>
+      <input id="cfn" class="ans" style="min-height:0" maxlength="20" value="${esc(CFG.name)}" placeholder="Opcional" autocomplete="off"></section>
+    <section class="card pad setc"><div class="lab">Tema</div>${optRow("theme",["auto","light","dark"],v=>({auto:"Automático",light:"Claro",dark:"Escuro"})[v])}</section>
+    <section class="card pad setc"><div class="lab">Meta diária: minutos de estudo</div>${optRow("goalMin",[5,10,15,20,30],v=>v+" min")}
+      <div class="lab">ou cartas revistas (o que chegar primeiro)</div>${optRow("goalCards",[10,20,30,50],v=>v)}</section>
+    <section class="card pad setc"><div class="lab">Palavras novas por dia, na revisão</div>${optRow("newDay",[5,10,15,20],v=>v)}</section>
+    <section class="card pad setc"><div class="lab">Tamanho do texto nas leituras</div>${optRow("fs",[17,20,23,26],v=>`<span style="font-size:${v-4}px">가</span>`)}</section>
+    <section class="card pad setc"><div class="lab">Voz coreana</div>
+      ${kv.length?`<select id="cfv" class="ans" style="min-height:0"><option value="">Automática (voz feminina, se houver)</option>${kv.map(v=>`<option value="${esc(v.name)}"${v.name===CFG.voice?" selected":""}>${esc(v.name)}</option>`).join("")}</select>`:`<div class="muted" style="font-size:13px">Este aparelho ainda não mostrou vozes coreanas. Se não ouvires som, vê a ajuda que aparece quando tocas em ${SPK.replace("<svg",'<svg style="width:14px;height:14px;vertical-align:-2px"')}.</div>`}
+      ${rateCtl()}<button class="btn ghost" id="cft">Ouvir a voz: 안녕하세요. 만나서 반가워요.</button></section>`);
+  const nm=$("#cfn"); nm.oninput=()=>{CFG.name=nm.value.trim().slice(0,20);saveCfg()};
+  $$("[data-cfg]").forEach(g=>g.onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;const k=g.dataset.cfg;
+    CFG[k]=typeof CFG_DEF[k]==="number"?+b.dataset.v:b.dataset.v;saveCfg();applyCfg();
+    g.querySelectorAll("[data-v]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)))});
+  const sv=$("#cfv"); if(sv)sv.onchange=()=>{CFG.voice=sv.value;saveCfg();speak("안녕하세요.")};
+  $("#cft").onclick=()=>speak("안녕하세요. 만나서 반가워요.");
+}
+
+/* ---- revisão espaçada (SM-2 simplificado) ----
+   gb_srs: {"tema|palavra": {i: intervalo em dias, e: facilidade, n: repetições certas seguidas, l: falhas, due: "AAAA-MM-DD"}} */
+let srs=store.get("srs",{}); for(const k in srs){const r=srs[k];if(!isObj(r)||!/^\d{4}-\d{2}-\d{2}$/.test(r.due)||!Number.isFinite(r.i)||!Number.isFinite(r.e))delete srs[k]}
+const saveSrs=()=>store.set("srs",srs);
+const sKey=(d,w)=>d.id+"|"+w[0];
+const allItems=()=>allWords().concat(mine.map(w=>({d:MINE_DECK(),w})));
+// Words marked "Já sei" before the SRS existed start as young reviews, spread over the next two weeks.
+if(!store.get("srsmig",false)){let h=0;for(const it of allItems()){const k=sKey(it.d,it.w);if(known[k]&&!srs[k]){h++;srs[k]={i:4,e:2.5,n:2,l:0,due:dayShift(1+h%14)}}}saveSrs();store.set("srsmig",true)}
+function srsStatus(r){if(!r)return "new";if(r.due<=today())return "due";return r.i>=21?"learned":"learning"}
+const ST_LAB={new:"Nova",due:"Para rever",learning:"A aprender",learned:"Aprendida"};
+function srsNext(r,g){r=r?{...r}:{i:0,e:2.5,n:0,l:0};
+  if(g===0){r.n=0;r.i=0;r.e=Math.max(1.3,r.e-0.2);r.l=(r.l||0)+1}
+  else{
+    if(g===1){r.i=r.n===0?1:Math.max(r.i+1,Math.round(r.i*1.2));r.e=Math.max(1.3,r.e-0.15)}
+    else if(g===2){r.i=r.n===0?1:r.n===1?3:Math.max(r.i+1,Math.round(r.i*r.e))}
+    else{r.i=r.n===0?4:Math.max(r.i+2,Math.round(Math.max(r.i,1)*r.e*1.3));r.e=Math.min(3.2,r.e+0.15)}
+    r.n++}
+  r.i=Math.min(r.i,365);r.due=dayShift(r.i);return r}
+const ivLab=i=>i<=0?"hoje":i===1?"1 dia":i<7?i+" dias":i<30?Math.round(i/7)+" sem.":i<365?Math.round(i/30)+(Math.round(i/30)===1?" mês":" meses"):"1 ano";
+function srsRate(d,w,g){
+  const k=sKey(d,w), was=srs[k], t=today();
+  if(!was){days[t]=days[t]||{};days[t].nw=(days[t].nw||0)+1}
+  srs[k]=srsNext(was,g); saveSrs();
+  if(g>=2)known[k]=true; else if(g===0)delete known[k];
+  if(d.id!=="mine"){const ek="v:"+k;if(g===0)errAdd(ek);else if(g>=2)errOk(ek)}
+  bump("v");
+}
+function srsCounts(){const t=today();let due=0,learning=0,learned=0,nw=0;
+  for(const it of allItems()){const s=srsStatus(srs[sKey(it.d,it.w)]);if(s==="due")due++;else if(s==="learning")learning++;else if(s==="learned")learned++;else nw++}
+  const newLeft=Math.min(nw,Math.max(0,CFG.newDay-((days[t]||{}).nw||0)));return {due,learning,learned,nw,newLeft}}
+function srsQueue(o={}){
+  const t=today(); let its=allItems(); if(o.deck)its=its.filter(x=>x.d.id===o.deck);
+  const rec=x=>srs[sKey(x.d,x.w)];
+  const due=its.filter(x=>rec(x)&&rec(x).due<=t).sort((a,b)=>rec(a).due.localeCompare(rec(b).due));
+  const fresh=its.filter(x=>!rec(x));
+  if(o.limit){let q=due.concat(fresh).slice(0,o.limit);
+    if(q.length<o.limit)q=q.concat(its.filter(x=>!q.includes(x)).sort((a,b)=>rec(a).i-rec(b).i).slice(0,o.limit-q.length));
+    return shuffle(q)}
+  const nl=o.extra?o.extra:Math.max(0,CFG.newDay-((days[t]||{}).nw||0));
+  return o.extra?fresh.slice(0,nl):shuffle(due).concat(fresh.slice(0,nl));
+}
+let SQ=null;
+function startSrs(o={}){SQ={q:srsQueue(o),i:0,o,again:{},seen:0,ok:0};S.deck=null;renderSrs()}
+function renderSrs(){
+  const t=today();
+  const head=`<div class="row"><button class="btn ghost" id="back">← Vocabulário</button><div class="grow"></div>
+    <div class="seg" style="flex:0 0 auto"><button aria-pressed="${S.vdir==="ko"}" data-dir="ko">한 → PT</button><button aria-pressed="${S.vdir==="pt"}" data-dir="pt">PT → 한</button></div></div>`;
+  const bind=()=>{$("#back").onclick=()=>{SQ=null;vocab()};$$("[data-dir]").forEach(b=>b.onclick=()=>{S.vdir=b.dataset.dir;renderSrs()})};
+  if(SQ.i>=SQ.q.length){
+    const c=srsCounts(), tom=allItems().filter(x=>{const r=srs[sKey(x.d,x.w)];return r&&r.due===dayShift(1)}).length;
+    V(head+`<div class="card pad" style="text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div class="ko accent" style="font-size:38px;font-weight:700">${SQ.seen?"수고했어요!":"다 했어요!"}</div>
+      <div>${SQ.seen?`Revisaste <b>${SQ.seen}</b> carta${SQ.seen===1?"":"s"}.`:"Não há cartas para rever agora."}</div>
+      <div class="muted" style="font-size:13px">${tom?`Amanhã tens ${tom} para rever.`:"Amanhã não há nada marcado."} ${goalText(days[t])}.</div>
+      ${c.nw?`<button class="btn" id="more5">Aprender mais 5 palavras novas</button>`:""}
+      <button class="btn ghost" id="sdone">Voltar ao vocabulário</button></div>`);
+    bind(); const m5=$("#more5"); if(m5)m5.onclick=()=>startSrs({extra:5}); $("#sdone").onclick=()=>{SQ=null;vocab()}; return;
+  }
+  const {d,w}=SQ.q[SQ.i], r=srs[sKey(d,w)], isNew=!r;
+  const front=S.vdir==="ko"?w[0]:w[1], back=S.vdir==="ko"?w[1]:w[0];
+  const ex=exampleOf(d,w);
+  const left=SQ.q.length-SQ.i;
+  V(head+`<div class="progress c-${d.c}"><div class="bar"><i style="width:${SQ.i/SQ.q.length*100}%"></i></div><span>${left} por ver</span></div>
+    <div class="row" style="gap:6px"><span class="badge ${isNew?"new":"rev"}">${isNew?"Nova":"Revisão"}</span><span class="muted" style="font-size:12px">${esc(d.pt)}</span></div>
+    <div class="flash c-${d.c}" id="fl" role="button" tabindex="0" aria-label="Virar cartão">
+      <span class="stamp no">De novo</span><span class="stamp yes">Bem</span><div class="inner">
+      <div class="face front"><div class="${S.vdir==="ko"?"w":"pt"}">${esc(front)}</div><div class="hint">pensa na resposta e toca para virar</div></div>
+      <div class="face back"><div class="${S.vdir==="ko"?"pt":"w"}">${esc(back)}</div><div class="hint">${esc(front)}</div>${pronHTML(w[0])}</div></div></div>
+    <div class="row">${say(w[0])}<button class="btn grow" id="show">Mostrar resposta</button></div>
+    <div id="grades" class="grades" hidden>${[["De novo","g0"],["Difícil","g1"],["Bem","g2"],["Fácil","g3"]].map(([l,c],g)=>`<button class="${c}" data-g="${g}"><b>${l}</b><small>${ivLab(srsNext(r,g).i)}</small></button>`).join("")}</div>
+    <div id="exb" hidden>${ex?`<div class="exbox"><div class="eyebrow">Exemplo · toca numa palavra</div><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="grow">${tapLine(ex[0],ex[1])}<span class="p">${esc(ex[1])}</span></span>${say(ex[0])}</div></div>`:""}</div>
+    ${rateCtl()}`);
+  bind();
+  const fl=$("#fl");
+  const reveal=()=>{if(fl.classList.contains("flipped"))return;fl.classList.add("flipped");$("#exb").hidden=false;$("#grades").hidden=false;$("#show").hidden=true;if(S.vdir==="pt")speak(w[0])};
+  const rate=g=>{if(!fl.classList.contains("flipped"))return;srsRate(d,w,g);SQ.seen++;
+    if(g===0){const k=sKey(d,w);SQ.again[k]=(SQ.again[k]||0)+1;if(SQ.again[k]<=2)SQ.q.push(SQ.q[SQ.i])}
+    SQ.i++;renderSrs()};
+  swipeable(fl,{left:()=>fl.classList.contains("flipped")?rate(0):(fl.style.transform="",reveal()),right:()=>fl.classList.contains("flipped")?rate(2):(fl.style.transform="",reveal()),tap:reveal});
+  $("#show").onclick=reveal;
+  $$("[data-g]").forEach(b=>b.onclick=()=>rate(+b.dataset.g));
+  fl.onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();reveal()}else if(/^[1-4]$/.test(e.key))rate(+e.key-1)};
+  if(S.vdir==="ko")speak(w[0]);
+  fl.focus({preventScroll:true});
+}
+function srsCardHTML(){
+  const c=srsCounts(), n=c.due+c.newLeft;
+  return `<section class="card pad srsc"><div class="row"><div class="eyebrow grow">복습 · Revisão espaçada</div><a class="more" href="#sequencia">${ICON.flame} ${streak()}</a></div>
+    <div class="srsn"><div><b>${c.due}</b>para rever hoje</div><div><b>${c.newLeft}</b>novas hoje</div><div><b>${c.learning}</b>a aprender</div><div><b>${c.learned}</b>aprendidas</div></div>
+    <button class="btn cont" id="srsgo">${n?`Rever agora · ${n} carta${n===1?"":"s"}`:c.nw?"Aprender mais 5 palavras":"Tudo revisto 🎉"}</button>
+    <div class="row" style="flex-wrap:nowrap"><select id="fdeck" class="ans" style="min-height:0;flex:1;min-width:0" aria-label="Tema para a sessão focada">${(mine.length?[MINE_DECK()]:[]).concat(DECKS).map(d=>`<option value="${d.id}">${esc(d.pt)} · ${esc(d.ko)}</option>`).join("")}</select>
+      <button class="btn ghost" id="f5" style="flex:none">5 palavras</button></div></section>`;
+}
+function vocabListHTML(tab){
+  const its=allItems().map(x=>({...x,r:srs[sKey(x.d,x.w)]})).map(x=>({...x,s:srsStatus(x.r)}))
+    .filter(x=>tab==="all"||x.s===tab);
+  if(tab==="due")its.sort((a,b)=>a.r.due.localeCompare(b.r.due));
+  if(!its.length)return `<div class="fb info">${({due:"Nada para rever hoje. 잘했어요!",learning:"Ainda não tens palavras a aprender. Começa uma revisão.",learned:"Uma palavra fica «aprendida» quando a próxima revisão fica a 3 semanas ou mais."})[tab]||""}</div>`;
+  return `<div class="wlist">${its.slice(0,600).map(x=>`<div class="wrow" data-wk="${esc(sKey(x.d,x.w))}"><button class="wmain" type="button"><span class="ko">${esc(x.w[0])}</span><span class="wpt">${esc(x.w[1])}</span></button>
+    <span class="badge ${x.s}">${x.s==="new"?"Nova":x.s==="due"?"Hoje":x.r.i>=21?"✓ "+ivLab(x.r.i):ivLab(x.r.i)}</span>${say(x.w[0],"icon sm")}</div>`).join("")}</div>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest(".wrow .wmain");if(!b)return;const k=b.parentElement.dataset.wk;
+  const it=allItems().find(x=>sKey(x.d,x.w)===k);if(it)openVocabSheet(it.w[0],it,null)});
+
+/* ---- tocar numa palavra coreana em qualquer frase ---- */
+// Find a word of the vocabulary from a word as it appears in a sentence: take off particles and verb endings.
+function ahStem(st){
+  if(st.endsWith("하"))return st.slice(0,-1)+"해";
+  const last=st.slice(-1), s=decS(last), pre=st.slice(0,-1); if(!s)return st;
+  const bright=s.V===0||s.V===8;
+  if(s.T==="ㅂ"&&!["입","좁","잡","씹","업"].includes(last))return pre+encS({...s,T:""})+(last==="돕"||last==="곱"?"와":"워");
+  if(s.T==="ㄷ"&&["듣","걷","묻","싣"].includes(last))return pre+encS({...s,T:"ㄹ"})+"어";
+  if(last==="르"&&pre){const p=decS(pre.slice(-1));if(p)return pre.slice(0,-1)+encS({...p,T:"ㄹ"})+(p.V===0||p.V===8?"라":"러")}
+  if(s.T)return st+(bright?"아":"어");
+  if([0,1,4,5,6].includes(s.V))return st;
+  const sw={8:9,13:14,20:6,11:10}; if(sw[s.V]!==undefined)return pre+encS({...s,V:sw[s.V]});
+  if(s.V===18){const p=pre&&decS(pre.slice(-1));return pre+encS({...s,V:p&&(p.V===0||p.V===8)?0:4})}
+  return st+"어";
+}
+const PARTS=["에서는","에서도","에게서","한테서","으로는","이에요","입니다","이세요","에서","에게","한테","께서","부터","까지","으로","처럼","보다","하고","이랑","이나","예요","이야","이다","랑","나","은","는","이","가","을","를","에","도","만","로","와","과","의","요","께","야"];
+const END1=["요","고","세","시","면","서","지","는","니","습","ㅂ","았","었","겠","러","려","기","자","네","어","아","다","게","도","죠","잖"];
+let VIDX=null;
+function vIndex(){if(VIDX)return VIDX;const m=new Map(),verbs=[];
+  for(const it of allWords()){const k=it.w[0].replace(/\s*\(.*?\)\s*/g,"").trim();if(!m.has(k))m.set(k,it);
+    if(/다$/.test(k)&&!/\s/.test(k)&&k.length>=2){const st=k.slice(0,-1),ss=[st,ahStem(st)];
+      const a=ahStem(st),la=decS(a.slice(-1));if(la&&!la.T)ss.push(a.slice(0,-1)+encS({...la,T:"ㅆ"}));
+      const ls=decS(st.slice(-1));if(ls&&ls.T==="ㄹ"&&st.length>=2)ss.push(st.slice(0,-1)+encS({...ls,T:""}));
+      verbs.push([ss,it])}}
+  verbs.sort((a,b)=>b[0][0].length-a[0][0].length);return VIDX={m,verbs}}
+function lookupKo(raw){
+  const tok=tokClean(String(raw)); if(!/[가-힣]/.test(tok))return null;
+  const mm=mine.find(x=>x[0]===tok); if(mm)return {d:MINE_DECK(),w:mm};
+  const {m,verbs}=vIndex(); if(m.has(tok))return m.get(tok);
+  let t=tok; for(let k=0;k<3;k++){const p=PARTS.find(p=>t.length>p.length&&t.endsWith(p));if(!p)break;t=t.slice(0,-p.length);
+    if(m.has(t))return m.get(t); const mm2=mine.find(x=>x[0]===t); if(mm2)return {d:MINE_DECK(),w:mm2}}
+  for(const [ss,it] of verbs)for(const s of ss){if(!tok.startsWith(s))continue;const rest=tok.slice(s.length);
+    if(s.length>=2||!rest||END1.some(e=>rest.startsWith(e)))return it}
+  return null;
+}
+const tapHTML=text=>String(text).split(/(\s+)/).map(w=>{if(!/[가-힣]/.test(w))return esc(w);
+  return `<button type="button" class="tw${lookupKo(w)?" vw":""}" data-kw="${esc(w)}">${esc(w)}</button>`}).join("");
+const tapLine=(ko,pt,cls="k")=>`<span class="${cls}" data-sent="${esc(ko)}" data-spt="${esc(pt||"")}">${tapHTML(ko)}</span>`;
+function sheetEl(){let sh=document.getElementById("sheet");
+  if(!sh){sh=document.createElement("div");sh.id="sheet";sh.className="sheet noswipe";sh.setAttribute("role","dialog");sh.setAttribute("aria-label","Palavra");document.body.appendChild(sh)}
+  return sh}
+const sheetTabs=has=>has?`<div class="seg shtabs"><button type="button" aria-pressed="true" data-sht="w">Palavra</button><button type="button" aria-pressed="false" data-sht="s">Frase</button></div>`:"";
+function bindSheetTabs(sh){sh.querySelectorAll("[data-sht]").forEach(b=>b.onclick=()=>{
+  sh.querySelectorAll("[data-sht]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  sh.querySelector(".shw").hidden=b.dataset.sht!=="w";sh.querySelector(".shs").hidden=b.dataset.sht!=="s"})}
+const sentHTML=sent=>sent&&sent[0]?`<div class="shs" hidden><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="ko grow" style="font-size:20px;font-weight:700;line-height:1.5">${esc(sent[0])}</span>${say(sent[0])}</div>${sent[1]?`<div style="font-size:15px">${esc(sent[1])}</div>`:""}</div>`:"";
+function openVocabSheet(tok,it,sent){
+  const sh=sheetEl(), word=tokClean(tok);
+  let body;
+  if(it){const r=srs[sKey(it.d,it.w)], s=srsStatus(r), ex=exampleOf(it.d,it.w);
+    body=`${it.w[0]!==word?`<div><span class="muted" style="font-size:13px">No vocabulário</span> <b class="ko" style="font-size:18px">${esc(it.w[0])}</b></div>`:""}
+      <div style="font-size:18px;font-weight:500">${esc(it.w[1])}</div>
+      <div class="row" style="gap:6px"><span class="badge ${s}">${ST_LAB[s]}</span><span class="muted" style="font-size:12px">${esc(it.d.pt)}</span></div>
+      ${ex?`<div class="exbox"><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="grow"><span class="k">${esc(ex[0])}</span><span class="p">${esc(ex[1])}</span></span>${say(ex[0])}</div></div>`:""}
+      ${pronHTML(word)}
+      <button class="btn" id="shr" ${s==="due"?"disabled":""}>${s==="due"?"Já está na revisão de hoje ✓":"Rever hoje na revisão espaçada"}</button>`}
+  else body=`<div class="muted">Esta palavra não está no vocabulário da app.</div>${pronHTML(word)}`;
+  sh.innerHTML=`<div class="row"><span class="ko grow" style="font-size:28px;font-weight:700">${esc(word)}</span>${say(word)}<button class="icon" id="shx" aria-label="Fechar">✕</button></div>
+    ${sheetTabs(sent&&sent[0]&&sent[0]!==word)}<div class="shw">${body}</div>${sentHTML(sent)}`;
+  sh.hidden=false; bindSheetTabs(sh); $("#shx").onclick=closeSheet;
+  const r=$("#shr"); if(r)r.onclick=()=>{const k=sKey(it.d,it.w);srs[k]=srs[k]?{...srs[k],due:today()}:{i:0,e:2.5,n:0,l:0,due:today()};saveSrs();
+    r.disabled=true;r.textContent="Fica para rever hoje ✓";toast("Vai aparecer em <b>Vocabulário › Rever agora</b>.")};
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-kw]");if(!b)return;e.preventDefault();e.stopPropagation();
+  const ln=b.closest("[data-sent]");openVocabSheet(b.dataset.kw,lookupKo(b.dataset.kw),ln?[ln.dataset.sent,ln.dataset.spt]:null)},true);
+const fsCtl=()=>`<div class="seg fsctl" role="group" aria-label="Tamanho do texto"><button type="button" data-fs="-1" aria-label="Texto mais pequeno">A−</button><button type="button" data-fs="1" aria-label="Texto maior">A+</button></div>`;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-fs]");if(!b)return;const L=[17,20,23,26];
+  CFG.fs=L[Math.max(0,Math.min(L.length-1,L.indexOf(CFG.fs)+ +b.dataset.fs))];saveCfg();applyCfg()});
+
+// Words suggested after a conversation: add them to "As minhas palavras" or dismiss them.
+function newWordsHTML(list){
+  const ws=(Array.isArray(list)?list:[]).filter(x=>x&&typeof x.ko==="string"&&x.ko.trim()&&typeof x.pt==="string").map(x=>[x.ko.trim(),x.pt.trim()])
+    .filter(([ko])=>!vIndex().m.has(ko)&&!isMine(ko)).slice(0,5);
+  if(!ws.length)return "";
+  return `<div class="card pad nwords"><div class="eyebrow">Palavras novas desta conversa</div>${ws.map(([ko,pt])=>`<div class="nwr" data-nko="${esc(ko)}" data-npt="${esc(pt)}"><span class="grow"><b class="ko">${esc(ko)}</b> <span class="muted">${esc(pt)}</span></span>${say(ko,"icon sm")}
+    <button class="btn" data-nw="add">Adicionar</button><button class="btn ghost" data-nw="skip">Não é para mim</button></div>`).join("")}</div>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-nw]");if(!b)return;const row=b.closest(".nwr");if(!row)return;
+  const ko=row.dataset.nko,pt=row.dataset.npt;
+  if(b.dataset.nw==="add"&&!isMine(ko)){mine.push([ko,pt,"",""]);store.set("mine",mine);row.innerHTML=`<span class="grow"><b class="ko">${esc(ko)}</b> <span class="muted">${esc(pt)}</span></span><span style="color:var(--ok);font-weight:700">Adicionada ✓</span>`}
+  else row.remove();});
 
 route();
 </script>
