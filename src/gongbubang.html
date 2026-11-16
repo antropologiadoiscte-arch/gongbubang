@@ -444,6 +444,9 @@ a.flame{color:inherit;text-decoration:none}
 .nwords{display:flex;flex-direction:column;gap:8px}
 .nwr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .nwr .btn{padding:7px 10px;font-size:13px}
+.gexp{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:14px}
+.gexp ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
+.gexp b.ko{font-size:17px}
 </style>
 
 <div class="stripe" aria-hidden="true"></div>
@@ -1612,7 +1615,7 @@ function wConj(){
     if(!shown){stats.drill++;if(ok)stats.drillOk++}
     ok?errOk(key):errAdd(key); bump("c");
     $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div>${ok?"정답이에요!":shown?"A resposta é:":"Ainda não. A resposta é:"}</div>
-      <div class="row"><span class="k grow">${esc(it[2])}</span>${say(it[2])}</div><div class="muted">${esc(it[3])}</div></div>
+      <div class="row"><span class="k grow">${esc(it[2])}</span>${say(it[2])}</div><div class="muted">${esc(it[3])}</div></div>${gexpHTML(it[0],DRILL_LESSON(it[0]))}
       <button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
     $("#nx").onclick=wConj; $("#chk").disabled=true; $("#skip").disabled=true;
   };
@@ -1887,7 +1890,7 @@ function wFill(){
   const finish=(ok,shown)=>{answered=true;if(!shown){stats.drill++;if(ok)stats.drillOk++}ok?errOk(key):errAdd(key);bump("c");
     const full=it[1]+it[4][0]+it[3];
     $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div>${ok?"정답이에요!":shown?"A resposta é:":"Ainda não. A resposta é:"}</div>
-      <div class="row"><span class="k grow">${esc(full)}</span>${say(full)}</div><div class="muted">${esc(it[5])}</div>${!ok&&!shown&&inp.value.trim()?`<div class="muted">Escreveste: <span class="ko">${diffHTML(inp.value.trim(),it[4][0]).mine}</span></div>`:""}</div>
+      <div class="row"><span class="k grow">${esc(full)}</span>${say(full)}</div><div class="muted">${esc(it[5])}</div>${!ok&&!shown&&inp.value.trim()?`<div class="muted">Escreveste: <span class="ko">${diffHTML(inp.value.trim(),it[4][0]).mine}</span></div>`:""}</div>${gexpHTML(it[2].replace(/^[^+]*\+\s*/,""),it[0])}
       <button class="btn" id="nx" style="width:100%">Seguinte →</button>`;
     $("#nx").onclick=wFill;$("#chk").disabled=true;$("#skip").disabled=true};
   $("#chk").onclick=()=>{if(answered||!inp.value.trim())return;const v=norm(inp.value);finish(it[4].some(a=>norm(a)===v),false)};
@@ -2790,6 +2793,32 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-nw]");if(!
   const ko=row.dataset.nko,pt=row.dataset.npt;
   if(b.dataset.nw==="add"&&!isMine(ko)){mine.push([ko,pt,"",""]);store.set("mine",mine);row.innerHTML=`<span class="grow"><b class="ko">${esc(ko)}</b> <span class="muted">${esc(pt)}</span></span><span style="color:var(--ok);font-weight:700">Adicionada ✓</span>`}
   else row.remove();});
+
+// Short grammar explanation shown after each conjugation / fill-in answer, right or wrong.
+const GALIAS=[[/\(ㅅ\??\)/,"ㅅ 불규칙",7],[/^ㅎ|\(ㅎ\??\)/,"ㅎ 불규칙",10],[/^못|지 못/,"못 / -지 못하다",11],[/수 없/,"못 / -지 못하다",11],
+  [/것 같/,"것 같다",9],[/보여요|보이다/,"-아/어 보이다",4],[/보세요|보다$/,"-아/어 보다",8],[/^-기가/,"-기가 좋다",5],[/걸려|놓여/,"놓여 있다",5],
+  [/^-는 \+/,"-는",1],[/^-는$/,"-는",1],[/고 싶은/,"-고 싶은",9],[/지 않는 게/,"-지 않는 게 좋다",8],[/면 좋겠/,"-(으)면 좋겠다",10],[/^-\(으\)ㄴ데|^-는데/,"-는데",8],
+  [/는 게 어때/,"-는 게 어때요",9],[/려고/,"-(으)려고 하다",9],[/로 정/,"-(으)로 정하다",9],[/시겠어요/,"-(으)시겠어요",9],[/^-\(으\)ㄹ까요/,"-(으)ㄹ까요",2],
+  [/^-?\(이\)라고/,"-(이)라고 하다",1],[/^-?\(이\)나/,"-(이)나",2],[/거나/,"-거나",2],[/마다/,"마다",3],[/ㄹ 때/,"-(으)ㄹ 때",3],[/면서/,"-(으)면서",6],[/기 전에/,"-기 전에",6],
+  [/ㄴ 후에/,"-(으)ㄴ 후에",6],[/^-지요|죠/,"-지요",7],[/^-\(으\)면$|^-\(으\)면 \(/,"-(으)면",7],[/vs 안/,"-지 않아요 vs 안",11],[/지 않/,"-지 않다",5]];
+function grammarFor(label,lesson){
+  label=String(label||"").trim();
+  let L=lesson;
+  if(/^ㅎ/.test(label))label="ㅎ";
+  if(L===11&&/^-지 않/.test(label))label="-지 않아요 vs 안";
+  if(L===10&&/^-\(으\)ㄴ$|^-아\/어요$/.test(label))label="ㅎ";
+  if(L===7&&/^-았\/었어요$/.test(label))label="(ㅅ)";
+  for(const [re,f,l0] of GALIAS){if(!re.test(label))continue;
+    const ls=[L,l0,...Object.keys(GRAMMAR).map(Number)].filter(x=>GRAMMAR[x]);
+    for(const l of ls){const g=GRAMMAR[l].find(g=>g.f.replace(/\?/g,"").includes(f.replace(/\?/g,"")));if(g)return {g,l}}}
+  return null;
+}
+function gexpHTML(label,lesson){const x=grammarFor(label,lesson);if(!x)return "";const {g,l}=x;
+  return `<div class="gexp"><div class="row" style="gap:6px;align-items:baseline"><b class="ko">${esc(g.f)}</b><span class="muted">${esc(g.m)}</span></div>
+    <ul>${g.r.slice(0,3).map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
+    <button type="button" class="more" data-gl="${l}" style="border:0;background:none;padding:0;align-self:flex-start">Ver na Gramática (${lname(l)}) →</button></div>`}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-gl]");if(!b)return;S.lesson=+b.dataset.gl;store.set("lesson",S.lesson);go("gramatica")});
+const DRILL_LESSON=lab=>{for(const k in DRILL_L)if(DRILL_L[k].includes(lab))return +k.slice(1);return null};
 
 route();
 </script>
