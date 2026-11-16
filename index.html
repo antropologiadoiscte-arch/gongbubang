@@ -2911,6 +2911,7 @@ function chamada(){
   $("#cics").onclick=downloadIcs;
 }
 function downloadIcs(){
+  if(window.claude&&claude.use){toast("Aqui, dentro do Claude, não dá para descarregar ficheiros. Toca neste botão na <b>app instalada</b> ou usa o ficheiro <b>chamada-coreano.ics</b> que te enviei na conversa.");return}
   const h=CFG.callHour||21, d=today().replace(/-/g,""), stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
   const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//gongbubang//chamada//PT","BEGIN:VEVENT","UID:gongbubang-chamada-diaria","DTSTAMP:"+stamp,
     `DTSTART:${d}T${String(h).padStart(2,"0")}0000`,"DURATION:PT15M","RRULE:FREQ=DAILY","SUMMARY:📞 공부방 · chamada de coreano",
