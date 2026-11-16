@@ -460,6 +460,40 @@ a.flame{color:inherit;text-decoration:none}
 .gexp{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:14px}
 .gexp ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
 .gexp b.ko{font-size:17px}
+
+/* v21: chamada */
+.avatar{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:17px;color:#fff;background:linear-gradient(135deg,var(--hero-a),var(--cobalt))}
+.avatar.big{width:84px;height:84px;font-size:28px;margin:0 auto}
+.avatar.talk{box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 55%,transparent);animation:talk 1s ease-in-out infinite alternate}
+@keyframes talk{to{box-shadow:0 0 0 9px color-mix(in srgb,var(--ok) 20%,transparent)}}
+.avatar.pulse{animation:pulse 1.2s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgb(255 255 255 / .55)}100%{box-shadow:0 0 0 26px rgb(255 255 255 / 0)}}
+.callin{display:flex;flex-direction:column;gap:10px;text-align:center;align-items:stretch}
+.callbtn{border:0;border-radius:99px;padding:16px 20px;font-size:17px;font-weight:700;background:#1fae5b;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center}
+.callbtn svg{width:22px;height:22px}
+.callscr{display:flex;flex-direction:column;gap:12px;background:var(--raised);border:1px solid var(--line);border-radius:22px;padding:14px}
+.ctop{display:flex;gap:12px;align-items:center}
+.ctop small{display:block;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cstat{text-align:center;font-size:14px;font-weight:700;color:var(--muted)}
+.cstat.on{color:var(--red)}
+.clive{min-height:44px;text-align:center;font-family:var(--display);font-size:19px;padding:8px;border-radius:14px;background:var(--surface)}
+.cctl{display:flex;justify-content:space-between;align-items:center;padding:4px 6px}
+.cround{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:18px}
+.cround svg{width:22px;height:22px}
+.cround.end{background:#e5484d;border-color:#e5484d;color:#fff}
+.cround.end svg{transform:rotate(135deg)}
+.cround.yes{background:#1fae5b;border-color:#1fae5b;color:#fff}
+.cmic{width:96px;height:96px;border-radius:50%;border:0;background:var(--hero-a);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:700;font-size:13px;box-shadow:0 6px 20px color-mix(in srgb,var(--hero-a) 40%,transparent)}
+.cmic svg{width:32px;height:32px}
+.cmic:disabled{opacity:.4;box-shadow:none}
+.cmic.on{background:#e5484d;animation:pulse 1.2s ease-out infinite}
+.callfix{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;border:1.5px solid var(--red);background:var(--red-soft)}
+.ring-in{position:fixed;inset:0;z-index:45;display:grid;place-items:center;padding:24px;background:linear-gradient(160deg,var(--hero-a),#101826);color:#fff}
+.rbox{display:flex;flex-direction:column;gap:8px;text-align:center;align-items:center;width:min(360px,100%)}
+.rbtns{display:flex;justify-content:space-between;width:100%;max-width:260px;margin-top:40px}
+.rbtns .cround{width:66px;height:66px;border:0}
+.rbtns.lab{margin-top:4px;font-size:13px;opacity:.85}
+.rbtns.lab span{width:66px;text-align:center}
 </style>
 
 <div class="stripe" aria-hidden="true"></div>
@@ -1067,12 +1101,13 @@ let curU=[], ttsWatch=null;
 let ttsPlain=store.get("ttsplain",false), ttsRunId=0;
 function ttsRun(items,o={}){
   const user=o.user??(Date.now()-lastTap<1500), retry=!!o.retry, id=++ttsRunId;
-  if(!hasTTS()){if(user)ttsHelp("none");return}
+  if(!hasTTS()){if(user)ttsHelp("none");if(o.onend)setTimeout(o.onend,300);return}
   const ss=speechSynthesis, kv=koVoices(), plain=ttsPlain||retry;
   let busy=false; try{busy=ss.speaking||ss.pending;if(busy)ss.cancel();ss.resume()}catch(e){}
   let started=false, failed=false; clearTimeout(ttsWatch);
   const again=reason=>{if(failed||id!==ttsRunId)return;failed=true;clearTimeout(ttsWatch);
-    if(!retry){setTimeout(()=>{if(id===ttsRunId)ttsRun(items,{user,retry:true})},250);return}
+    if(!retry){setTimeout(()=>{if(id===ttsRunId)ttsRun(items,{...o,user,retry:true})},250);return}
+    if(o.onend)setTimeout(o.onend,300);
     if(user)ttsHelp(reason==="language-unavailable"||reason==="voice-unavailable"?"novoice":reason==="not-allowed"?"silent":reason==="nostart"?(voices.length&&!kv.length?"novoice":"silent"):"error",reason==="nostart"?"":reason)};
   const go=()=>{
     if(id!==ttsRunId)return;
@@ -1083,6 +1118,7 @@ function ttsRun(items,o={}){
         u.onstart=()=>{started=true;clearTimeout(ttsWatch);if(retry&&!ttsPlain){ttsPlain=true;store.set("ttsplain",true)}};
         u.onerror=e=>{if(e.error==="canceled"||e.error==="interrupted")return;again(e.error)};
         return u});
+      if(o.onend&&curU.length)curU[curU.length-1].onend=()=>{if(id===ttsRunId)o.onend()};
       curU.forEach(u=>ss.speak(u));
     }catch(e){again(e.message);return}
     ttsWatch=setTimeout(()=>{if(!started&&!ss.speaking&&id===ttsRunId)again("nostart")},2500);
@@ -1113,6 +1149,8 @@ const ICON={
   flame:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.6 2.5c.7 3.2 5.4 5.3 5.4 10.6a6 6 0 0 1-12 0c0-2.6 1.3-4.4 2.6-5.6.2 2.2 1.2 3.4 2.4 3.6-.3-3.4.2-6 1.6-8.6z"/></svg>'};
 ICON.gear=ico('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>');
 ICON.srs=ico('<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/><path d="m9 12 2 2 4-4"/>');
+ICON.phone=ico('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>');
+ICON.cal=ico('<rect x="3" y="4" width="18" height="18" rx="2.5"/><path d="M16 2v4M8 2v4M3 10h18"/>');
 ICON.back=ico('<path d="M15 18l-6-6 6-6"/>');
 ICON.mic=ico('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>');
 const TABS=[["home","Início"],["gramatica","Gramática"],["vocab","Vocabulário"],["pratica","Praticar"],["exame","Exame"]];
@@ -1127,6 +1165,7 @@ function route(){
   if(hasTTS())speechSynthesis.cancel();
   clearInterval(EX.timer); EX.live=false; closeSheet();
   if(t!=="vocab"){S.deck=null;SQ=null}
+  if(t!=="pratica")callQuit();
   views[t]();
   window.scrollTo(0,0);
 }
@@ -1295,6 +1334,7 @@ function goBack(){
   if(h==="pratica"){
     if(S.story){S.story=null;pratica();return}
     if(S.read){S.read=null;pratica();return}
+    if(CALL){if(!CALL.ended){callHangUp();return}CALL=null;pratica();return}
     if(CH){S.scen=null;CH=null;pratica();return}
     if(OR){clearInterval(EX.timer);OR=null;pratica();return}
   }
@@ -1591,7 +1631,7 @@ function pratica(){
   V(`<div><div class="eyebrow">연습 · Praticar</div><h1 class="title">${P.find(p=>p[0]===S.psub)[1]}<small>${P.find(p=>p[0]===S.psub)[2]}</small></h1></div>
     <div class="seg">${P.map(([id,k])=>`<button aria-pressed="${S.psub===id}" data-p="${id}" class="ko" style="font-size:16px">${k}</button>`).join("")}</div>
     <div id="pbody" class="view"></div>`);
-  $$("[data-p]").forEach(b=>b.onclick=()=>{S.psub=b.dataset.p;S.read=null;S.story=null;S.scen=null;closeSheet();pratica()});
+  $$("[data-p]").forEach(b=>b.onclick=()=>{callQuit();S.psub=b.dataset.p;S.read=null;S.story=null;S.scen=null;closeSheet();pratica()});
   ({escrita,audicao,leitura,conversa})[S.psub]();
 }
 
@@ -2470,10 +2510,11 @@ function videos(){
 
 /* ============ 말하기 (oral de exame + conversa) ============ */
 function conversa(){
-  S.cmode=S.cmode||"oral";
+  S.cmode=S.cmode||"call";
   if(S.scen!==null&&S.cmode==="chat"){renderChat();return}
-  $("#pbody").innerHTML=`<div class="seg"><button aria-pressed="${S.cmode==="oral"}" data-cm="oral">Exame oral</button><button aria-pressed="${S.cmode==="chat"}" data-cm="chat">Conversa</button></div><div id="cbody" class="view"></div>`;
-  $$("[data-cm]").forEach(b=>b.onclick=()=>{S.cmode=b.dataset.cm;S.scen=null;OR=null;conversa()});
+  $("#pbody").innerHTML=`<div class="seg"><button aria-pressed="${S.cmode==="call"}" data-cm="call">Chamada</button><button aria-pressed="${S.cmode==="oral"}" data-cm="oral">Exame oral</button><button aria-pressed="${S.cmode==="chat"}" data-cm="chat">Conversa</button></div><div id="cbody" class="view"></div>`;
+  $$("[data-cm]").forEach(b=>b.onclick=()=>{callQuit();S.cmode=b.dataset.cm;S.scen=null;OR=null;conversa()});
+  if(S.cmode==="call"){chamada();return}
   if(S.cmode==="oral"){oral();return}
   $("#cbody").innerHTML=`<p class="muted" style="margin:0">Escolhe uma situação. O Claude faz de outra pessoa e conversa contigo em coreano simples. No fim, corrige o que escreveste.</p>
     <div class="list">${SCEN.map((s,i)=>`<button class="scen" data-s="${i}"><b>${lname(s[0])} · ${esc(s[1])}</b><span>Com ${esc(s[3])} · ${esc(s[4])}</span></button>`).join("")}</div>`;
@@ -2526,10 +2567,11 @@ function oralQ(){
 
 /* ============ v19: definições, meta diária, sequência, revisão espaçada (SRS), tocar numa palavra ============ */
 // Settings live in gb_cfg. "since" is the day this version first ran: older days keep the old streak rule.
-const CFG_DEF={goalMin:10,goalCards:20,newDay:10,theme:"auto",name:"",voice:"",fs:20,since:""};
+const CFG_DEF={goalMin:10,goalCards:20,newDay:10,theme:"auto",name:"",voice:"",fs:20,since:"",callHour:21,handsFree:true};
 let CFG=Object.assign({},CFG_DEF,store.get("cfg",{}));
-for(const [k,ok] of [["goalMin",[5,10,15,20,30]],["goalCards",[10,20,30,50]],["newDay",[5,10,15,20]],["fs",[17,20,23,26]]])if(!ok.includes(CFG[k]))CFG[k]=CFG_DEF[k];
+for(const [k,ok] of [["goalMin",[5,10,15,20,30]],["goalCards",[10,20,30,50]],["newDay",[5,10,15,20]],["fs",[17,20,23,26]],["callHour",[0,19,20,21,22]]])if(!ok.includes(CFG[k]))CFG[k]=CFG_DEF[k];
 if(!["auto","light","dark"].includes(CFG.theme))CFG.theme="auto";
+if(typeof CFG.handsFree!=="boolean")CFG.handsFree=true;
 for(const k of ["name","voice","since"])if(typeof CFG[k]!=="string")CFG[k]="";
 if(!/^\d{4}-\d{2}-\d{2}$/.test(CFG.since))CFG.since=today();
 const saveCfg=()=>store.set("cfg",CFG);
@@ -2608,6 +2650,7 @@ function definicoes(){
     <section class="card pad setc"><div class="lab">Tema</div>${optRow("theme",["auto","light","dark"],v=>({auto:"Automático",light:"Claro",dark:"Escuro"})[v])}</section>
     <section class="card pad setc"><div class="lab">Meta diária: minutos de estudo</div>${optRow("goalMin",[5,10,15,20,30],v=>v+" min")}
       <div class="lab">ou cartas revistas (o que chegar primeiro)</div>${optRow("goalCards",[10,20,30,50],v=>v)}</section>
+    <section class="card pad setc"><div class="lab">Chamada diária de coreano (a app «liga-te» a esta hora)</div>${optRow("callHour",[0,19,20,21,22],v=>v?v+"h":"Desligada")}</section>
     <section class="card pad setc"><div class="lab">Palavras novas por dia, na revisão</div>${optRow("newDay",[5,10,15,20],v=>v)}</section>
     <section class="card pad setc"><div class="lab">Tamanho do texto nas leituras</div>${optRow("fs",[17,20,23,26],v=>`<span style="font-size:${v-4}px">가</span>`)}</section>
     <section class="card pad setc"><div class="lab">Voz coreana</div>
@@ -2832,6 +2875,205 @@ function gexpHTML(label,lesson){const x=grammarFor(label,lesson);if(!x)return ""
     <button type="button" class="more" data-gl="${l}" style="border:0;background:none;padding:0;align-self:flex-start">Ver na Gramática (${lname(l)}) →</button></div>`}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-gl]");if(!b)return;S.lesson=+b.dataset.gl;store.set("lesson",S.lesson);go("gramatica")});
 const DRILL_LESSON=lab=>{for(const k in DRILL_L)if(DRILL_L[k].includes(lab))return +k.slice(1);return null};
+
+/* ============ v21: CHAMADA — conversa por voz com o Claude, com correção antes de avançar ============ */
+// Each turn: the learner speaks (speech recognition, or the keyboard microphone), Claude checks that line,
+// and if it has a mistake the call pauses on a correction card until she taps "Continuar".
+const ART_URL="https://claude.ai/artifact/JDnF1drQVmF4YGE2whP9f3";
+let CALL=null, CREC=null;
+const callScen=()=>SCEN[(S.callScen??Math.floor(Date.now()/864e5))%SCEN.length];
+const callsDone=()=>store.get("calls",{});
+const callName=sc=>sc[3].split(",")[0].trim();
+const callT=s=>mmss(s*1000);
+function chamada(){
+  if(CALL){renderCall();return}
+  const sc=callScen(), cd=callsDone(), td=cd[today()], h=CFG.callHour;
+  const n7=Object.keys(cd).filter(k=>k>=dayShift(-6)).length;
+  $("#cbody").innerHTML=`<section class="card pad callin">
+      <div class="avatar big" aria-hidden="true">${esc(callName(sc).slice(0,2))}</div>
+      <div class="eyebrow">전화 · Chamada diária${h?` · ${h}h`:""}</div>
+      <div style="font-size:20px;font-weight:700">${esc(sc[1])}</div>
+      <div class="muted" style="font-size:13px">Com ${esc(sc[3])} · gramática: ${esc(sc[4])}</div>
+      <button class="callbtn" id="cgo">${ICON.phone}<span>${td?"Ligar outra vez":"Começar a chamada"}</span></button>
+      <div class="muted" style="font-size:13px">${td?`Hoje já falaste ${callT(td.sec||0)} · ${td.n||0} frases ✓`:"Falas em coreano. Se errares, a chamada para, explica o erro e só depois continua."}</div>
+      <label class="row" style="justify-content:center;gap:8px;font-size:14px"><input type="checkbox" id="chf" ${CFG.handsFree?"checked":""}> Mãos livres (o microfone abre sozinho depois de cada fala)</label>
+    </section>
+    <section class="card pad" style="display:flex;flex-direction:column;gap:8px"><div class="eyebrow">Tema da chamada</div>
+      <select id="csc" class="ans" style="min-height:0">${SCEN.map((s,i)=>`<option value="${i}"${s===sc?" selected":""}>${lname(s[0])} · ${esc(s[1])}</option>`).join("")}</select>
+      <div class="muted" style="font-size:12px">Por defeito, o tema muda todos os dias.</div></section>
+    <section class="card pad" style="display:flex;flex-direction:column;gap:8px"><div class="eyebrow">Lembrete diário</div>
+      <div style="font-size:14px">${h?`Às <b>${h}h</b>, se a app estiver aberta, ${esc(callName(sc))} «liga-te». Para o telemóvel te avisar mesmo com a app fechada, junta o lembrete ao calendário.`:"O lembrete está desligado. Liga-o nas Definições."}</div>
+      <div class="row"><button class="btn ghost grow" id="cics">${ICON.cal} Juntar ao calendário (todos os dias às ${h||21}h)</button></div>
+      <div class="muted" style="font-size:12px">Últimos 7 dias: ${n7} chamada${n7===1?"":"s"}.</div></section>`;
+  $("#cgo").onclick=()=>callStart(sc);
+  $("#chf").onchange=e=>{CFG.handsFree=e.target.checked;saveCfg()};
+  $("#csc").onchange=e=>{S.callScen=+e.target.value;chamada()};
+  $("#cics").onclick=downloadIcs;
+}
+function downloadIcs(){
+  const h=CFG.callHour||21, d=today().replace(/-/g,""), stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//gongbubang//chamada//PT","BEGIN:VEVENT","UID:gongbubang-chamada-diaria","DTSTAMP:"+stamp,
+    `DTSTART:${d}T${String(h).padStart(2,"0")}0000`,"DURATION:PT15M","RRULE:FREQ=DAILY","SUMMARY:📞 공부방 · chamada de coreano",
+    "DESCRIPTION:Abre o 공부방 com o Claude › Praticar › 말하기 › Chamada: "+ART_URL,"URL:"+ART_URL,
+    "BEGIN:VALARM","ACTION:DISPLAY","TRIGGER:PT0M","DESCRIPTION:Hora da chamada de coreano!","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));a.download="chamada-coreano.ics";document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);toast("Abre o ficheiro <b>chamada-coreano.ics</b> para o juntar ao calendário.")}
+  catch(e){toast("Não consegui criar o ficheiro aqui. Abre a app instalada e tenta outra vez.")}
+}
+function callStart(sc){
+  callStopRec(); closeRing();
+  CALL={sc,msgs:[],fix:null,status:"think",t0:Date.now(),errs:[],n:0,live:"",ended:false,kb:!SR,showPt:false};
+  clearInterval(CALL.tick); CALL.tick=setInterval(()=>{const el=document.getElementById("ctime");if(el&&CALL)el.textContent=callT(Math.round((Date.now()-CALL.t0)/1000));lastAct=Date.now()},1000);
+  renderCall(); callAI(null);
+}
+const callTranscript=()=>CALL.msgs.map(m=>(m.who==="me"?"Aluna: ":callName(CALL.sc)+": ")+m.ko).join("\n");
+function callAI(said){
+  CALL.status="think"; renderCall();
+  const sc=CALL.sc, who=callName(sc);
+  getSample().then(sample=>{
+    if(!sample)throw {code:"none"};
+    const base=`Estás numa chamada de voz para a aluna praticar coreano. Fazes de ${sc[3]}. Situação: ${sc[2]}
+A aluna é portuguesa, nível 세종한국어 2A. Gramática que ela deve praticar: ${sc[4]}.
+Fala só coreano simples em 해요체, 1 ou 2 frases curtas, e acaba quase sempre com uma pergunta para a conversa continuar.`;
+    const prompt=said===null?`${base}
+É o início da chamada: atende como ao telefone (por exemplo 여보세요?) e começa a conversa sobre a situação.
+Responde só com JSON: {"ko":"a tua fala em coreano","pt":"tradução em português de Portugal"}`
+    :`${base}
+O que a aluna diz chega por reconhecimento de voz: ignora espaços, pontuação e pequenas falhas de transcrição; não as contes como erro.
+Conversa até agora:
+${callTranscript()}
+Última fala da aluna: "${said}"
+1) Avalia só a última fala da aluna. Se tiver um erro de gramática, de partícula, de conjugação ou de vocabulário, ou se não soar natural, põe "correto": false, escreve em "corrigido" a frase certa, o mais perto possível do que ela quis dizer, e em "explicacao" explica em português de Portugal, em 1 ou 2 frases curtas, onde errou e como deve ser. Se ela falar em português, ensina como se diz em coreano (correto false). Se estiver certa, "correto": true e deixa "corrigido" e "explicacao" vazios.
+2) Depois continua a conversa com a tua próxima fala, que responde ao que ela quis dizer.
+Responde só com JSON: {"correto":true,"corrigido":"","explicacao":"","ko":"a tua próxima fala em coreano","pt":"tradução em português de Portugal"}`;
+    return sample.json(prompt,{modelTier:"default",cache:false}).then(r=>{
+      if(!CALL||CALL.ended)return;
+      if(!r||typeof r.ko!=="string"||!r.ko)throw {code:"bad"};
+      const next={who:"them",ko:r.ko,pt:typeof r.pt==="string"?r.pt:""};
+      if(said!==null&&r.correto===false&&typeof r.corrigido==="string"&&r.corrigido.trim()){
+        const fx={orig:said,cor:r.corrigido.trim(),exp:typeof r.explicacao==="string"?r.explicacao:"",next};
+        CALL.errs.push(fx); CALL.fix=fx; CALL.status="fix"; renderCall();
+        ttsRun([["이렇게 말해요.",false],[fx.cor,true]],{user:false});
+        return;
+      }
+      callSay(next);
+    });
+  }).catch(e=>{if(!CALL)return;CALL.status="error";CALL.error=e&&e.code==="none"?"none":sampleErr(e);renderCall()});
+}
+function callSay(m){
+  CALL.msgs.push(m); CALL.fix=null; CALL.status="speak"; renderCall();
+  ttsRun([[m.ko,false]],{user:false,onend:()=>{if(!CALL||CALL.ended||CALL.status!=="speak")return;CALL.status="you";renderCall();if(CFG.handsFree&&SR&&!CALL.kb)callListen()}});
+}
+function callStopRec(){if(CREC){try{CREC.onend=null;CREC.abort()}catch(_){}CREC=null}}
+// Listen once; when the learner stops talking, the line is sent. Tap the mic again to send at once.
+function callListen(target){
+  if(!SR){CALL.kb=true;renderCall();return}
+  callStopRec(); try{speechSynthesis.cancel()}catch(_){}
+  let txt="", sent=false;
+  const finish=()=>{CREC=null;if(sent||!CALL)return;sent=true;const t=txt.trim();
+    if(target){callCheckRepeat(t);return}
+    if(!t){CALL.status="you";CALL.live="";renderCall();return}
+    CALL.live="";CALL.msgs.push({who:"me",ko:t});CALL.n++;callAI(t)};
+  try{
+    CREC=new SR();CREC.lang="ko-KR";CREC.interimResults=true;CREC.continuous=false;
+    CREC.onresult=ev=>{txt="";for(const r of ev.results)txt+=r[0].transcript;lastAct=Date.now();const lv=document.getElementById("clive");if(lv)lv.textContent=txt};
+    CREC.onerror=ev=>{if(/not-allowed|service-not-allowed|audio-capture/.test(ev.error)){CREC=null;sent=true;CALL.kb=true;CALL.status=target?"fix":"you";renderCall();
+      toast("<b>O microfone não está disponível nesta página.</b> Usa o microfone do teclado coreano na caixa de texto.")}};
+    CREC.onend=finish; CREC.start();
+    CALL.status=target?"repeat":"listen"; CALL.live=""; renderCall();
+  }catch(e){CREC=null;CALL.kb=true;renderCall()}
+}
+function callCheckRepeat(t){
+  if(!CALL||!CALL.fix)return; CALL.status="fix";
+  const ok=t&&simRatio(t,CALL.fix.cor)>=0.8;
+  CALL.fix.rep=t?{t,ok}:null; renderCall();
+  if(ok)speak("잘했어요!");
+}
+function callSend(text){const t=text.trim();if(!t||!CALL)return;
+  if(CALL.status==="fix"){callCheckRepeat(t);return}
+  CALL.msgs.push({who:"me",ko:t});CALL.n++;callAI(t)}
+function callHangUp(){
+  if(!CALL)return; callStopRec(); try{speechSynthesis.cancel()}catch(_){} clearInterval(CALL.tick);
+  const sec=Math.round((Date.now()-CALL.t0)/1000);
+  if(CALL.n){const cd=callsDone(),t=today(),o=cd[t]||{sec:0,n:0,e:0};cd[t]={sec:o.sec+sec,n:o.n+CALL.n,e:o.e+CALL.errs.length};store.set("calls",cd);bump("c")}
+  CALL.ended=true; CALL.sec=sec; renderCall();
+}
+function renderCall(){
+  const box=document.getElementById("cbody"); if(!box||!CALL)return;
+  const sc=CALL.sc, who=callName(sc);
+  if(CALL.ended){
+    box.innerHTML=`<section class="card pad callin"><div class="avatar big">${esc(who.slice(0,2))}</div>
+      <div class="ko" style="font-size:26px;font-weight:700">수고했어요!</div>
+      <div>Chamada de <b>${callT(CALL.sec)}</b> · ${CALL.n} frase${CALL.n===1?"":"s"} tuas · ${CALL.errs.length} correç${CALL.errs.length===1?"ão":"ões"}</div></section>
+      ${CALL.errs.length?`<section class="card pad" style="display:flex;flex-direction:column;gap:10px"><div class="eyebrow">Para rever</div>${CALL.errs.map(f=>`<div class="rev"><span class="muted">Disseste: ${esc(f.orig)}</span><span class="row" style="flex-wrap:nowrap"><span class="ko grow" style="font-weight:700">${esc(f.cor)}</span>${say(f.cor,"icon sm")}</span>${f.exp?`<span>${esc(f.exp)}</span>`:""}</div>`).join("")}</section>`:`<div class="fb ok">Sem erros nesta chamada. 완벽해요!</div>`}
+      <div class="row"><button class="btn grow" id="cagain">Ligar outra vez</button><button class="btn ghost grow" id="cout">Terminar</button></div>`;
+    $("#cagain").onclick=()=>callStart(sc); $("#cout").onclick=()=>{CALL=null;chamada()};
+    return;
+  }
+  const st=CALL.status, f=CALL.fix;
+  const stTxt={think:"A pensar…",speak:`${who} está a falar…`,you:SR&&!CALL.kb?"A tua vez: toca no microfone e fala":"A tua vez: escreve ou dita a resposta",listen:"A ouvir… fala em coreano",repeat:"Repete a frase certa…",fix:"Correção antes de continuar",error:"Problema na ligação"}[st]||"";
+  const msgs=CALL.msgs.slice(-6).map(m=>m.who==="them"
+    ?`<div class="bub them">${tapLine(m.ko,m.pt)}${CALL.showPt&&m.pt?`<span class="t">${esc(m.pt)}</span>`:""}<span class="tools"><button data-say="${esc(m.ko)}">Ouvir</button><button data-say="${esc(m.ko)}" data-slow="1">Devagar</button></span></div>`
+    :`<div class="bub me"><span class="k">${esc(m.ko)}</span></div>`).join("");
+  const fixHTML=f?`<div class="callfix" role="status"><div class="eyebrow" style="color:var(--red)">Espera, há um erro</div>
+      <div><span class="muted" style="font-size:13px">Disseste</span><div class="ko" style="font-size:17px">${diffHTML(f.orig,f.cor).mine}</div></div>
+      <div><span class="muted" style="font-size:13px">Devia ser</span><div class="row" style="flex-wrap:nowrap"><span class="ko grow" style="font-size:19px;font-weight:700">${esc(f.cor)}</span>${say(f.cor)}</div></div>
+      ${f.exp?`<div class="tip">${esc(f.exp)}</div>`:""}${pronHTML(f.cor)}
+      ${f.rep?`<div class="fb ${f.rep.ok?"ok":"no"}">${f.rep.ok?"잘했어요! Disseste bem.":`Ouvi: <span class="ko">${esc(f.rep.t)}</span>. Tenta outra vez ou continua.`}</div>`:""}
+      <div class="row">${SR&&!CALL.kb?`<button class="btn ghost grow mic${st==="repeat"?" on":""}" id="crep">${ICON.mic} Repetir a frase certa</button>`:""}<button class="btn grow" id="cnext">Percebi, continuar →</button></div></div>`:"";
+  const errHTML=st==="error"?(CALL.error==="none"
+    ?`<div class="fb info">A chamada precisa do Claude, que não está disponível nesta versão da app. <a href="${ART_URL}" target="_blank" rel="noopener">Abre o 공부방 no Claude</a> e liga de lá.</div>`
+    :`<div class="fb info">${esc(CALL.error)} <button class="btn ghost" id="cretry" style="margin-top:8px">Tentar outra vez</button></div>`):"";
+  const canTalk=st==="you"||st==="listen";
+  box.innerHTML=`<section class="callscr">
+      <div class="ctop"><div class="avatar${st==="speak"?" talk":""}">${esc(who.slice(0,2))}</div><div class="grow" style="min-width:0"><b>${esc(who)}</b><small>${esc(sc[1])} · <span id="ctime">${callT(Math.round((Date.now()-CALL.t0)/1000))}</span></small></div>
+        <button class="btn ghost" id="cpt" style="padding:7px 10px;font-size:12px">${CALL.showPt?"Sem":"Com"} tradução</button></div>
+      <div class="chat">${msgs}</div>
+      ${fixHTML}${errHTML}
+      <div class="cstat${st==="listen"||st==="repeat"?" on":""}">${st==="think"?'<span class="spin"></span> ':""}${stTxt}</div>
+      ${st==="listen"||st==="repeat"?`<div class="clive" id="clive">${esc(CALL.live)}</div>`:""}
+      ${CALL.kb&&(canTalk||st==="speak")?`<div class="composer"><textarea class="ans" id="cki" lang="ko" placeholder="Toca aqui e usa o microfone do teclado coreano…" aria-label="A tua resposta"></textarea><button class="btn" id="cks">Enviar</button></div>`:""}
+      <div class="cctl">
+        ${SR?`<button class="cround" id="ckb" aria-label="${CALL.kb?"Usar o microfone":"Escrever"}">${CALL.kb?ICON.mic:"가"}</button>`:"<span style='width:52px'></span>"}
+        ${!CALL.kb?`<button class="cmic${st==="listen"?" on":""}" id="cmic" ${canTalk?"":"disabled"} aria-label="${st==="listen"?"Enviar":"Falar"}">${ICON.mic}<span>${st==="listen"?"Enviar":"Falar"}</span></button>`:`<span class="cmic" style="visibility:hidden"></span>`}
+        <button class="cround end" id="cend" aria-label="Desligar">${ICON.phone}</button></div>
+      ${rateCtl()}</section>`;
+  $("#cend").onclick=callHangUp;
+  $("#cpt").onclick=()=>{CALL.showPt=!CALL.showPt;renderCall()};
+  const ck=$("#ckb"); if(ck)ck.onclick=()=>{callStopRec();CALL.kb=!CALL.kb;if(CALL.status==="listen")CALL.status="you";renderCall()};
+  const cm=$("#cmic"); if(cm)cm.onclick=()=>{if(CALL.status==="listen"){try{CREC&&CREC.stop()}catch(_){}}else callListen()};
+  const cn=$("#cnext"); if(cn)cn.onclick=()=>{callStopRec();callSay(f.next)};
+  const cr=$("#crep"); if(cr)cr.onclick=()=>{if(CALL.status==="repeat"){try{CREC&&CREC.stop()}catch(_){}}else callListen(true)};
+  const ct=$("#cretry"); if(ct)ct.onclick=()=>{const last=CALL.msgs[CALL.msgs.length-1];callAI(last&&last.who==="me"?last.ko:null)};
+  const ks=$("#cks"); if(ks){const ki=$("#cki");ks.onclick=()=>callSend(ki.value);
+    ki.onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();ks.click()}}}
+  if(f&&CALL.kb&&!document.getElementById("cki")){/* repeat by keyboard */
+    const r=document.createElement("div");r.className="composer";r.innerHTML=`<textarea class="ans" id="cri" lang="ko" placeholder="Repete aqui a frase certa (opcional)" aria-label="Repetir"></textarea><button class="btn ghost" id="crs">Verificar</button>`;
+    box.querySelector(".callfix").appendChild(r);$("#crs").onclick=()=>callCheckRepeat($("#cri").value.trim())}
+  const ch=box.querySelector(".chat"); if(ch&&ch.lastElementChild&&!f)ch.lastElementChild.scrollIntoView({block:"nearest"});
+  if(f)box.querySelector(".callfix").scrollIntoView({block:"nearest"});
+}
+
+/* ---- "liga-te" à hora marcada: ecrã de chamada a entrar, quando a app está aberta ---- */
+function closeRing(){const r=document.getElementById("ring");if(r)r.remove();try{navigator.vibrate&&navigator.vibrate(0)}catch(_){}}
+function callDue(){const h=CFG.callHour;return !!h&&new Date().getHours()>=h&&!callsDone()[today()]&&store.get("callskip","")!==today()}
+function ringIn(){
+  if(!callDue()||CALL||EX.live||document.getElementById("ring"))return;
+  const sc=callScen(), who=callName(sc);
+  const o=document.createElement("div");o.id="ring";o.className="ring-in noswipe";o.setAttribute("role","alertdialog");o.setAttribute("aria-label",`${who} está a ligar`);
+  o.innerHTML=`<div class="rbox"><div class="avatar big pulse">${esc(who.slice(0,2))}</div>
+    <div style="font-size:24px;font-weight:700">${esc(who)}</div><div style="opacity:.85">está a ligar… · chamada de coreano das ${CFG.callHour}h</div>
+    <div style="opacity:.75;font-size:13px">${esc(sc[1])}</div>
+    <div class="rbtns"><button class="cround end" id="rno" aria-label="Agora não">${ICON.phone}</button><button class="cround yes" id="ryes" aria-label="Atender">${ICON.phone}</button></div>
+    <div class="rbtns lab"><span>Agora não</span><span>Atender</span></div></div>`;
+  document.body.appendChild(o);
+  try{navigator.vibrate&&navigator.vibrate([400,200,400,200,400])}catch(_){}
+  $("#rno").onclick=()=>{store.set("callskip",today());closeRing()};
+  $("#ryes").onclick=()=>{closeRing();S.psub="conversa";S.cmode="call";S.scen=null;OR=null;CH=null;
+    if((location.hash||"#home")==="#pratica")pratica();else go("pratica");setTimeout(()=>callStart(sc),50)};
+}
+setInterval(ringIn,30000); setTimeout(ringIn,1500);
+function callQuit(){if(!CALL)return;if(!CALL.ended&&CALL.n)callHangUp();callStopRec();clearInterval(CALL.tick);CALL=null}
 
 route();
 </script>
